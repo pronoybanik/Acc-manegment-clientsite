@@ -26,7 +26,8 @@ const ImageBanner = () => {
           key={index}
           src={image}
           alt={`Image ${index + 1}`}
-          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000  ${
+          className={`absolute top-0 
+          left-0 w-full h-full transition-opacity duration-1000  ${
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
         />
