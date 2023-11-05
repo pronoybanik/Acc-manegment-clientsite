@@ -9,6 +9,7 @@ const Home = () => {
       <Header />
       <OurServices />
       <OurProducts />
+      <p className="mt-20 text-center font-bold">client review</p>
     </div>
   );
 };

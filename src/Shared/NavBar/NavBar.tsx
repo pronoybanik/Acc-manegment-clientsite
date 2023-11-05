@@ -30,16 +30,16 @@ const NavBar = () => {
                     className="text-gray-500 transition hover:text-gray-500/75"
                     href="/"
                   >
-                    About
+                    Home
                   </a>
                 </li>
 
                 <li>
                   <a
                     className="text-gray-500 transition hover:text-gray-500/75"
-                    href="/"
+                    href="/brands"
                   >
-                    Careers
+                    Brands
                   </a>
                 </li>
 
