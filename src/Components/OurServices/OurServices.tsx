@@ -27,20 +27,27 @@ const OurServices = () => {
 
   return (
     <section className="font-serif bg-slate-100 py-6">
-      <div className="text-5xl flex items-center justify-center my-14 font-serif">
-        How it works
+      <div className="my-14">
+        <div className="text-5xl flex items-center justify-center  font-serif">
+          How it works
+        </div>
+        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4"></p>
       </div>
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mx-36">
+
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mx-48">
         {serviceInfo.map((data, index) => (
-          <div className=" flex justify-center">
+          <div key={index} className=" flex justify-center">
             <div className="">
-              <div className="">
+              <div className="flex justify-center">
                 <img className="w-24 h-24" src={data.image} alt="" />
               </div>
-              <h1 className="mt-2">
-                {index + 1}. {data.serviceName}
-              </h1>
-              <p className="w-96 mt-2 text-sm">{data.serviceInfo}</p>
+              <div className="mt-2 flex justify-center">
+                <h1 className="text-3xl mr-2 -mt-2 font-bold text-[#98CB4C]">
+                  {index + 1}.
+                </h1>
+                <h1 className="text-xl font-semibold">{data.serviceName}</h1>
+              </div>
+              <p className="mt-2 text-sm text-center">{data.serviceInfo}</p>
             </div>
           </div>
         ))}
