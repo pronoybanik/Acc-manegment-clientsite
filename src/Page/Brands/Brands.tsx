@@ -25,6 +25,7 @@ type product = {
   status: string;
   createdAt: string;
   updatedAt: string;
+  image: string;
 };
 
 const Brands = () => {
@@ -431,7 +432,7 @@ const Brands = () => {
             <div className="lg:col-span-3">
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {data?.data?.map((d: product) => (
-                  <BrandCard productData={d} />
+                  <BrandCard key={d?._id} productData={d} />
                 ))}
               </ul>
             </div>

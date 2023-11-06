@@ -5,6 +5,8 @@ import Home from "../Page/Home/Home";
 import Brands from "../Page/Brands/Brands";
 import BrandItem from "../Page/BrandItem/BrandItem";
 import ProductItem from "../Components/ProductItem/ProductItem";
+import AddProduct from "../Page/AddProduct/AddProduct";
+import AddBrand from "../Page/AddBrand/AddBrand";
 
 const AllRouters = createBrowserRouter([
   {
@@ -16,9 +18,10 @@ const AllRouters = createBrowserRouter([
       { path: "/brands", element: <Brands /> },
       { path: "/brands/:id", element: <BrandItem /> },
       { path: "/product/:id", element: <ProductItem /> },
+      { path: "/addProduct", element: <AddProduct /> },
+      { path: "/addBrand", element: <AddBrand /> },
     ],
   },
-  
 ]);
 
 export default AllRouters;

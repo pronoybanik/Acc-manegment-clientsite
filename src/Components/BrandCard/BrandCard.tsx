@@ -24,18 +24,19 @@ type product = {
   status: string;
   createdAt: string;
   updatedAt: string;
+  image: string;
 };
 
 const BrandCard = ({ productData }: { productData: product }) => {
-  console.log(productData);
-  const { _id, name, description } = productData;
+  const { _id, name, description, image } = productData;
   const slicedDescription = description.slice(0, 110);
+
   return (
     <div>
       <li>
         <Link to={_id} className="group block overflow-hidden">
           <img
-            src="http:string"
+            src={image}
             alt=""
             className="h-[350px] w-full object-cover transition duration-500 group-hove:string"
           />

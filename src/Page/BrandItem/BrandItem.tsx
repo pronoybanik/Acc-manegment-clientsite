@@ -2,6 +2,36 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetBrandItemQuery } from "../../Features/Brands/BrandsAPi";
 
+interface Product {
+  brand: {
+    name: string;
+    id: string;
+  };
+  category: string;
+  createdAt: string;
+  description: string;
+  imageURLs: string[];
+  name: string;
+  unit: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
+
+// interface brand {
+//   createdAt: string;
+//   description: string;
+//   email: string;
+//   location: string;
+//   name: string;
+//   products: Product[];
+//   status: string;
+//   suppliers: string[]; // You can specify the correct type for suppliers if needed
+//   updatedAt: string;
+//   __v: number;
+//   _id: string;
+// }
+
 const BrandItem = () => {
   const { id } = useParams();
   const { data } = useGetBrandItemQuery(id);
@@ -13,7 +43,7 @@ const BrandItem = () => {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-20 lg:mt-20">
           <img
             alt="Les Paul"
-            src=""
+            src={data?.data?.image}
             className="aspect-square w-[400px] rounded-xl object-cover"
           />
 
@@ -204,7 +234,7 @@ const BrandItem = () => {
           <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4" />
         </div>
         <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-          {data?.data?.products?.map((data) => (
+          {data?.data?.products?.map((data: Product) => (
             <Link to="#" className="group block">
               <div className="relative h-[350px] sm:h-[450px]">
                 <img
@@ -222,7 +252,7 @@ const BrandItem = () => {
 
               <div className="mt-3">
                 <h3 className="text-sm text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                  Small Headphones
+                  {data?.category}
                 </h3>
 
                 <p className="mt-1.5 max-w-[40ch] text-xs text-gray-500">
