@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
 
 const ImageBanner = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const images = [
     "https://images.pexels.com/photos/7890065/pexels-photo-7890065.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/3039069/pexels-photo-3039069.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+    "https://images.pexels.com/photos/196643/pexels-photo-196643.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "https://images.pexels.com/photos/1367242/pexels-photo-1367242.jpeg?auto=compress&cs=tinysrgb&w=1600"
   ];
 
   useEffect(() => {
@@ -17,27 +19,21 @@ const ImageBanner = () => {
       clearInterval(interval);
     };
   }, []);
-  
 
   return (
-    <div className="relative w-full h-[600px] ">
+    <div className="relative w-full h-[650px] ">
       {images.map((image, index) => (
         <img
           key={index}
           src={image}
           alt={`Image ${index + 1}`}
-          className={`absolute top-0 
-          left-0 w-full h-full transition-opacity duration-1000  ${
+          className={`absolute rounded-lg top-0 left-0 object-cover w-full h-full transition-opacity duration-1000  ${
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
 
-      <div
-        data-aos="fade-up"
-        data-aos-duration="3000"
-        className="flex items-center justify-center h-full"
-      >
+      <div className="flex items-center justify-center h-full">
         <div className="relative">
           <p className="text-white lg:text-5xl md:text-3xl text-2xl font-semibold mt-4 mb-6 max-w-sm sm:text-xl/relaxed">
             Organic products

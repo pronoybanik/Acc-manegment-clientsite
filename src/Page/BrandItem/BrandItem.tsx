@@ -234,6 +234,7 @@ const BrandItem = () => {
           <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4" />
         </div>
         <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
+          
           {data?.data?.products?.map((data: Product) => (
             <Link key={data?._id} to="#" className="group block">
               <div className="relative h-[350px] sm:h-[450px]">

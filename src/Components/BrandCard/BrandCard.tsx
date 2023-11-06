@@ -38,7 +38,7 @@ const BrandCard = ({ productData }: { productData: product }) => {
           <img
             src={image}
             alt=""
-            className="h-[350px] w-full object-cover transition duration-500 group-hove:string"
+            className="h-[350px] w-full object-contain transition duration-500 group-hove:string"
           />
 
           <div className="relative bg-white pt-3">

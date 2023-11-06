@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import { useCreateProductMutation } from "../../Features/Products/ProductApi";
 
@@ -31,6 +31,14 @@ type BrandData = {
 const AddProduct = () => {
   const { data: brandData } = useGetBrandQuery({});
   const [createProduct] = useCreateProductMutation();
+
+  const [selectedFileCount, setSelectedFileCount] = useState(0);
+
+  const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const fileInput = e.target;
+    const count = fileInput.files.length;
+    setSelectedFileCount(count);
+  };
 
   const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -196,17 +204,43 @@ const AddProduct = () => {
               </div>
 
               <div>
-                <label className="sr-only" htmlFor="unit">
-                  image
+                <label
+                  className="block text-gray-700 text-sm font-bold"
+                  htmlFor="productImage"
+                >
+                  Upload Product Image
                 </label>
-                <input
-                  className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="productImage"
-                  type="file"
-                  name="productImage"
-                  id="productImage"
-                />
+                <div className="mt-1 flex items-center space-x-4">
+                  <label className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 cursor-pointer">
+                    Browse
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="productImage"
+                      name="productImage"
+                      onChange={handleFileChange}
+                      multiple // Allow multiple file selection
+                    />
+                  </label>
+                  <span className="text-gray-500">
+                    {selectedFileCount === 1
+                      ? "1 file selected"
+                      : `${selectedFileCount} files selected`}
+                  </span>
+                </div>
               </div>
+
+              {/* <div className="relative w-full">
+                <label className="cursor-pointer bg-blue-500 text-white rounded-lg p-2 text-sm font-medium w-full block text-center">
+                  Upload Product Image
+                  <input
+                    type="file"
+                    className="hidden"
+                    name="productImage"
+                    id="productImage"
+                  />
+                </label>
+              </div> */}
 
               <div className="mt-4">
                 <button

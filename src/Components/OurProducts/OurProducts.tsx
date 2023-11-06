@@ -20,14 +20,13 @@ type productData = {
 
 const OurProducts = () => {
   const { data } = useGetProductsQuery({});
-  console.log(data?.data);
 
   return (
     <section className="lg:mx-40">
-      <div className="my-10">
-        <p className="text-center font-bold font-serif text-4xl">
+      <div className="my-14">
+        <div className="text-5xl flex items-center justify-center  font-serif">
           Our Products
-        </p>
+        </div>
         <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4"></p>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:gap-4">
@@ -68,7 +67,7 @@ const OurProducts = () => {
                   <img
                     src={d?.imageURLs}
                     alt=""
-                    className="h-[300px] w-full object-cover "
+                    className="h-[300px] object-contain w-full  "
                   />
 
                   <div className="mt-3 flex justify-between text-sm">
