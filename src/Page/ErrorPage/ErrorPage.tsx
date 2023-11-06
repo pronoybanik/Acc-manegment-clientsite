@@ -1,12 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const ErrorPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  setTimeout(() => {
-    navigate("/");
-  }, 4000);
+  // setTimeout(() => {
+  //   navigate("/");
+  // }, 3000);
 
   return (
     <div className="grid  px-4 bg-white place-content-center h-[800px]">

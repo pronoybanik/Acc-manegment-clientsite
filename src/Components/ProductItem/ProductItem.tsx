@@ -1,11 +1,10 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { useGetBrandItemQuery } from "../../Features/Brands/BrandsAPi";
+import { useParams } from "react-router-dom";
+import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
 
-const BrandItem = () => {
+const ProductItem = () => {
   const { id } = useParams();
-  const { data } = useGetBrandItemQuery(id);
-  console.log(data?.data);
+  const { data: productData } = useGetProductItemQuery(id);
 
   return (
     <div className="relative mx-auto max-w-screen-xl px-4 py-8">
@@ -13,11 +12,11 @@ const BrandItem = () => {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-20 lg:mt-20">
           <img
             alt="Les Paul"
-            src=""
+            src={productData?.data?.imageURLs[0]}
             className="aspect-square w-[400px] rounded-xl object-cover"
           />
 
-          {/* <div className="grid grid-cols-2 gap-4 lg:mt-4">
+          <div className="grid grid-cols-2 gap-4 lg:mt-4">
             <img
               alt="Les Paul"
               src="https://images.unsplash.com/photo-1456948927036-ad533e53865c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
@@ -29,19 +28,7 @@ const BrandItem = () => {
               src="https://images.unsplash.com/photo-1456948927036-ad533e53865c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
               className="aspect-square w-full rounded-xl object-cover"
             />
-
-            <img
-              alt="Les Paul"
-              src="https://images.unsplash.com/photo-1456948927036-ad533e53865c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-              className="aspect-square w-full rounded-xl object-cover"
-            />
-
-            <img
-              alt="Les Paul"
-              src="https://images.unsplash.com/photo-1456948927036-ad533e53865c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-              className="aspect-square w-full rounded-xl object-cover"
-            />
-          </div> */}
+          </div>
         </div>
 
         <div className="sticky top-0">
@@ -52,7 +39,7 @@ const BrandItem = () => {
           <div className="mt-8 flex justify-between">
             <div className="max-w-[35ch] space-y-2">
               <h1 className="text-xl font-bold sm:text-2xl">
-                FirstName LastName
+                Name: {productData?.data?.category}
               </h1>
 
               {/* <p className="text-lg font-semibold">{DoctorType}</p> */}
@@ -190,52 +177,13 @@ const BrandItem = () => {
             </fieldset>
 
             {/* <Link to="/bookAppointment" className="mt-8 flex gap-4">
-          <SecondaryButton>set appointment</SecondaryButton>
-        </Link> */}
+            <SecondaryButton>set appointment</SecondaryButton>
+          </Link> */}
           </form>
-        </div>
-      </div>
-
-      <div>
-        <div className="my-14">
-          <div className="text-5xl flex items-center justify-center  font-serif">
-            Brand Related Product
-          </div>
-          <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4" />
-        </div>
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-          {data?.data?.products?.map((data) => (
-            <Link to="#" className="group block">
-              <div className="relative h-[350px] sm:h-[450px]">
-                <img
-                  src="https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-                  alt=""
-                  className="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0"
-                />
-
-                <img
-                  src="https://images.unsplash.com/photo-1594385208974-2e75f8d7bb48?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-                  alt=""
-                  className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100"
-                />
-              </div>
-
-              <div className="mt-3">
-                <h3 className="text-sm text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                  Small Headphones
-                </h3>
-
-                <p className="mt-1.5 max-w-[40ch] text-xs text-gray-500">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis
-                  quibusdam ab maiores placeat odio id?
-                </p>
-              </div>
-            </Link>
-          ))}
         </div>
       </div>
     </div>
   );
 };
 
-export default BrandItem;
+export default ProductItem;

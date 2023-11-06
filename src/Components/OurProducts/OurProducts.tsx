@@ -1,6 +1,7 @@
 import React from "react";
 import image from "../../Images/home page image/pexels-pixabay-219794-removebg-preview.png";
 import { useGetProductsQuery } from "../../Features/Products/ProductApi";
+import { Link } from "react-router-dom";
 
 type productData = {
   _id: string;
@@ -59,7 +60,11 @@ const OurProducts = () => {
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
             {data?.data?.map((d: productData) => (
               <div>
-                <a key={d?._id} href="#" className="group block">
+                <Link
+                  key={d?._id}
+                  to={`/product/${d?._id}`}
+                  className="group block"
+                >
                   <img
                     src={d?.imageURLs[0]}
                     alt=""
@@ -80,7 +85,7 @@ const OurProducts = () => {
 
                     <p className="text-gray-900">$299</p>
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>
