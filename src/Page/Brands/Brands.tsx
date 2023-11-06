@@ -2,7 +2,7 @@ import React from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import BrandCard from "../../Components/BrandCard/BrandCard";
 
-type product = {
+type BrandData = {
   _id: string;
   name: string;
   description: string;
@@ -431,7 +431,7 @@ const Brands = () => {
 
             <div className="lg:col-span-3">
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {data?.data?.map((d: product) => (
+                {data?.data?.map((d: BrandData) => (
                   <BrandCard key={d?._id} productData={d} />
                 ))}
               </ul>

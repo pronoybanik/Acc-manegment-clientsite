@@ -11,7 +11,7 @@ type productData = {
   };
   category: string;
   description: string;
-  imageURLs: [string];
+  imageURLs: string;
   name: string;
   unit: string;
 };
@@ -66,7 +66,7 @@ const OurProducts = () => {
                   className="group block"
                 >
                   <img
-                    src={d?.imageURLs[0]}
+                    src={d?.imageURLs}
                     alt=""
                     className="h-[300px] w-full object-cover "
                   />

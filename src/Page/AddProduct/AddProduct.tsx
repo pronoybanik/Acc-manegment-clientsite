@@ -1,6 +1,97 @@
 import React from "react";
+import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
+import { useCreateProductMutation } from "../../Features/Products/ProductApi";
+
+type BrandData = {
+  _id: string;
+  name: string;
+  description: string;
+  email: string;
+  location: string;
+  products: {
+    brand: {
+      name: string;
+      id: string;
+    };
+    _id: string;
+    name: string;
+    description: string;
+    unit: string;
+    imageURLs: string[];
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  image: string;
+};
 
 const AddProduct = () => {
+  const { data: brandData } = useGetBrandQuery({});
+  const [createProduct] = useCreateProductMutation();
+
+  const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      productName: { value: string };
+      category: { value: string };
+      unit: { value: string };
+      option: { value: string };
+      description: { value: string };
+      productImage: { files: FileList };
+    };
+
+    const productName = target.productName.value;
+    const category = target.category.value;
+    const unit = target.unit.value;
+    const BrandId = target.option.value;
+    const description = target.description.value;
+    const productImage = target.productImage.files[0];
+    console.log(
+      productName,
+      category,
+      unit,
+      BrandId,
+      description,
+      productImage
+    );
+
+    const formData = new FormData();
+    formData.append("image", productImage);
+
+    const url =
+      "https://api.imgbb.com/1/upload?key=99f58a547dc4b1d269148eb1b605ef29";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Image upload failed");
+      }
+
+      const imgData = await response.json();
+      const productImageUrl = imgData.data.url;
+      createProduct({
+        name: productName,
+        description: description,
+        brand: {
+          id: BrandId,
+        },
+        category: category,
+        unit: unit,
+        imageURLs: productImageUrl,
+      });
+      alert("Create product data");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <section className="bg-gray-100">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -25,16 +116,21 @@ const AddProduct = () => {
           </div>
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-            <form action="" className="space-y-4">
+            <form
+              onSubmit={handleCreateProduct}
+              action=""
+              className="space-y-4"
+            >
               <div>
                 <label className="sr-only" htmlFor="name">
-                  Name
+                  product Name
                 </label>
                 <input
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
                   placeholder="Product Name"
                   type="text"
                   id="name"
+                  name="productName"
                 />
               </div>
 
@@ -48,6 +144,7 @@ const AddProduct = () => {
                     placeholder="category"
                     type="text"
                     id="category"
+                    name="category"
                   />
                 </div>
 
@@ -59,75 +156,30 @@ const AddProduct = () => {
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
                     placeholder="unit"
                     type="text"
+                    name="unit"
                     id="unit"
                   />
                 </div>
               </div>
 
               <div className="grid lg:grid-cols-4 grid-cols-1 gap-4 text-center">
-                <div>
-                  <input
-                    className="peer sr-only"
-                    id="option1"
-                    type="radio"
-                    name="option"
-                  />
-
-                  <label
-                    htmlFor="option1"
-                    className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                  >
-                    <span className="text-sm"> Fresh </span>
-                  </label>
-                </div>
-
-                <div>
-                  <input
-                    className="peer sr-only"
-                    id="option2"
-                    type="radio"
-                    name="option"
-                  />
-
-                  <label
-                    htmlFor="option2"
-                    className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                  >
-                    <span className="text-sm"> Dove </span>
-                  </label>
-                </div>
-
-                <div>
-                  <input
-                    className="peer sr-only"
-                    id="option3"
-                    type="radio"
-                    name="option"
-                  />
-
-                  <label
-                    htmlFor="option3"
-                    className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                  >
-                    <span className="text-sm"> Rup cada </span>
-                  </label>
-                </div>
-
-                <div>
-                  <input
-                    className="peer sr-only"
-                    id="option4"
-                    type="radio"
-                    name="option"
-                  />
-
-                  <label
-                    htmlFor="option4"
-                    className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                  >
-                    <span className="text-sm"> Aci </span>
-                  </label>
-                </div>
+                {brandData?.data?.map((data: BrandData, index: number) => (
+                  <div key={data?._id}>
+                    <input
+                      className="peer sr-only"
+                      id={`option${index + 1}`}
+                      type="radio"
+                      name="option"
+                      defaultValue={data?._id}
+                    />
+                    <label
+                      htmlFor={`option${index + 1}`}
+                      className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                    >
+                      <span className="text-sm"> {data?.name} </span>
+                    </label>
+                  </div>
+                ))}
               </div>
 
               <div>
@@ -139,7 +191,21 @@ const AddProduct = () => {
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
                   placeholder="Description"
                   id="description"
+                  name="description"
                 ></textarea>
+              </div>
+
+              <div>
+                <label className="sr-only" htmlFor="unit">
+                  image
+                </label>
+                <input
+                  className="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                  placeholder="productImage"
+                  type="file"
+                  name="productImage"
+                  id="productImage"
+                />
               </div>
 
               <div className="mt-4">

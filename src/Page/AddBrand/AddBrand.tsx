@@ -4,7 +4,7 @@ import { useCreateBrandMutation } from "../../Features/Brands/BrandsAPi";
 const AddBrand = () => {
   const [createBrand] = useCreateBrandMutation();
 
-  const handleBrandSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateBrand = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       brandName: { value: string };
@@ -73,7 +73,7 @@ const AddBrand = () => {
           </div>
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-            <form onSubmit={handleBrandSubmit} className="space-y-4">
+            <form onSubmit={handleCreateBrand} className="space-y-4">
               <div>
                 <label className="sr-only" htmlFor="name">
                   Brand Name
