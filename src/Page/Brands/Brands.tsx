@@ -432,7 +432,7 @@ const Brands = () => {
             <div className="lg:col-span-3">
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {data?.data?.map((d: BrandData) => (
-                  <BrandCard key={d?._id} productData={d} />
+                  <BrandCard key={d?._id} BrandData={d} />
                 ))}
               </ul>
             </div>

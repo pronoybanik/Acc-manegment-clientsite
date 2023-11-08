@@ -24,20 +24,24 @@ type BrandData = {
   }[];
   status: string;
   createdAt: string;
+  price: number;
   updatedAt: string;
   image: string;
 };
 
 const AddProduct = () => {
-  const { data: brandData } = useGetBrandQuery({});
-  const [createProduct] = useCreateProductMutation();
-
   const [selectedFileCount, setSelectedFileCount] = useState(0);
+  const [createProduct] = useCreateProductMutation();
+  const { data: brandData } = useGetBrandQuery({});
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const fileInput = e.target;
-    const count = fileInput.files.length;
-    setSelectedFileCount(count);
+    const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
+    const files = inputElement.files; // Access the files property
+
+    if (files) {
+      const count = files.length;
+      setSelectedFileCount(count);
+    }
   };
 
   const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,6 +51,7 @@ const AddProduct = () => {
       category: { value: string };
       unit: { value: string };
       option: { value: string };
+      price: { value: number };
       description: { value: string };
       productImage: { files: FileList };
     };
@@ -56,15 +61,8 @@ const AddProduct = () => {
     const unit = target.unit.value;
     const BrandId = target.option.value;
     const description = target.description.value;
+    const ProductPrice = target.price.value;
     const productImage = target.productImage.files[0];
-    console.log(
-      productName,
-      category,
-      unit,
-      BrandId,
-      description,
-      productImage
-    );
 
     const formData = new FormData();
     formData.append("image", productImage);
@@ -90,6 +88,7 @@ const AddProduct = () => {
         brand: {
           id: BrandId,
         },
+        price: ProductPrice,
         category: category,
         unit: unit,
         imageURLs: productImageUrl,
@@ -166,6 +165,18 @@ const AddProduct = () => {
                     type="text"
                     name="unit"
                     id="unit"
+                  />
+                </div>
+                <div>
+                  <label className="sr-only" htmlFor="price">
+                    unit
+                  </label>
+                  <input
+                    className="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                    placeholder="price"
+                    type="text"
+                    name="price"
+                    id="price"
                   />
                 </div>
               </div>
