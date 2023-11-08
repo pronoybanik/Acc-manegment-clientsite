@@ -1,6 +1,18 @@
 import React from "react";
+import Login from "../../Page/Login/Login";
+import Register from "../../Page/Register/Register";
 
 const NavBar = () => {
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [showRegisterModal, setShowRegisterModal] = React.useState(false);
+
+  const closeLoginForm = () => {
+    setShowLoginModal(false);
+  };
+  const closeRegisterForm = () => {
+    setShowRegisterModal(false);
+  };
+
   return (
     <header className="bg-white">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -84,21 +96,28 @@ const NavBar = () => {
 
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
-              <a
-                className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
-                href="/"
-              >
-                Login
-              </a>
+              {/* <a
+            className="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700"
+            href="/"
+          >
+            Login
+          </a>
 
-              <div className="hidden sm:flex">
-                <a
-                  className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
-                  href="/"
-                >
-                  Register
-                </a>
-              </div>
+          <a
+            className="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:text-teal-600/75 sm:block"
+            href="/"
+          >
+            Register
+          </a> */}
+              <button onClick={() => setShowLoginModal(true)}>
+                Show Login Modal
+              </button>
+              <button onClick={() => setShowRegisterModal(true)}>
+                Show Register Modal
+              </button>
+
+              {showLoginModal && <Login closeForm={closeLoginForm} />}
+              {showRegisterModal && <Register closeForm={closeRegisterForm} />}
             </div>
 
             <div className="block md:hidden">
