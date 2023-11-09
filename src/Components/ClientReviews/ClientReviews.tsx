@@ -4,7 +4,8 @@ const ClientReviews = () => {
   return (
     <div className="relative w-full h-[500px] ">
       <img
-        src="https://images.pexels.com/photos/952482/pexels-photo-952482.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        // src="https://images.pexels.com/photos/175414/pexels-photo-175414.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        src="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1600"
         alt="Image"
         className="absolute  top-0 left-0 object-cover w-full h-full transition-opacity duration-1000  "
       />

@@ -27,7 +27,7 @@ const OurProductItem = ({ data }: { data: productData }) => {
         <img
           src={data?.imageURLs}
           alt=""
-          className="h-full object-contain w-full"
+          className="h-80 object-contain w-full"
         />
 
         <div className="mt-3 flex justify-between text-sm">

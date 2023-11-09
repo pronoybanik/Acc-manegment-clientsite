@@ -1,11 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
 
 interface LoginProps {
   closeForm: () => void; // Define the closeForm prop as a function that takes no arguments and returns void.
 }
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
+  const [loginAccount] = useLoginAccountMutation();
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+
+    const email = target.email.value;
+    const password = target.password.value;
+
+    loginAccount({
+      email,
+      password,
+    });
+    alert("login sucecss")
+  };
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto  ">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -32,16 +52,6 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                 Close
               </button>
 
-              <h1 className="text-2xl font-bold sm:text-3xl">
-                Get started today!
-              </h1>
-
-              <p className="mt-4 text-gray-500">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                libero nulla eaque error neque ipsa culpa autem, at itaque
-                nostrum!
-              </p>
-
               <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
                   <h1 className="text-2xl font-bold sm:text-3xl">
@@ -57,6 +67,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
 
                 <form
                   action=""
+                  onSubmit={handleLogin}
                   className="mx-auto mb-0 mt-8 max-w-2xl space-y-4"
                 >
                   <div>
@@ -69,6 +80,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                         type="email"
                         className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter email"
+                        name="email"
                       />
 
                       <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -100,6 +112,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                         type="password"
                         className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter password"
+                        name="password"
                       />
 
                       <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
