@@ -8,6 +8,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
   const [loginAccount] = useLoginAccountMutation();
+  
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +25,8 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
       email,
       password,
     });
-    alert("login sucecss")
+    alert("login sucecss");
+    window.location.reload()
   };
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto  ">

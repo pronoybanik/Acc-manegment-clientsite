@@ -1,10 +1,24 @@
 import React from "react";
 import Login from "../../Page/Login/Login";
 import Register from "../../Page/Register/Register";
+import { useDispatch } from "react-redux";
+import { userLoggedOut } from "../../Features/Login/LoginSlice";
+import { useGetUserQuery } from "../../Features/Login/LoginApi";
 
 const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const [showRegisterModal, setShowRegisterModal] = React.useState(false);
+
+  const dispatch = useDispatch();
+
+  const { data } = useGetUserQuery({});
+  console.log("user Data", data);
+
+  const handleLogOut = () => {
+    dispatch(userLoggedOut());
+    localStorage.clear();
+    window.location.reload();
+  };
 
   const closeLoginForm = () => {
     setShowLoginModal(false);
@@ -118,6 +132,14 @@ const NavBar = () => {
 
               {showLoginModal && <Login closeForm={closeLoginForm} />}
               {showRegisterModal && <Register closeForm={closeRegisterForm} />}
+              {data?.data?.email ? (
+                <button
+                  onClick={handleLogOut}
+                  className="text-white bg-black px-5 py-2 "
+                >
+                  Logout
+                </button>
+              ) : null}
             </div>
 
             <div className="block md:hidden">
