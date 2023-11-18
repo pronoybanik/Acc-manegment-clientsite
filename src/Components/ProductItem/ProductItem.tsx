@@ -1,70 +1,53 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { useGetBrandItemQuery } from "../../Features/Brands/BrandsAPi";
+import { useParams } from "react-router-dom";
+import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
 
-interface Product {
-  brand: {
-    name: string;
-    id: string;
-  };
-  category: string;
-  createdAt: string;
-  description: string;
-  imageURLs: string;
-  name: string;
-  unit: string;
-  updatedAt: string;
-  price:number;
-  __v: number;
-  _id: string;
-}
-
-// interface brand {
-//   createdAt: string;
-//   description: string;
-//   email: string;
-//   location: string;
-//   name: string;
-//   products: Product[];
-//   status: string;
-//   suppliers: string[]; // You can specify the correct type for suppliers if needed
-//   updatedAt: string;
-//   __v: number;
-//   _id: string;
-// }
-
-const BrandItem = () => {
+const ProductItem = () => {
   const { id } = useParams();
-  const { data } = useGetBrandItemQuery(id);
+  const { data: productData } = useGetProductItemQuery(id);
 
   return (
-    <div className="relative mx-auto max-w-screen-xl px-4 py-8">
+    <div className="relative mx-auto max-w-screen-xl px-4 py-8 font-serif">
       <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-32">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-32 ">
           <img
             alt="Les Paul"
-            src={data?.data?.image}
-            className="aspect-square w-[350px] rounded-xl object-cover"
+            src={productData?.data?.imageURLs}
+            className="aspect-square w-[400px] rounded-xl object-contain"
           />
+
+          <div className="grid grid-cols-2 gap-4 lg:mt-4">
+            <img
+              alt="Les Paul"
+              src={productData?.data?.imageURLs}
+              className="aspect-square w-full rounded-xl object-contain"
+            />
+
+            <img
+              alt="Les Paul"
+              src={productData?.data?.imageURLs}
+              className="aspect-square w-full rounded-xl object-contain"
+            />
+          </div>
         </div>
 
         <div className="sticky top-0 lg:mt-10">
-          <strong className="rounded-full text-2xl border border-blue-600 bg-gray-100 px-3 py-0.5 text- font-medium tracking-wide text-blue-600">
-            Name: {data?.data?.name}
+          <strong className="rounded-full border border-blue-600 bg-gray-100 px-3 py-0.5 text- font-medium tracking-wide text-blue-600">
+            Name: {productData?.data?.name}
           </strong>
 
-          <div className="mt-4 flex justify-between">
+          <div className="mt-8 flex justify-between">
             <div className="max-w-[35ch] space-y-2">
-              <div className="flex">
-                <div className=" text-xl font-medium mr-2">Location:</div>
+              <div className="flex ">
+                <div className="mb-2 text-xl font-medium mr-2">Category:</div>
                 <div className="font-bold text-xl">
-                  {data?.data?.location}
+                  {productData?.data?.category}
                 </div>
               </div>
               <div className="flex ">
-                <div className="mb-2 text-xl font-medium mr-2">Status:</div>
-                <div className="font-bold text-xl font-sans text-red-600">
-                  {data?.data?.status} 
+                <div className="mb-2 text-xl font-medium mr-2">price:</div>
+                <div className="font-bold text-xl font-sans">
+                  {productData?.data?.price} TK
                 </div>
               </div>
 
@@ -121,55 +104,15 @@ const BrandItem = () => {
           <div className="mt-4">
             <div className="prose max-w-none">
               <p className="mb-2 text-lg font-medium">About:</p>
-              {data?.data?.description}
+              {productData?.data?.description}
             </div>
 
             {/* <button className="mt-2 text-sm font-medium underline">Read More</button> */}
           </div>
         </div>
       </div>
-
-      <div>
-        <div className="my-14">
-          <div className="text-5xl flex items-center justify-center  font-serif">
-            Brand Related Product
-          </div>
-          <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4" />
-        </div>
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-          {data?.data?.products?.map((data: Product) => (
-             <section key={data?._id} className="border-2 p-4 mt-4 h-full">
-             <Link
-               key={data?._id}
-               to={`/product/${data?._id}`}
-               className="group block"
-             >
-               <img
-                 src={data?.imageURLs}
-                 alt=""
-                 className="h-full object-contain w-full"
-               />
-       
-               <div className="mt-3 flex justify-between text-sm">
-                 <div>
-                   <h3 className="text-gray-900 group-hover:underline group-hover:underline-offset-4">
-                     {data?.category}
-                   </h3>
-       
-                   <p className="mt-1.5 max-w-[45ch] text-xs text-gray-500">
-                     {data?.name}
-                   </p>
-                 </div>
-       
-                 <p className="text-gray-900">price:{data?.price} TK</p>
-               </div>
-             </Link>
-           </section>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
 
-export default BrandItem;
+export default ProductItem;

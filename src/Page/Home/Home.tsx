@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../Components/Header/Header";
 import OurServices from "../../Components/OurServices/OurServices";
 import OurProducts from "../../Components/OurProducts/OurProducts";
+import ClientReviews from "../../Components/ClientReviews/ClientReviews";
 
 const Home = () => {
   return (
@@ -9,7 +10,7 @@ const Home = () => {
       <Header />
       <OurServices />
       <OurProducts />
-      <p className="mt-20 text-center font-bold">client review</p>
+      <ClientReviews />
     </div>
   );
 };

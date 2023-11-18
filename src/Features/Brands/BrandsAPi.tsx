@@ -8,7 +8,15 @@ const brandApi = ApiSlice.injectEndpoints({
     getBrandItem: builder.query({
       query: (id) => `/brand/${id}`,
     }),
+    createBrand: builder.mutation({
+      query: (data) => ({
+        url: "/brand",
+        method: "POST",
+        body: data,
+      }),
+      
+    }),
   }),
 });
 
-export const { useGetBrandQuery, useGetBrandItemQuery } = brandApi;
+export const { useGetBrandQuery, useGetBrandItemQuery, useCreateBrandMutation } = brandApi;
