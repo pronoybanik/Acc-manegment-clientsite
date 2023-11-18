@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 
-
 const ImageBanner = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const images = [
     "https://images.pexels.com/photos/7890065/pexels-photo-7890065.jpeg?auto=compress&cs=tinysrgb&w=1600",
     "https://images.pexels.com/photos/196643/pexels-photo-196643.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/1367242/pexels-photo-1367242.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    "https://images.pexels.com/photos/1367242/pexels-photo-1367242.jpeg?auto=compress&cs=tinysrgb&w=1600",
   ];
 
   useEffect(() => {
@@ -34,9 +33,9 @@ const ImageBanner = () => {
       ))}
 
       <div className="flex items-center justify-center h-full">
-        <div className="relative">
-          <p className="text-white lg:text-5xl md:text-3xl text-2xl font-semibold mt-4 mb-6 max-w-sm sm:text-xl/relaxed">
-            Organic products
+        <div className="relative px-2">
+          <p className="text-white lg:text-5xl  text-4xl font-serif font-semibold my-6 max-w-md sm:text-xl/relaxed">
+            Organic Products
           </p>
           <p className="text-white font-sans text-xm max-w-screen-md ">
             Vegetables are nutritious, essential components of a healthy diet.

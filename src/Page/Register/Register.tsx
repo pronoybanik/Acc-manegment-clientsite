@@ -79,13 +79,20 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
     }
   };
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto ">
+    <div className="fixed z-10 inset-0 overflow-y-auto  ">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+        <span
+          className="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+        >
+          &#8203;
+        </span>
+
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           {/* Add your login form content here */}
 
           <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -97,18 +104,21 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                 Close
               </button>
 
-              <h1 className="text-2xl font-bold sm:text-3xl">
-                Get started today!
-              </h1>
+              <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl text-center">
+                  <h1 className="text-2xl font-bold sm:text-3xl">
+                    Get started today!
+                  </h1>
 
-              <p className="mt-4 text-gray-500">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                libero nulla eaque error neque ipsa culpa autem, at itaque
-                nostrum!
-              </p>
+                  <p className="mt-4 text-gray-500">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
+                    libero nulla eaque error neque ipsa culpa autem, at itaque
+                    nostrum!
+                  </p>
+                </div>
 
-              <section className="mt-2">
-                <form onSubmit={handleRegister} action="">
+             <section>
+             <form onSubmit={handleRegister} action="">
                   <div className="flex gap-4 mb-2">
                     {/* first Name */}
                     <div>
@@ -239,7 +249,7 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                   {/* profile Image */}
                   <div className="mb-2">
                     <label
-                      className="block text-gray-700 text-sm font-bold lg:-ml-72 -ml-48"
+                      className="block text-gray-700 text-sm font-bold"
                       htmlFor="productImage"
                     >
                       Upload Product Image
@@ -271,7 +281,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                     Sign in
                   </button>
                 </form>
-              </section>
+             </section>
+              </div>
             </div>
           </div>
         </div>

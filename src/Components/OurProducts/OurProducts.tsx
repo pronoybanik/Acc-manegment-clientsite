@@ -21,15 +21,16 @@ const OurProducts = () => {
   const { data } = useGetProductsQuery({});
 
   return (
-    <section className="lg:mx-40">
+    <section className="w-10/12 mx-auto">
       <div className="my-14">
-        <div className="text-5xl flex items-center justify-center  font-serif">
+        <div className="lg:text-5xl text-3xl flex items-center justify-center  font-serif">
           Our Products
         </div>
-        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4"></p>
+        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 lg:mt-4 mt-2"></p>
       </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:gap-4  ">
-        <div className="mr-4 ">
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="mr-4 lg:block hidden">
           <div className="bg-gray-100">
             <p className="text-center my-4 font-serif text-2xl font-semibold pt-10">
               Healthy Foods
@@ -56,7 +57,7 @@ const OurProducts = () => {
           </div>
         </div>
 
-        <div className="h-32 rounded-lg  lg:col-span-3 mt-2">
+        <div className="mt-4 col-span-2">
           <div className="flex gap-4">
             <p className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100">
               ACI
@@ -70,7 +71,7 @@ const OurProducts = () => {
               Rupchanda
             </p>
           </div>
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 ">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
             {data?.data?.map((d: productData) => (
               <OurProductItem key={d?._id} data={d}></OurProductItem>
             ))}

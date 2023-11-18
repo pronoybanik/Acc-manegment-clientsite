@@ -2,22 +2,22 @@ import React from "react";
 
 const ClientReviews = () => {
   return (
-    <div className="relative w-full h-[500px] ">
+    <div className="relative w-full lg:h-[500px] h-full mt-10">
       <img
-        // src="https://images.pexels.com/photos/175414/pexels-photo-175414.jpeg?auto=compress&cs=tinysrgb&w=1600"
-        src="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        src="https://images.pexels.com/photos/175414/pexels-photo-175414.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        // src="https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1600"
         alt="Image"
         className="absolute  top-0 left-0 object-cover w-full h-full transition-opacity duration-1000  "
       />
 
-      <div className="relative pt-20">
-        <div className="text-5xl flex items-center justify-center  font-serif text-white">
+      <div className="relative pt-20 ">
+        <div className="lg:text-5xl text-4xl  flex items-center justify-center  font-serif text-white">
           How it works
         </div>
-        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 "></p>
+        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 lg:mt-4 mt-2"></p>
       </div>
 
-      <div className="flex items-center justify-center h-full -mt-20">
+      <div className="flex items-center justify-center h-full lg:pb-44 md:py-20 py-10">
         <div className="relative grid lg:grid-cols-3 md:grid-cols-2  grid-cols-1 gap-4 w-10/12">
           <blockquote className="rounded-lg bg-gray-100 p-8">
             <div className="flex items-center gap-4">
