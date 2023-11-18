@@ -1,14 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
 
 interface LoginProps {
-  closeForm: () => void; // Define the closeForm prop as a function that takes no arguments and returns void.
+  closeForm: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
-  const [loginAccount] = useLoginAccountMutation();
-  
+  const [loginAccount, { data, error, isLoading }] = useLoginAccountMutation();
+  const navigate = useNavigate();
+
+  // Error HandleIng...
+  let content = null;
+  if (isLoading) {
+    content = <p>Loading..</p>;
+  }
+  if (!isLoading && error?.data?.status === "fail") {
+    content = (
+      <div
+        role="alert"
+        className="rounded border-s-4 border-red-500 bg-red-50 p-4"
+      >
+        <strong className="block font-medium text-red-800">
+          {error?.data?.error}
+        </strong>
+      </div>
+    );
+  }
+  if (!isLoading && !error && data?.status === "success") {
+    setTimeout(() => {
+      alert("Login SuccessFull");
+      window.location.reload();
+      navigate("/");
+    }, 1000);
+  }
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,9 +50,8 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
       email,
       password,
     });
-    alert("login sucecss");
-    window.location.reload()
   };
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto  ">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -141,6 +165,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                       </span>
                     </div>
                   </div>
+                  {content}
 
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-500">
