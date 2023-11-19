@@ -1,10 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 interface LoginProps {
   closeForm: () => void;
 }
+
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
   const [loginAccount, { data, error, isLoading }] = useLoginAccountMutation();
@@ -175,12 +177,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                       </Link>
                     </p>
 
-                    <button
-                      type="submit"
-                      className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
-                    >
-                      Sign in
-                    </button>
+                    <PrimaryButton>Sing in</PrimaryButton>
                   </div>
                 </form>
               </div>

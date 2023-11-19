@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SecondaryButton from "../../Shared/Buttons/SecondryButton";
 
 const ImageBanner = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -47,11 +48,7 @@ const ImageBanner = () => {
           </p>
 
           <div className="flex items-center justify-center gap-2 mt-8 ">
-            <button className="text-white font-sans border py-2 rounded-sm lg:px-16 md:px-4 px-2 uppercase">
-              shop
-            </button>
-            {/* <PrimaryButton>Make A Appointment</PrimaryButton>
-            <PrimaryButton>View Department</PrimaryButton> */}
+            <SecondaryButton>shop</SecondaryButton>
           </div>
         </div>
       </div>

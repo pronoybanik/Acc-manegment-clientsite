@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 interface LoginProps {
   closeForm: () => void;
@@ -274,12 +275,7 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    className="block w-full rounded-lg bg-[#98CB4C] px-5 py-3 text-sm font-medium text-white"
-                  >
-                    Sign in
-                  </button>
+                <PrimaryButton>Sing up</PrimaryButton>
                 </form>
              </section>
               </div>
