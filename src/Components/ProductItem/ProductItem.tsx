@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
+import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
 
 const ProductItem = () => {
   const { id } = useParams();
   const { data: productData } = useGetProductItemQuery(id);
+  const [createOrder] = useCreateOrderMutation();
+  
+
+  const [productQuantity, setProductQuantity] = useState(1);
+
+  // increment handler
+  const handleIncrement = () => {
+    setProductQuantity(productQuantity + 1);
+  };
+
+  // decrement handler
+  const handleDecrement = () => {
+    setProductQuantity(productQuantity - 1);
+  };
+
+  const handleAddProduct = (id: string) => {
+    const productId = id;
+    const quantity = productQuantity;
+    setTimeout(() => {
+      createOrder({
+        productId,
+        quantity,
+      });
+      alert("Product Add")
+    }, 2000);
+  };
 
   return (
     <div className="relative mx-auto max-w-screen-xl px-4 py-8 font-serif">
@@ -107,7 +134,21 @@ const ProductItem = () => {
               {productData?.data?.description}
             </div>
 
-            {/* <button className="mt-2 text-sm font-medium underline">Read More</button> */}
+            {/* product Countity counter */}
+            <div className="flex mt-4 gap-4">
+              <button onClick={handleIncrement}>+</button>
+              <div className="border py-2 px-2 w-16 text-center">
+                {productQuantity}
+              </div>
+              <button onClick={handleDecrement}>-</button>
+            </div>
+
+            <button
+              onClick={() => handleAddProduct(productData?.data?._id)}
+              className="mt-4 border-2 py-2 px-2"
+            >
+              Add To Card
+            </button>
           </div>
         </div>
       </div>

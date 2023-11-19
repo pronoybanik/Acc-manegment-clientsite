@@ -30,7 +30,7 @@ const OurProducts = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="mr-4 lg:block hidden">
+        <div className="mr-4 lg:block md:block hidden">
           <div className="bg-gray-100">
             <p className="text-center my-4 font-serif text-2xl font-semibold pt-10">
               Healthy Foods
