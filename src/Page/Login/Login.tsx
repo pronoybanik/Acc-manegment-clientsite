@@ -7,7 +7,6 @@ interface LoginProps {
   closeForm: () => void;
 }
 
-
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
   const [loginAccount, { data, error, isLoading }] = useLoginAccountMutation();
   const navigate = useNavigate();

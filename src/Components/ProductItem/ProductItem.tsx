@@ -6,10 +6,11 @@ import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
 const ProductItem = () => {
   const { id } = useParams();
   const { data: productData } = useGetProductItemQuery(id);
-  const [createOrder] = useCreateOrderMutation();
-  
-
   const [productQuantity, setProductQuantity] = useState(1);
+  const [createOrder] = useCreateOrderMutation();
+
+  const userItem = localStorage.getItem("userId");
+  const userId = userItem ? JSON.parse(userItem) : null;
 
   // increment handler
   const handleIncrement = () => {
@@ -28,8 +29,9 @@ const ProductItem = () => {
       createOrder({
         productId,
         quantity,
+        userId,
       });
-      alert("Product Add")
+      alert("Product Add");
     }, 2000);
   };
 

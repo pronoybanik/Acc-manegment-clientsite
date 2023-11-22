@@ -103,15 +103,21 @@ const NavBar = () => {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="sm:flex sm:gap-4">
+          <div className="flex items-center gap-4 ">
+            <div className="flex gap-2">
               <button
                 className="text-white"
                 onClick={() => setShowLoginModal(true)}
               >
                 Login
               </button>
-              <button className="text-white ml-2" onClick={() => setShowRegisterModal(true)}>
+
+              <p className="text-white mt-2">/</p>
+
+              <button
+                className="text-white"
+                onClick={() => setShowRegisterModal(true)}
+              >
                 Register
               </button>
 
