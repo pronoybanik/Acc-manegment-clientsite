@@ -14,9 +14,12 @@ const brandApi = ApiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      
     }),
   }),
 });
 
-export const { useGetBrandQuery, useGetBrandItemQuery, useCreateBrandMutation } = brandApi;
+export const {
+  useGetBrandQuery,
+  useGetBrandItemQuery,
+  useCreateBrandMutation,
+} = brandApi;

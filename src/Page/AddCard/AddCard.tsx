@@ -206,7 +206,7 @@ const AddCard = () => {
                 </div>
                 {checkOut && (
                   <PaymentModel
-                    orderData={orderData}
+                    orderData={order}
                     priceData={totalPriceWithVat}
                     closeForm={closeLoginForm}
                   />
