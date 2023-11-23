@@ -7,6 +7,7 @@ import BrandItem from "../Page/BrandItem/BrandItem";
 import ProductItem from "../Components/ProductItem/ProductItem";
 import AddProduct from "../Page/AddProduct/AddProduct";
 import AddBrand from "../Page/AddBrand/AddBrand";
+import AddCard from "../Page/AddCard/AddCard";
 
 const AllRouters = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const AllRouters = createBrowserRouter([
       { path: "/product/:id", element: <ProductItem /> },
       { path: "/addProduct", element: <AddProduct /> },
       { path: "/addBrand", element: <AddBrand /> },
+      { path: "/addCard", element: <AddCard /> },
     ],
   },
 ]);

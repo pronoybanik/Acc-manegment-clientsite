@@ -13,7 +13,6 @@ const NavBar = () => {
   const dispatch = useDispatch();
 
   const { data } = useGetUserQuery({});
-  console.log("user Data", data);
 
   const handleLogOut = () => {
     dispatch(userLoggedOut());
@@ -65,6 +64,15 @@ const NavBar = () => {
           Add Brand
         </Link>
       </li>
+
+      <li>
+        <Link
+          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
+          to="/addCard"
+        >
+          Order Products
+        </Link>
+      </li>
     </>
   );
 
@@ -95,15 +103,21 @@ const NavBar = () => {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="sm:flex sm:gap-4">
+          <div className="flex items-center gap-4 ">
+            <div className="flex gap-2">
               <button
                 className="text-white"
                 onClick={() => setShowLoginModal(true)}
               >
                 Login
               </button>
-              <button className="text-white ml-2" onClick={() => setShowRegisterModal(true)}>
+
+              <p className="text-white mt-2">/</p>
+
+              <button
+                className="text-white"
+                onClick={() => setShowRegisterModal(true)}
+              >
                 Register
               </button>
 

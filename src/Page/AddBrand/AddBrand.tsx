@@ -1,8 +1,18 @@
-import React from "react";
+import { useEffect } from "react";
 import { useCreateBrandMutation } from "../../Features/Brands/BrandsAPi";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import Errors from "../../Shared/Errors/Errors";
 
 const AddBrand = () => {
-  const [createBrand] = useCreateBrandMutation();
+  const [createBrand, { isSuccess, isLoading, isError, error }] =
+    useCreateBrandMutation();
+  console.log(error, isSuccess);
+
+  useEffect(() => {
+    if (isSuccess && !isError) {
+      alert(" Brand is created");
+    }
+  }, [isSuccess, isError]);
 
   const handleCreateBrand = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,7 +52,6 @@ const AddBrand = () => {
         location: location,
         image: brandImageUrl,
       });
-      alert("Create data");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -107,6 +116,7 @@ const AddBrand = () => {
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
                     placeholder="Brand Image"
                     type="file"
+                    required
                     name="brandImage"
                   />
                 </div>
@@ -124,13 +134,16 @@ const AddBrand = () => {
                 ></textarea>
               </div>
 
+              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+
               <div className="mt-4">
-                <button
-                  type="submit"
-                  className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
-                >
-                  Send
-                </button>
+                <PrimaryButton>
+                  {isLoading ? (
+                    <div className="animate-pulse">Loading..</div>
+                  ) : (
+                    <div>submit</div>
+                  )}
+                </PrimaryButton>
               </div>
             </form>
           </div>

@@ -1,46 +1,60 @@
-import { useState, useEffect } from "react";
-import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
+import { useGetUserQuery } from "../../Features/Login/LoginApi";
+import { useCreateOrderPaymentMutation } from "../../Features/Orders/OrdersApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
-import Errors from "../../Shared/Errors/Errors";
 
-interface LoginProps {
+interface checkOutProps {
   closeForm: () => void;
 }
 
-const Register: React.FC<LoginProps> = ({ closeForm }) => {
-  const [selectedFileCount, setSelectedFileCount] = useState(0);
-  const [createAccount, { isSuccess, isLoading, isError, error }] =
-    useCreateAccountMutation();
-
-  // image file counter
-  const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const inputElement = e.target as HTMLInputElement;
-    const files = inputElement.files;
-
-    if (files) {
-      const count = files.length;
-      setSelectedFileCount(count);
-    }
+interface Product {
+  brand: {
+    id: string;
   };
+  _id: string;
+  name: string;
+  description: string;
+  unit: string;
+  price: number;
+  imageURLs: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
-  useEffect(() => {
-    if (isSuccess) {
-      alert(" Account is Create");
-    }
-  }, [isSuccess]);
+interface OrderData {
+  _id: string;
+  productId: Product;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+interface PriceData {
+  totalPriceWithVat: number;
+}
+
+const PaymentModel: React.FC<
+  checkOutProps & { priceData: PriceData; orderData: OrderData }
+> = ({ closeForm, priceData, orderData }) => {
+  const { data } = useGetUserQuery({});
+  const [createOrderPayment, { data: orderPayment }] =
+    useCreateOrderPaymentMutation();
+
+  if (orderPayment?.url) {
+    alert("please pay your Bill");
+    window.location.replace(orderPayment?.url || undefined);
+  }
+
+  const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const target = e.target as typeof e.target & {
       firstName: { value: string };
       lastName: { value: string };
       email: { value: string };
       shippingAddress: { value: string };
       presentAddress: { value: string };
-      password: { value: string };
-      confirmPassword: { value: string };
-      profileImage: { files: FileList };
     };
 
     const firstName = target.firstName.value;
@@ -48,42 +62,19 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
     const email = target.email.value;
     const shippingAddress = target.shippingAddress.value;
     const presentAddress = target.presentAddress.value;
-    const password = target.password.value;
-    const confirmPassword = target.confirmPassword.value;
-    const imageURL = target.profileImage.files[0];
+    // const saveOrderData = orderData?.data;
 
-    const formData = new FormData();
-    formData.append("image", imageURL);
-
-    const url =
-      "https://api.imgbb.com/1/upload?key=99f58a547dc4b1d269148eb1b605ef29";
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Image upload failed");
-      }
-
-      const imgData = await response.json();
-      const profileImageUrl = imgData.data.url;
-      createAccount({
-        firstName,
-        lastName,
-        email,
-        shippingAddress,
-        presentAddress,
-        password,
-        confirmPassword,
-        imageURL: profileImageUrl,
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    createOrderPayment({
+      priceData,
+      orderData,
+      firstName,
+      lastName,
+      email,
+      shippingAddress,
+      presentAddress,
+    });
   };
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto  ">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -113,18 +104,14 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
               <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
                   <h1 className="text-2xl font-bold sm:text-3xl">
-                    Get started today!
+                    Please Pay Your Bill
                   </h1>
 
-                  <p className="mt-4 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                    libero nulla eaque error neque ipsa culpa autem, at itaque
-                    nostrum!
-                  </p>
+                  <p className="mt-4 text-gray-500">Total Price:{priceData}</p>
                 </div>
 
                 <section>
-                  <form onSubmit={handleRegister} action="">
+                  <form onSubmit={handlePayment} action="">
                     <div className="flex gap-4 mb-2">
                       {/* first Name */}
                       <div>
@@ -137,6 +124,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                             type="text"
                             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                             placeholder="First Name"
+                            disabled
+                            value={data?.data?.firstName}
                             name="firstName"
                           />
                         </div>
@@ -152,6 +141,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                             type="text"
                             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                             placeholder="Last Name"
+                            disabled
+                            value={data?.data?.lastName}
                             name="lastName"
                           />
                         </div>
@@ -168,6 +159,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                           type="email"
                           className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                           placeholder="Enter email"
+                          disabled
+                          value={data?.data?.email}
                           name="email"
                         />
 
@@ -200,6 +193,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                           type="text"
                           className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                           placeholder="Shipping Address"
+                          disabled
+                          value={data?.data?.shippingAddress}
                           name="shippingAddress"
                         />
                       </div>
@@ -215,86 +210,14 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                           type="text"
                           className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                           placeholder="Present Address"
+                          disabled
+                          value={data?.data?.presentAddress}
                           name="presentAddress"
                         />
                       </div>
                     </div>
 
-                    <div className="flex gap-3 mb-2 ">
-                      {/* password */}
-                      <div>
-                        <label htmlFor="email" className="sr-only">
-                          Password
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="password"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="Password"
-                            name="password"
-                          />
-                        </div>
-                      </div>
-                      {/* confirmPassword */}
-                      <div>
-                        <label htmlFor="confirmPassword" className="sr-only">
-                          confirm Password
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="password"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="Confirm Password"
-                            name="confirmPassword"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>
-                        {isError && (
-                          <Errors>{error?.data?.error?.message}</Errors>
-                        )}
-                      </div>
-                    </div>
-                    {/* profile Image */}
-                    <div className="mb-2">
-                      <label
-                        className="block text-gray-700 text-sm font-bold"
-                        htmlFor="productImage"
-                      >
-                        Upload Product Image
-                      </label>
-                      <div className="mt-1 flex items-center space-x-4">
-                        <label className="bg-[#98CB4C] hover:bg-[#a1d84f] text-white rounded-lg px-4 py-2 cursor-pointer">
-                          Browse
-                          <input
-                            type="file"
-                            required
-                            className="hidden"
-                            id="profileImage"
-                            name="profileImage"
-                            onChange={handleFileChange}
-                            multiple // Allow multiple file selection
-                          />
-                        </label>
-                        <span className="text-gray-500">
-                          {selectedFileCount === 1
-                            ? "1 file selected"
-                            : `${selectedFileCount} files selected`}
-                        </span>
-                      </div>
-                    </div>
-
-                    <PrimaryButton>
-                      {isLoading ? (
-                        <div className="animate-pulse">Loading...</div>
-                      ) : (
-                        <div>Sing up</div>
-                      )}
-                    </PrimaryButton>
+                    <PrimaryButton>pay</PrimaryButton>
                   </form>
                 </section>
               </div>
@@ -306,4 +229,4 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   );
 };
 
-export default Register;
+export default PaymentModel;
