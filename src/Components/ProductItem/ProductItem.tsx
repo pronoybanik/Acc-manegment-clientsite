@@ -1,16 +1,34 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
 import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
+import Loading from "../../Shared/Loading/Loading";
+import Errors from "../../Shared/Errors/Errors";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 const ProductItem = () => {
   const { id } = useParams();
-  const { data: productData } = useGetProductItemQuery(id);
-  const [productQuantity, setProductQuantity] = useState(1);
-  const [createOrder] = useCreateOrderMutation();
+  const {
+    data: productData,
+    isError,
+    isLoading,
+    error,
+  } = useGetProductItemQuery(id);
 
+  const [
+    createOrder,
+    {
+      isSuccess,
+      isError: orderIsError,
+      isLoading: orderLoading,
+      error: orderError,
+    },
+  ] = useCreateOrderMutation();
+
+  const [productQuantity, setProductQuantity] = useState(1);
   const userItem = localStorage.getItem("userId");
   const userId = userItem ? JSON.parse(userItem) : null;
+  const navigate = useNavigate();
 
   // increment handler
   const handleIncrement = () => {
@@ -22,22 +40,20 @@ const ProductItem = () => {
     setProductQuantity(productQuantity - 1);
   };
 
-  const handleAddProduct = (id: string) => {
-    const productId = id;
-    const quantity = productQuantity;
-    setTimeout(() => {
-      createOrder({
-        productId,
-        quantity,
-        userId,
-      });
-      alert("Product Add");
-    }, 2000);
-  };
-
-  return (
-    <div className="relative mx-auto max-w-screen-xl px-4 py-8 font-serif">
+  let content = null;
+  if (isLoading) {
+    content = <Loading></Loading>;
+  }
+  if (!isLoading && isError) {
+    content = <Errors>{error?.toString()}</Errors>;
+  }
+  if (!isLoading && !isError && productData.data.length === 0) {
+    content = <Errors>{"There are no Video"}</Errors>;
+  }
+  if (!isLoading && !isError && productData.status === "success") {
+    content = (
       <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
+        {/* product Image */}
         <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-32 ">
           <img
             alt="Les Paul"
@@ -60,6 +76,7 @@ const ProductItem = () => {
           </div>
         </div>
 
+        {/* product Data */}
         <div className="sticky top-0 lg:mt-10">
           <strong className="rounded-full border border-blue-600 bg-gray-100 px-3 py-0.5 text- font-medium tracking-wide text-blue-600">
             Name: {productData?.data?.name}
@@ -145,15 +162,45 @@ const ProductItem = () => {
               <button onClick={handleDecrement}>-</button>
             </div>
 
-            <button
+            <div
+              className="mt-4"
               onClick={() => handleAddProduct(productData?.data?._id)}
-              className="mt-4 border-2 py-2 px-2"
             >
-              Add To Card
-            </button>
+              <PrimaryButton>
+                {orderLoading ? <div>Loading..</div> : <div>Add To Card</div>}
+              </PrimaryButton>
+            </div>
+            <div>
+              {orderIsError && <Errors>{orderError?.toString()}</Errors>}
+            </div>
           </div>
         </div>
       </div>
+    );
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert("Product is Add your card");
+      navigate("/addCard");
+    }
+  }, [isSuccess, navigate]);
+
+  const handleAddProduct = (id: string) => {
+    const productId = id;
+    const quantity = productQuantity;
+    setTimeout(() => {
+    createOrder({
+      productId,
+      quantity,
+      userId,
+    });
+    }, 1000);
+  };
+
+  return (
+    <div className="relative mx-auto max-w-screen-xl px-4 py-8 font-serif">
+      {content}
     </div>
   );
 };

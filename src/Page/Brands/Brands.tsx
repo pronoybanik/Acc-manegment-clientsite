@@ -1,6 +1,8 @@
 import React from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import BrandCard from "../../Components/BrandCard/BrandCard";
+import Errors from "../../Shared/Errors/Errors";
+import Loading from "../../Shared/Loading/Loading";
 
 type BrandData = {
   _id: string;
@@ -29,7 +31,23 @@ type BrandData = {
 };
 
 const Brands = () => {
-  const { data } = useGetBrandQuery([]);
+  const { data, isLoading, isError, error } = useGetBrandQuery([]);
+
+  let content = null;
+  if (isLoading) {
+    content = <Loading></Loading>;
+  }
+  if (!isLoading && isError) {
+    content = <Errors>{error?.toString()}</Errors>;
+  }
+  if (!isLoading && !isError && data.data.length === 0) {
+    content = <Errors>{"There are no Video"}</Errors>;
+  }
+  if (!isLoading && !isError && data.status === "success" && data.data.length > 0) {
+    content = data?.data?.map((d: BrandData) => (
+      <BrandCard key={d?._id} BrandData={d} />
+    ));
+  }
 
   return (
     <section>
@@ -431,9 +449,7 @@ const Brands = () => {
 
             <div className="lg:col-span-3">
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {data?.data?.map((d: BrandData) => (
-                  <BrandCard key={d?._id} BrandData={d} />
-                ))}
+                {content}
               </ul>
             </div>
           </div>

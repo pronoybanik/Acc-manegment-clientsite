@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import Errors from "../../Shared/Errors/Errors";
 
 interface LoginProps {
   closeForm: () => void;
 }
 
 const Register: React.FC<LoginProps> = ({ closeForm }) => {
-
   const [selectedFileCount, setSelectedFileCount] = useState(0);
-  const [createAccount] = useCreateAccountMutation();
+  const [createAccount, { isSuccess, isLoading, isError, error }] =
+    useCreateAccountMutation();
 
   // image file counter
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -21,6 +22,12 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
       setSelectedFileCount(count);
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert(" Account is Create");
+    }
+  }, [isSuccess]);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -73,8 +80,6 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
         confirmPassword,
         imageURL: profileImageUrl,
       });
-
-      alert("Account Register");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -118,166 +123,180 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                   </p>
                 </div>
 
-             <section>
-             <form onSubmit={handleRegister} action="">
-                  <div className="flex gap-4 mb-2">
-                    {/* first Name */}
-                    <div>
-                      <label htmlFor="firstName" className="sr-only">
-                        First Name
-                      </label>
+                <section>
+                  <form onSubmit={handleRegister} action="">
+                    <div className="flex gap-4 mb-2">
+                      {/* first Name */}
+                      <div>
+                        <label htmlFor="firstName" className="sr-only">
+                          First Name
+                        </label>
 
-                      <div className="relative">
-                        <input
-                          type="text"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="First Name"
-                          name="firstName"
-                        />
-                      </div>
-                    </div>
-                    {/* last Name */}
-                    <div>
-                      <label htmlFor="lastName" className="sr-only">
-                        Last Name
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="text"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Last Name"
-                          name="lastName"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* Email  */}
-                  <div className="mb-2">
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        type="email"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                        placeholder="Enter email"
-                        name="email"
-                      />
-
-                      <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-gray-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                        <div className="relative">
+                          <input
+                            type="text"
+                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                            placeholder="First Name"
+                            name="firstName"
                           />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                  {/* shipping Address */}
-                  <div className="mb-2">
-                    <label htmlFor="shippingAddress" className="sr-only">
-                      shipping Address
-                    </label>
+                        </div>
+                      </div>
+                      {/* last Name */}
+                      <div>
+                        <label htmlFor="lastName" className="sr-only">
+                          Last Name
+                        </label>
 
-                    <div className="relative">
-                      <input
-                        type="text"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                        placeholder="Shipping Address"
-                        name="shippingAddress"
-                      />
+                        <div className="relative">
+                          <input
+                            type="text"
+                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                            placeholder="Last Name"
+                            name="lastName"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  {/* present Address */}
-                  <div className="mb-2">
-                    <label htmlFor="email" className="sr-only">
-                      present Address
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        type="text"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                        placeholder="Present Address"
-                        name="presentAddress"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 mb-2 ">
-                    {/* password */}
-                    <div>
+                    {/* Email  */}
+                    <div className="mb-2">
                       <label htmlFor="email" className="sr-only">
-                        Password
+                        Email
                       </label>
 
                       <div className="relative">
                         <input
-                          type="password"
+                          type="email"
                           className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Password"
-                          name="password"
+                          placeholder="Enter email"
+                          name="email"
+                        />
+
+                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    {/* shipping Address */}
+                    <div className="mb-2">
+                      <label htmlFor="shippingAddress" className="sr-only">
+                        shipping Address
+                      </label>
+
+                      <div className="relative">
+                        <input
+                          type="text"
+                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                          placeholder="Shipping Address"
+                          name="shippingAddress"
                         />
                       </div>
                     </div>
-                    {/* confirmPassword */}
+                    {/* present Address */}
+                    <div className="mb-2">
+                      <label htmlFor="email" className="sr-only">
+                        present Address
+                      </label>
+
+                      <div className="relative">
+                        <input
+                          type="text"
+                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                          placeholder="Present Address"
+                          name="presentAddress"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 mb-2 ">
+                      {/* password */}
+                      <div>
+                        <label htmlFor="email" className="sr-only">
+                          Password
+                        </label>
+
+                        <div className="relative">
+                          <input
+                            type="password"
+                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                            placeholder="Password"
+                            name="password"
+                          />
+                        </div>
+                      </div>
+                      {/* confirmPassword */}
+                      <div>
+                        <label htmlFor="confirmPassword" className="sr-only">
+                          confirm Password
+                        </label>
+
+                        <div className="relative">
+                          <input
+                            type="password"
+                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                            placeholder="Confirm Password"
+                            name="confirmPassword"
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <div>
-                      <label htmlFor="confirmPassword" className="sr-only">
-                        confirm Password
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="password"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Confirm Password"
-                          name="confirmPassword"
-                        />
+                      <div>
+                        {isError && (
+                          <Errors>{error?.data?.error?.message}</Errors>
+                        )}
                       </div>
                     </div>
-                  </div>
-                  {/* profile Image */}
-                  <div className="mb-2">
-                    <label
-                      className="block text-gray-700 text-sm font-bold"
-                      htmlFor="productImage"
-                    >
-                      Upload Product Image
-                    </label>
-                    <div className="mt-1 flex items-center space-x-4">
-                      <label className="bg-[#98CB4C] hover:bg-[#a1d84f] text-white rounded-lg px-4 py-2 cursor-pointer">
-                        Browse
-                        <input
-                          type="file"
-                          className="hidden"
-                          id="profileImage"
-                          name="profileImage"
-                          onChange={handleFileChange}
-                          multiple // Allow multiple file selection
-                        />
+                    {/* profile Image */}
+                    <div className="mb-2">
+                      <label
+                        className="block text-gray-700 text-sm font-bold"
+                        htmlFor="productImage"
+                      >
+                        Upload Product Image
                       </label>
-                      <span className="text-gray-500">
-                        {selectedFileCount === 1
-                          ? "1 file selected"
-                          : `${selectedFileCount} files selected`}
-                      </span>
+                      <div className="mt-1 flex items-center space-x-4">
+                        <label className="bg-[#98CB4C] hover:bg-[#a1d84f] text-white rounded-lg px-4 py-2 cursor-pointer">
+                          Browse
+                          <input
+                            type="file"
+                            required
+                            className="hidden"
+                            id="profileImage"
+                            name="profileImage"
+                            onChange={handleFileChange}
+                            multiple // Allow multiple file selection
+                          />
+                        </label>
+                        <span className="text-gray-500">
+                          {selectedFileCount === 1
+                            ? "1 file selected"
+                            : `${selectedFileCount} files selected`}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                <PrimaryButton>Sing up</PrimaryButton>
-                </form>
-             </section>
+                    <PrimaryButton>
+                      {isLoading ? (
+                        <div className="animate-pulse">Loading...</div>
+                      ) : (
+                        <div>Sing up</div>
+                      )}
+                    </PrimaryButton>
+                  </form>
+                </section>
               </div>
             </div>
           </div>

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import { useCreateProductMutation } from "../../Features/Products/ProductApi";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import Errors from "../../Shared/Errors/Errors";
 
 type BrandData = {
   _id: string;
@@ -31,8 +33,9 @@ type BrandData = {
 
 const AddProduct = () => {
   const [selectedFileCount, setSelectedFileCount] = useState(0);
-  const [createProduct] = useCreateProductMutation();
-  const { data: brandData } = useGetBrandQuery({});
+  const [createProduct, { isSuccess, isLoading, isError, error }] =
+    useCreateProductMutation();
+  const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -43,6 +46,12 @@ const AddProduct = () => {
       setSelectedFileCount(count);
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert(" Your product is Add");
+    }
+  }, [isSuccess]);
 
   const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,7 +102,6 @@ const AddProduct = () => {
         unit: unit,
         imageURLs: productImageUrl,
       });
-      alert("Create product data");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -169,7 +177,7 @@ const AddProduct = () => {
                 </div>
                 <div>
                   <label className="sr-only" htmlFor="price">
-                    unit
+                    price
                   </label>
                   <input
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
@@ -182,23 +190,27 @@ const AddProduct = () => {
               </div>
 
               <div className="grid lg:grid-cols-4 grid-cols-1 gap-4 text-center">
-                {brandData?.data?.map((data: BrandData, index: number) => (
-                  <div key={data?._id}>
-                    <input
-                      className="peer sr-only"
-                      id={`option${index + 1}`}
-                      type="radio"
-                      name="option"
-                      defaultValue={data?._id}
-                    />
-                    <label
-                      htmlFor={`option${index + 1}`}
-                      className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                    >
-                      <span className="text-sm"> {data?.name} </span>
-                    </label>
-                  </div>
-                ))}
+                {brandIsLoading ? (
+                  <div>Loading...</div>
+                ) : (
+                  brandData?.data?.map((data: BrandData, index: number) => (
+                    <div key={data?._id}>
+                      <input
+                        className="peer sr-only"
+                        id={`option${index + 1}`}
+                        type="radio"
+                        name="option"
+                        defaultValue={data?._id}
+                      />
+                      <label
+                        htmlFor={`option${index + 1}`}
+                        className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                      >
+                        <span className="text-sm"> {data?.name} </span>
+                      </label>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div>
@@ -214,6 +226,8 @@ const AddProduct = () => {
                 ></textarea>
               </div>
 
+              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+
               <div>
                 <label
                   className="block text-gray-700 text-sm font-bold"
@@ -228,6 +242,7 @@ const AddProduct = () => {
                       type="file"
                       className="hidden"
                       id="productImage"
+                      required
                       name="productImage"
                       onChange={handleFileChange}
                       multiple // Allow multiple file selection
@@ -254,12 +269,13 @@ const AddProduct = () => {
               </div> */}
 
               <div className="mt-4">
-                <button
-                  type="submit"
-                  className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
-                >
-                  Send
-                </button>
+                <PrimaryButton>
+                  {isLoading ? (
+                    <div className="animate-pulse">Loading...</div>
+                  ) : (
+                    <div>submit</div>
+                  )}
+                </PrimaryButton>
               </div>
             </form>
           </div>

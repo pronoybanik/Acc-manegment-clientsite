@@ -16,8 +16,9 @@ type productData = {
 };
 
 const OurProductItem = ({ data }: { data: productData }) => {
+  
 
-    return (
+  return (
     <section className="border-2 p-4 mt-4 h-full">
       <Link
         key={data?._id}

@@ -2,6 +2,8 @@ import React from "react";
 import image from "../../Images/home page image/pexels-pixabay-219794-removebg-preview.png";
 import { useGetProductsQuery } from "../../Features/Products/ProductApi";
 import OurProductItem from "../OurProductItem/OurProductItem";
+import Errors from "../../Shared/Errors/Errors";
+import Loading from "../../Shared/Loading/Loading";
 
 type productData = {
   _id: string;
@@ -18,7 +20,23 @@ type productData = {
 };
 
 const OurProducts = () => {
-  const { data } = useGetProductsQuery({});
+  const { data, isLoading, isError, error } = useGetProductsQuery({});
+
+  let content = null;
+  if (isLoading) {
+    content = <Loading></Loading>;
+  }
+  if (!isLoading && isError) {
+    content = <Errors>{error?.toString()}</Errors>;
+  }
+  if (!isLoading && !isError && data.data.length === 0) {
+    content = <Errors>{"There are no Video"}</Errors>;
+  }
+  if (!isLoading && !isError && data.status === "success" && data.data.length > 0) {
+    content = data?.data?.map((d: productData) => (
+      <OurProductItem key={d?._id} data={d}></OurProductItem>
+    ));
+  }
 
   return (
     <section className="w-10/12 mx-auto">
@@ -72,9 +90,7 @@ const OurProducts = () => {
             </p>
           </div>
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-            {data?.data?.map((d: productData) => (
-              <OurProductItem key={d?._id} data={d}></OurProductItem>
-            ))}
+            {content}
           </div>
         </div>
       </div>
