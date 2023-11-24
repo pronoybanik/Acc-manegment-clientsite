@@ -62,6 +62,8 @@ const AddSupplier = () => {
   const handleCreateSupplier = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
+      supplierName: { value: string };
+      email: { value: string };
       contactNumber: { value: string };
       emergencyContactNumber: { value: string };
       presentAddress: { value: string };
@@ -71,6 +73,8 @@ const AddSupplier = () => {
       nationalIdImageURL: { files: FileList };
     };
 
+    const name = target.supplierName.value;
+    const email = target.email.value;
     const contactNumber = target.contactNumber.value;
     const emergencyContactNumber = target.emergencyContactNumber.value;
     const BrandId = target.option.value;
@@ -78,6 +82,9 @@ const AddSupplier = () => {
     const permanentAddress = target.permanentAddress.value;
     const location = target.location.value;
     const nationalIdImageURL = target.nationalIdImageURL.files[0];
+
+    
+    
 
     const formData = new FormData();
     formData.append("image", nationalIdImageURL);
@@ -99,8 +106,8 @@ const AddSupplier = () => {
       const nationalImageUrl = imgData.data.url;
 
       createSupplier({
-        name: data?.data?.firstName + "" + data?.data?.lastName,
-        email: data?.data?.email,
+        name,
+        email,
         brand: {
           id: BrandId,
         },
@@ -115,8 +122,6 @@ const AddSupplier = () => {
     } catch (error) {
       console.error("Error:", error);
     }
-
-  
   };
 
   return (
@@ -154,25 +159,21 @@ const AddSupplier = () => {
                 </label>
                 <input
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Product Name"
+                  placeholder="supplier Name"
                   type="text"
                   id="name"
-                  value={data?.data?.firstName}
-                  disabled
-                  name="name"
+                  name="supplierName"
                 />
               </div>
               <div>
                 <label className="sr-only" htmlFor="name">
-                  gmail
+                  Email
                 </label>
                 <input
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Product Name"
+                  placeholder="supplier Email"
                   type="email"
                   id="name"
-                  value={data?.data?.email}
-                  disabled
                   name="email"
                 />
               </div>

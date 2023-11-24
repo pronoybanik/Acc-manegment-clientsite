@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useGetOrderQuery } from "../../Features/Orders/OrdersApi";
+import {
+  useDeleteOrderMutation,
+  useGetOrderQuery,
+} from "../../Features/Orders/OrdersApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import PaymentModel from "../../Components/PaymentModel/PaymentModel";
 import Loading from "../../Shared/Loading/Loading";
@@ -41,6 +44,7 @@ const AddCard = () => {
   const userItem = localStorage.getItem("userId");
   const userId = userItem ? JSON.parse(userItem) : null;
 
+  const [deleteOrder , {isSuccess}] = useDeleteOrderMutation();
   // close module handler
   const closeLoginForm = () => {
     setCheckOut(false);
@@ -71,6 +75,18 @@ const AddCard = () => {
     }
   }, [order]);
   const totalPriceWithVat = totalPrice + 100;
+
+  const handleOrderDelete = (id) => {
+    if (id) {
+      deleteOrder(id);
+    }
+  };
+
+  useEffect(() => {
+    if(isSuccess){
+      alert("order Delete")
+    }
+  }, [isSuccess])
 
   let content = null;
   if (isLoading) {
@@ -135,7 +151,10 @@ const AddCard = () => {
                     />
                   </form>
 
-                  <button className="text-gray-600 transition hover:text-red-600">
+                  <button
+                    onClick={() => handleOrderDelete(data?._id)}
+                    className="text-gray-600 transition hover:text-red-600"
+                  >
                     <span className="sr-only">Remove item</span>
 
                     <svg
