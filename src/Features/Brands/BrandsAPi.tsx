@@ -4,6 +4,8 @@ const brandApi = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getBrand: builder.query({
       query: () => "/brand",
+      keepUnusedDataFor: 600,
+      providesTags: ["getBrands"],
     }),
     getBrandItem: builder.query({
       query: (id) => `/brand/${id}`,
@@ -14,6 +16,7 @@ const brandApi = ApiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["getBrands"],
     }),
   }),
 });

@@ -116,21 +116,7 @@ const AddSupplier = () => {
       console.error("Error:", error);
     }
 
-    // "name": "Jhankar Mahbub",
-    // "email": "jhankar.rupchanda@test.com",
-    // "brand": {
-    //   "name": "Rupchanada",
-    //   "id": "64ee0971e8c5b2e53f912fad"
-    // },
-    // "contactNumber": ["01111111111", "02222222222"],
-    // "emergencyContactNumber": "011111111",
-    // "tradeLicenceNumber": 1111111111,
-    // "presentAddress": "944 Honduras Street",
-    // "permanentAddress": "944 Ghana Street",
-    // "location": "dhaka",
-    // "imageURL": "https://i.ibb.co/WnFSs9Y/unnamed.webp",
-    // "nationalIdImageURL": "https://i.ibb.co/WnFSs9Y/unnamed.webp",
-    // "status": "active"
+  
   };
 
   return (
@@ -138,7 +124,7 @@ const AddSupplier = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
           <div className="lg:col-span-2 lg:py-12">
-            <p className="text-3xl my-2">Add Product </p>
+            <p className="text-3xl my-2">Add supplier </p>
             <p className="max-w-xl text-lg">
               At the same time, the fact that we are wholly owned and totally
               independent from manufacturer and other group control gives you

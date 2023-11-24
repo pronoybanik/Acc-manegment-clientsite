@@ -2,17 +2,20 @@ import { useEffect } from "react";
 import { useCreateBrandMutation } from "../../Features/Brands/BrandsAPi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
+import { useNavigate } from "react-router-dom";
 
 const AddBrand = () => {
   const [createBrand, { isSuccess, isLoading, isError, error }] =
     useCreateBrandMutation();
-  console.log(error, isSuccess);
-
+    const navigate = useNavigate();
+    
+    
   useEffect(() => {
     if (isSuccess && !isError) {
       alert(" Brand is created");
+      navigate("/brands");
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, navigate]);
 
   const handleCreateBrand = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

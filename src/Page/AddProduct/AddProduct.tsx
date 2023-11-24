@@ -3,6 +3,7 @@ import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import { useCreateProductMutation } from "../../Features/Products/ProductApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
+import { useNavigate } from "react-router-dom";
 
 type BrandData = {
   _id: string;
@@ -36,6 +37,7 @@ const AddProduct = () => {
   const [createProduct, { isSuccess, isLoading, isError, error }] =
     useCreateProductMutation();
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
+  const navigate = useNavigate();
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -50,8 +52,9 @@ const AddProduct = () => {
   useEffect(() => {
     if (isSuccess) {
       alert(" Your product is Add");
+      navigate("/");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

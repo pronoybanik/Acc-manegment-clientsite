@@ -77,7 +77,7 @@ const AddCard = () => {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.toString()}</Errors>;
+    content = <Errors>{error?.data?.error}</Errors>;
   }
   if (!isLoading && !isError && order.length === 0) {
     content = <Errors>{"There are no Product"}</Errors>;
