@@ -24,13 +24,14 @@ interface UserData {
 }
 
 const OrdersSection = ({ orderInfo }: { orderInfo: UserData }) => {
-  // delete funsanality
+  // delete funsanality...
   const [deleteOrderPayment, { isSuccess }] = useDeleteOrderPaymentMutation();
   const handleDelete = (id: string) => {
     if (id) {
       deleteOrderPayment(id);
     }
   };
+
   useEffect(() => {
     if (isSuccess) {
       alert("Delete Orders");
@@ -135,21 +136,15 @@ const OrdersSection = ({ orderInfo }: { orderInfo: UserData }) => {
 
                 <ul className="mt-2 space-y-1 px-4">
                   <li>
-                    <a
-                      href=""
-                      className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      Shipping 
-                    </a>
+                    <div className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                      Shipping
+                    </div>
                   </li>
 
                   <li>
-                    <a
-                      href=""
-                      className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                     Delivered
-                    </a>
+                    <div className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                      Delivered
+                    </div>
                   </li>
                 </ul>
               </details>
