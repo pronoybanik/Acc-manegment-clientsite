@@ -19,6 +19,7 @@ interface UserData {
   presentAddress: string;
   priceData: number;
   shippingAddress: string;
+  shippingStatus: string;
   __v: number;
   _id: string;
 }
@@ -47,7 +48,11 @@ const AllOrder = () => {
     ));
   }
 
-  return <section className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">{content}</section>;
+  return (
+    <section className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
+      {content}
+    </section>
+  );
 };
 
 export default AllOrder;

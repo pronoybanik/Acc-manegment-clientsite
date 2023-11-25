@@ -14,22 +14,31 @@ const orderApi = ApiSlice.injectEndpoints({
       query: () => "/order",
       providesTags: ["getOrder"],
     }),
-    createOrderPayment: builder.mutation({
-      query: (data) => ({
-        url: "/payment",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    getAllPayment: builder.query({
-      query: () => "/payment",
-    }),
     deleteOrder: builder.mutation({
       query: (id) => ({
         url: `/order/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["getOrder"],
+    }),
+    createOrderPayment: builder.mutation({
+      query: (data) => ({
+        url: "/payment",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["getAllPayment"],
+    }),
+    getAllPayment: builder.query({
+      query: () => "/payment",
+      providesTags: ["getAllPayment"],
+    }),
+    deleteOrderPayment: builder.mutation({
+      query: (id) => ({
+        url: `/payment/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["getAllPayment"],
     }),
   }),
 });
@@ -40,4 +49,5 @@ export const {
   useDeleteOrderMutation,
   useCreateOrderPaymentMutation,
   useGetAllPaymentQuery,
+  useDeleteOrderPaymentMutation,
 } = orderApi;

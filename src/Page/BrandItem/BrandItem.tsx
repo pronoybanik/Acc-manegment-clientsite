@@ -21,19 +21,7 @@ interface Product {
   _id: string;
 }
 
-// interface brand {
-//   createdAt: string;
-//   description: string;
-//   email: string;
-//   location: string;
-//   name: string;
-//   products: Product[];
-//   status: string;
-//   suppliers: string[]; // You can specify the correct type for suppliers if needed
-//   updatedAt: string;
-//   __v: number;
-//   _id: string;
-// }
+
 
 const BrandItem = () => {
   const { id } = useParams();

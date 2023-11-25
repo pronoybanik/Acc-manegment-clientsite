@@ -11,6 +11,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   const [selectedFileCount, setSelectedFileCount] = useState(0);
   const [createAccount, { isSuccess, isLoading, isError, error }] =
     useCreateAccountMutation();
+    console.log(error);
+    
 
   // image file counter
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {

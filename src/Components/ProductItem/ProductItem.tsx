@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
 import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
@@ -8,6 +8,7 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 const ProductItem = () => {
   const { id } = useParams();
+
   const {
     data: productData,
     isError,
@@ -22,8 +23,10 @@ const ProductItem = () => {
       isError: orderIsError,
       isLoading: orderLoading,
       error: orderError,
+      data,
     },
   ] = useCreateOrderMutation();
+  console.log(data);
 
   const [productQuantity, setProductQuantity] = useState(1);
   const userItem = localStorage.getItem("userId");
@@ -190,11 +193,11 @@ const ProductItem = () => {
     const productId = id;
     const quantity = productQuantity;
     setTimeout(() => {
-    createOrder({
-      productId,
-      quantity,
-      userId,
-    });
+      createOrder({
+        productId,
+        quantity,
+        userId,
+      });
     }, 1000);
   };
 
