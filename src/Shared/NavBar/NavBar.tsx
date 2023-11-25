@@ -91,6 +91,15 @@ const NavBar = () => {
           Order Products
         </Link>
       </li>
+
+      <li>
+        <Link
+          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
+          to="/managerDashBoard"
+        >
+          Manager DashBoard
+        </Link>
+      </li>
     </>
   );
 

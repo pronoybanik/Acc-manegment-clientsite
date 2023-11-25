@@ -38,7 +38,6 @@ interface Product {
 const BrandItem = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetBrandItemQuery(id);
-  console.log(data);
 
   let content = null;
   if (isLoading) {

@@ -10,6 +10,8 @@ import AddBrand from "../Page/AddBrand/AddBrand";
 import AddCard from "../Page/AddCard/AddCard";
 import AddStore from "../Page/AddStore/AddStore";
 import AddSupplier from "../Page/AddSupplier/AddSupplier";
+import ManagerDashBoard from "../LayOut/ManagerDashBoard/ManagerDashBoard";
+import AllOrder from "../Page/AllOrder/AllOrder";
 
 const AllRouters = createBrowserRouter([
   {
@@ -26,6 +28,18 @@ const AllRouters = createBrowserRouter([
       { path: "/addCard", element: <AddCard /> },
       { path: "/addStore", element: <AddStore /> },
       { path: "/addSupplier", element: <AddSupplier /> },
+    ],
+  },
+  {
+    path: "/managerDashBoard",
+    element: <ManagerDashBoard />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: "/managerDashBoard/allBrand", element: <Brands /> },
+      {
+        path: "/managerDashBoard/allOrder",
+        element: <AllOrder />,
+      },
     ],
   },
 ]);
