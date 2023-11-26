@@ -1,63 +1,43 @@
 import { useEffect } from "react";
-import { useCreateBrandMutation } from "../../Features/Brands/BrandsAPi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { useGetUserQuery } from "../../Features/Login/LoginApi";
+import { useCreateStoreMutation } from "../../Features/Store/store";
 import Errors from "../../Shared/Errors/Errors";
-import { useNavigate } from "react-router-dom";
 
-const AddBrand = () => {
-  const [createBrand, { isSuccess, isLoading, isError, error }] =
-    useCreateBrandMutation();
-    const navigate = useNavigate();
-    
-    
+const AddStore = () => {
+  const { data } = useGetUserQuery({});
+
+  const [createStore, { isSuccess, isLoading, isError, error }] =
+    useCreateStoreMutation();
+
   useEffect(() => {
-    if (isSuccess && !isError) {
-      alert(" Brand is created");
-      navigate("/brands");
+    if (isSuccess) {
+      alert("Store Create");
     }
-  }, [isSuccess, isError, navigate]);
+  }, [isSuccess]);
 
-  const handleCreateBrand = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateStore = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
-      brandName: { value: string };
-      location: { value: string };
-      brandImage: { files: FileList };
+      name: { value: string };
+      contactNumber: { value: string };
       description: { value: string };
     };
 
-    const brandName = target.brandName.value;
-    const location = target.location.value;
-    const brandImage = target.brandImage.files[0];
+    const storeName = target.name.value;
     const description = target.description.value;
-
-    const formData = new FormData();
-    formData.append("image", brandImage);
-
-    const url =
-      "https://api.imgbb.com/1/upload?key=99f58a547dc4b1d269148eb1b605ef29";
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Image upload failed");
-      }
-
-      const imgData = await response.json();
-      const brandImageUrl = imgData.data.url;
-      createBrand({
-        name: brandName,
-        description: description,
-        location: location,
-        image: brandImageUrl,
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const managerName = data?.data?.firstName + "" + data?.data?.lastName;
+    const contactNumber = target.contactNumber.value;
+    const id = data?.data?._id;
+    createStore({
+      storeName,
+      description,
+      manager: {
+        managerName,
+        contactNumber,
+        id,
+      },
+    });
   };
 
   return (
@@ -65,8 +45,7 @@ const AddBrand = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
           <div className="lg:col-span-2 lg:py-12">
-            <p className="text-3xl my-2">Add Brand </p>
-
+            <p className="text-3xl my-2">Add Store </p>
             <p className="max-w-xl text-lg">
               At the same time, the fact that we are wholly owned and totally
               independent from manufacturer and other group control gives you
@@ -85,42 +64,35 @@ const AddBrand = () => {
           </div>
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-            <form onSubmit={handleCreateBrand} className="space-y-4">
+            <form
+              onSubmit={handleCreateStore}
+              action=""
+              className="space-y-4"
+            >
               <div>
                 <label className="sr-only" htmlFor="name">
-                  Brand Name
+                  Store Name
                 </label>
                 <input
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Brand Name"
+                  placeholder="Store Name"
                   type="text"
-                  name="brandName"
+                  id="name"
+                  name="name"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="sr-only" htmlFor="location">
-                    Location
+                  <label className="sr-only" htmlFor="category">
+                    contactNumber
                   </label>
                   <input
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                    placeholder="location"
-                    type="text"
-                    name="location"
-                  />
-                </div>
-
-                <div>
-                  <label className="sr-only" htmlFor="unit">
-                    Brand Image
-                  </label>
-                  <input
-                    className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                    placeholder="Brand Image"
-                    type="file"
-                    required
-                    name="brandImage"
+                    placeholder="contact Number"
+                    type="number"
+                    id="contactNumber"
+                    name="contactNumber"
                   />
                 </div>
               </div>
@@ -132,17 +104,17 @@ const AddBrand = () => {
 
                 <textarea
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Description Brand"
+                  placeholder="Description"
+                  id="description"
                   name="description"
                 ></textarea>
               </div>
 
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
-
+              {isError ? <Errors>{error?.data?.error} </Errors> : null}
               <div className="mt-4">
                 <PrimaryButton>
                   {isLoading ? (
-                    <div className="animate-pulse">Loading..</div>
+                    <div className="animate-pulse">Loading...</div>
                   ) : (
                     <div>submit</div>
                   )}
@@ -156,4 +128,4 @@ const AddBrand = () => {
   );
 };
 
-export default AddBrand;
+export default AddStore;

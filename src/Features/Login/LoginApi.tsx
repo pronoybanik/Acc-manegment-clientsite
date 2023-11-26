@@ -34,7 +34,10 @@ const loginApi = ApiSlice.injectEndpoints({
     getUser: builder.query({
       query: () => "/user/me",
     }),
+    getAllUser: builder.query({
+      query: () => "/user",
+    }),
   }),
 });
 
-export const { useLoginAccountMutation, useGetUserQuery } = loginApi;
+export const { useLoginAccountMutation, useGetUserQuery, useGetAllUserQuery } = loginApi;

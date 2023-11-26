@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
-import { useCreateProductMutation } from "../../Features/Products/ProductApi";
-import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { useCreateSupplierMutation } from "../../Features/Supplier/Supplier";
 import Errors from "../../Shared/Errors/Errors";
-import { useNavigate } from "react-router-dom";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { useGetUserQuery } from "../../Features/Login/LoginApi";
 
 type BrandData = {
   _id: string;
@@ -32,12 +32,18 @@ type BrandData = {
   image: string;
 };
 
-const AddProduct = () => {
-  const [selectedFileCount, setSelectedFileCount] = useState(0);
-  const [createProduct, { isSuccess, isLoading, isError, error }] =
-    useCreateProductMutation();
+const AddSupplier = () => {
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
-  const navigate = useNavigate();
+  const { data } = useGetUserQuery({});
+
+  const [
+    createSupplier,
+    { data: createSupplierData, isSuccess, isLoading, isError, error },
+  ] = useCreateSupplierMutation();
+  const [selectedFileCount, setSelectedFileCount] = useState(0);
+
+  console.log(createSupplierData);
+  console.log(error);
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -52,32 +58,47 @@ const AddProduct = () => {
   useEffect(() => {
     if (isSuccess) {
       alert(" Your product is Add");
-      navigate("/");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess]);
 
-  const handleCreateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateSupplier = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
-      productName: { value: string };
-      category: { value: string };
-      unit: { value: string };
+      supplierName: { value: string };
+      email: { value: string };
+      contactNumber: { value: string };
+      emergencyContactNumber: { value: string };
+      presentAddress: { value: string };
       option: { value: string };
-      price: { value: number };
-      description: { value: string };
-      productImage: { files: FileList };
+      location: { value: number };
+      permanentAddress: { value: string };
+      nationalIdImageURL: { files: FileList };
     };
 
-    const productName = target.productName.value;
-    const category = target.category.value;
-    const unit = target.unit.value;
+    const name = target.supplierName.value;
+    const email = target.email.value;
+    const contactNumber = target.contactNumber.value;
+    const emergencyContactNumber = target.emergencyContactNumber.value;
     const BrandId = target.option.value;
-    const description = target.description.value;
-    const ProductPrice = target.price.value;
-    const productImage = target.productImage.files[0];
+    const presentAddress = target.presentAddress.value;
+    const permanentAddress = target.permanentAddress.value;
+    const location = target.location.value;
+    const nationalIdImageURL = target.nationalIdImageURL.files[0];
+
+    console.log(
+      name,
+      email,
+      contactNumber,
+      emergencyContactNumber,
+      BrandId,
+      presentAddress,
+      permanentAddress,
+      location,
+      nationalIdImageURL
+    );
 
     const formData = new FormData();
-    formData.append("image", productImage);
+    formData.append("image", nationalIdImageURL);
 
     const url =
       "https://api.imgbb.com/1/upload?key=99f58a547dc4b1d269148eb1b605ef29";
@@ -93,17 +114,21 @@ const AddProduct = () => {
       }
 
       const imgData = await response.json();
-      const productImageUrl = imgData.data.url;
-      createProduct({
-        name: productName,
-        description: description,
+      const nationalImageUrl = imgData.data.url;
+
+      createSupplier({
+        name,
+        email,
         brand: {
           id: BrandId,
         },
-        price: ProductPrice,
-        category: category,
-        unit: unit,
-        imageURLs: productImageUrl,
+        contactNumber,
+        emergencyContactNumber,
+        presentAddress,
+        permanentAddress,
+        location,
+        nationalIdImageURL: nationalImageUrl,
+        imageURL: data?.data?.imageURL,
       });
     } catch (error) {
       console.error("Error:", error);
@@ -115,7 +140,7 @@ const AddProduct = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
           <div className="lg:col-span-2 lg:py-12">
-            <p className="text-3xl my-2">Add Product </p>
+            <p className="text-3xl my-2">Add supplier </p>
             <p className="max-w-xl text-lg">
               At the same time, the fact that we are wholly owned and totally
               independent from manufacturer and other group control gives you
@@ -135,59 +160,83 @@ const AddProduct = () => {
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
             <form
-              onSubmit={handleCreateProduct}
+              onSubmit={handleCreateSupplier}
               action=""
               className="space-y-4"
             >
               <div>
                 <label className="sr-only" htmlFor="name">
-                  product Name
+                  name
                 </label>
                 <input
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Product Name"
+                  placeholder="supplier Name"
                   type="text"
                   id="name"
-                  name="productName"
+                  name="supplierName"
+                />
+              </div>
+              <div>
+                <label className="sr-only" htmlFor="name">
+                  Email
+                </label>
+                <input
+                  className="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                  placeholder="supplier Email"
+                  type="email"
+                  id="name"
+                  name="email"
+                />
+              </div>
+              <div>
+                <label className="sr-only" htmlFor="name">
+                  contact Number
+                </label>
+                <input
+                  className="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                  placeholder="contact Number"
+                  type="text"
+                  id="name"
+                  name="contactNumber"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="sr-only" htmlFor="category">
-                    category
+                  <label className="sr-only" htmlFor="emergencyContactNumber">
+                    emergency ContactNumber
                   </label>
                   <input
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                    placeholder="category"
+                    placeholder="Emergency ContactNumber"
                     type="text"
-                    id="category"
-                    name="category"
+                    id="emergencyContactNumber"
+                    name="emergencyContactNumber"
                   />
                 </div>
 
                 <div>
-                  <label className="sr-only" htmlFor="unit">
-                    unit
+                  <label className="sr-only" htmlFor="presentAddress">
+                    present Address
                   </label>
                   <input
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                    placeholder="unit"
+                    placeholder="Present Address"
                     type="text"
-                    name="unit"
-                    id="unit"
+                    name="presentAddress"
+                    id="presentAddress"
                   />
                 </div>
                 <div>
-                  <label className="sr-only" htmlFor="price">
-                    price
+                  <label className="sr-only" htmlFor="location">
+                    location
                   </label>
                   <input
                     className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                    placeholder="price"
+                    placeholder="location"
                     type="text"
-                    name="price"
-                    id="price"
+                    name="location"
+                    id="location"
                   />
                 </div>
               </div>
@@ -218,14 +267,14 @@ const AddProduct = () => {
 
               <div>
                 <label className="sr-only" htmlFor="message">
-                  Description
+                  permanentAddress
                 </label>
 
                 <textarea
                   className="w-full rounded-lg border border-gray-200 p-3 text-sm"
-                  placeholder="Description"
-                  id="description"
-                  name="description"
+                  placeholder="permanentAddress"
+                  id="permanentAddress"
+                  name="permanentAddress"
                 ></textarea>
               </div>
 
@@ -234,7 +283,7 @@ const AddProduct = () => {
               <div>
                 <label
                   className="block text-gray-700 text-sm font-bold"
-                  htmlFor="productImage"
+                  htmlFor="nationalIdImageURL"
                 >
                   Upload Product Image
                 </label>
@@ -244,9 +293,9 @@ const AddProduct = () => {
                     <input
                       type="file"
                       className="hidden"
-                      id="productImage"
+                      id="nationalIdImageURL"
                       required
-                      name="productImage"
+                      name="nationalIdImageURL"
                       onChange={handleFileChange}
                       multiple // Allow multiple file selection
                     />
@@ -260,16 +309,16 @@ const AddProduct = () => {
               </div>
 
               {/* <div className="relative w-full">
-                <label className="cursor-pointer bg-blue-500 text-white rounded-lg p-2 text-sm font-medium w-full block text-center">
-                  Upload Product Image
-                  <input
-                    type="file"
-                    className="hidden"
-                    name="productImage"
-                    id="productImage"
-                  />
-                </label>
-              </div> */}
+                  <label className="cursor-pointer bg-blue-500 text-white rounded-lg p-2 text-sm font-medium w-full block text-center">
+                    Upload Product Image
+                    <input
+                      type="file"
+                      className="hidden"
+                      name="nationalIdImageURL"
+                      id="nationalIdImageURL"
+                    />
+                  </label>
+                </div> */}
 
               <div className="mt-4">
                 <PrimaryButton>
@@ -288,4 +337,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddSupplier;

@@ -38,10 +38,10 @@ const Brands = () => {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.toString()}</Errors>;
+    content = <Errors>{error?.data?.error}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no Brand"}</Errors>;
   }
   if (!isLoading && !isError && data.status === "success" && data.data.length > 0) {
     content = data?.data?.map((d: BrandData) => (

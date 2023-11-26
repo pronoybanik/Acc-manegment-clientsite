@@ -19,6 +19,7 @@ type productData = {
   unit: string;
 };
 
+
 const OurProducts = () => {
   const { data, isLoading, isError, error } = useGetProductsQuery({});
 
@@ -27,15 +28,23 @@ const OurProducts = () => {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.toString()}</Errors>;
+    content = <Errors>{error?.data?.error}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no product"}</Errors>;
   }
-  if (!isLoading && !isError && data.status === "success" && data.data.length > 0) {
-    content = data?.data?.map((d: productData) => (
-      <OurProductItem key={d?._id} data={d}></OurProductItem>
-    ));
+  if (
+    !isLoading &&
+    !isError &&
+    data.status === "success" &&
+    data.data.length > 0
+  ) {
+    content = data?.data
+      .slice()
+      .sort((a: productData, b: productData) => b.price - a.price)
+      .map((d: productData) => (
+        <OurProductItem key={d?._id} data={d}></OurProductItem>
+      ));
   }
 
   return (

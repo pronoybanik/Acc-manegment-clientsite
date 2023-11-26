@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   closeForm: () => void;
@@ -11,6 +12,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   const [selectedFileCount, setSelectedFileCount] = useState(0);
   const [createAccount, { isSuccess, isLoading, isError, error }] =
     useCreateAccountMutation();
+  const navigate = useNavigate();
+  
 
   // image file counter
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -26,6 +29,7 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   useEffect(() => {
     if (isSuccess) {
       alert(" Account is Create");
+      navigate("/");
     }
   }, [isSuccess]);
 

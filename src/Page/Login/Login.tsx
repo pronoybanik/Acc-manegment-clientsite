@@ -175,8 +175,9 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                         Sign up
                       </Link>
                     </p>
-
-                    <PrimaryButton>Sing in</PrimaryButton>
+                    <PrimaryButton>
+                      {isLoading ? <div>Loading...</div> : <div>Sing in</div>}{" "}
+                    </PrimaryButton>
                   </div>
                 </form>
               </div>

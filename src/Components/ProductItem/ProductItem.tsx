@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductItemQuery } from "../../Features/Products/ProductApi";
 import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
@@ -8,6 +8,7 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 const ProductItem = () => {
   const { id } = useParams();
+
   const {
     data: productData,
     isError,
@@ -22,8 +23,10 @@ const ProductItem = () => {
       isError: orderIsError,
       isLoading: orderLoading,
       error: orderError,
+      data,
     },
   ] = useCreateOrderMutation();
+  console.log(data);
 
   const [productQuantity, setProductQuantity] = useState(1);
   const userItem = localStorage.getItem("userId");
@@ -48,7 +51,7 @@ const ProductItem = () => {
     content = <Errors>{error?.toString()}</Errors>;
   }
   if (!isLoading && !isError && productData.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no product"}</Errors>;
   }
   if (!isLoading && !isError && productData.status === "success") {
     content = (
@@ -154,13 +157,40 @@ const ProductItem = () => {
             </div>
 
             {/* product Countity counter */}
-            <div className="flex mt-4 gap-4">
-              <button onClick={handleIncrement}>+</button>
-              <div className="border py-2 px-2 w-16 text-center">
-                {productQuantity}
+
+            <div>
+              <label htmlFor="Quantity" className="sr-only">
+                {" "}
+                Quantity{" "}
+              </label>
+
+              <div className="flex w-36 mt-4 items-center border border-gray-200 rounded">
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
+                >
+                  -
+                </button>
+
+                <input
+                  type="number"
+                  id="Quantity"
+                  value={productQuantity}
+                  className="h-10 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
+                >
+                  +
+                </button>
               </div>
-              <button onClick={handleDecrement}>-</button>
             </div>
+
+        
 
             <div
               className="mt-4"
@@ -190,11 +220,11 @@ const ProductItem = () => {
     const productId = id;
     const quantity = productQuantity;
     setTimeout(() => {
-    createOrder({
-      productId,
-      quantity,
-      userId,
-    });
+      createOrder({
+        productId,
+        quantity,
+        userId,
+      });
     }, 1000);
   };
 

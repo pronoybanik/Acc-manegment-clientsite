@@ -21,24 +21,11 @@ interface Product {
   _id: string;
 }
 
-// interface brand {
-//   createdAt: string;
-//   description: string;
-//   email: string;
-//   location: string;
-//   name: string;
-//   products: Product[];
-//   status: string;
-//   suppliers: string[]; // You can specify the correct type for suppliers if needed
-//   updatedAt: string;
-//   __v: number;
-//   _id: string;
-// }
+
 
 const BrandItem = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetBrandItemQuery(id);
-  console.log(data);
 
   let content = null;
   if (isLoading) {
@@ -48,7 +35,7 @@ const BrandItem = () => {
     content = <Errors>{error?.toString()}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no Brand"}</Errors>;
   }
   if (!isLoading && !isError && data.status === "success") {
     content = (
@@ -154,35 +141,39 @@ const BrandItem = () => {
           </div>
 
           <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-            {data?.data?.products?.map((data: Product) => (
-              <section key={data?._id} className="border-2 p-4 mt-4 h-full">
-                <Link
-                  key={data?._id}
-                  to={`/product/${data?._id}`}
-                  className="group block"
-                >
-                  <img
-                    src={data?.imageURLs}
-                    alt=""
-                    className="h-full object-contain w-full"
-                  />
+            {data?.data?.products?.length === 0 ? (
+              <Errors>Create A Products</Errors>
+            ) : (
+              data?.data?.products?.map((data: Product) => (
+                <section key={data?._id} className="border-2 p-4 mt-4 h-full">
+                  <Link
+                    key={data?._id}
+                    to={`/product/${data?._id}`}
+                    className="group block"
+                  >
+                    <img
+                      src={data?.imageURLs}
+                      alt=""
+                      className="h-full object-contain w-full"
+                    />
 
-                  <div className="mt-3 flex justify-between text-sm">
-                    <div>
-                      <h3 className="text-gray-900 group-hover:underline group-hover:underline-offset-4">
-                        {data?.category}
-                      </h3>
+                    <div className="mt-3 flex justify-between text-sm">
+                      <div>
+                        <h3 className="text-gray-900 group-hover:underline group-hover:underline-offset-4">
+                          {data?.category}
+                        </h3>
 
-                      <p className="mt-1.5 max-w-[45ch] text-xs text-gray-500">
-                        {data?.name}
-                      </p>
+                        <p className="mt-1.5 max-w-[45ch] text-xs text-gray-500">
+                          {data?.name}
+                        </p>
+                      </div>
+
+                      <p className="text-gray-900">price:{data?.price} TK</p>
                     </div>
-
-                    <p className="text-gray-900">price:{data?.price} TK</p>
-                  </div>
-                </Link>
-              </section>
-            ))}
+                  </Link>
+                </section>
+              ))
+            )}
           </div>
         </div>
       </>
