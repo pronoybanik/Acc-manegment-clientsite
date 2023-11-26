@@ -14,7 +14,7 @@ const AllUser = () => {
     content = <Errors>{error?.data?.error}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no user"}</Errors>;
   }
   if (!isLoading && !isError && data.data.length > 0) {
     content = data?.data?.map((userData) => (
@@ -52,6 +52,12 @@ const AllUser = () => {
             </th>
             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
               status
+            </th>
+            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+              status Change 
+            </th>
+            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+              Delate Account
             </th>
           </tr>
         </thead>

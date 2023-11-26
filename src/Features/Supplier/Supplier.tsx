@@ -8,8 +8,24 @@ const supplierApi = ApiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["getSupplier"],
+    }),
+    getAllSupplier: builder.query({
+      query: () => "/supplier",
+      providesTags: ["getSupplier"],
+    }),
+    deleteSupplier: builder.mutation({
+      query: (id) => ({
+        url: `/supplier/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["getSupplier"],
     }),
   }),
 });
 
-export const { useCreateSupplierMutation } = supplierApi;
+export const {
+  useCreateSupplierMutation,
+  useDeleteSupplierMutation,
+  useGetAllSupplierQuery,
+} = supplierApi;

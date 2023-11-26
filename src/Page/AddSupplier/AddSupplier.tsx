@@ -36,11 +36,13 @@ const AddSupplier = () => {
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
   const { data } = useGetUserQuery({});
 
-  const [createSupplier, { isSuccess, isLoading, isError, error }] =
-    useCreateSupplierMutation();
+  const [
+    createSupplier,
+    { data: createSupplierData, isSuccess, isLoading, isError, error },
+  ] = useCreateSupplierMutation();
   const [selectedFileCount, setSelectedFileCount] = useState(0);
 
-  console.log(data);
+  console.log(createSupplierData);
   console.log(error);
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -83,8 +85,17 @@ const AddSupplier = () => {
     const location = target.location.value;
     const nationalIdImageURL = target.nationalIdImageURL.files[0];
 
-    
-    
+    console.log(
+      name,
+      email,
+      contactNumber,
+      emergencyContactNumber,
+      BrandId,
+      presentAddress,
+      permanentAddress,
+      location,
+      nationalIdImageURL
+    );
 
     const formData = new FormData();
     formData.append("image", nationalIdImageURL);

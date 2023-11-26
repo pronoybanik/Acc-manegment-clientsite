@@ -35,7 +35,7 @@ const BrandItem = () => {
     content = <Errors>{error?.toString()}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no Brand"}</Errors>;
   }
   if (!isLoading && !isError && data.status === "success") {
     content = (

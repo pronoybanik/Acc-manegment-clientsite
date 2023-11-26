@@ -13,6 +13,7 @@ import AddSupplier from "../Page/AddSupplier/AddSupplier";
 import ManagerDashBoard from "../LayOut/ManagerDashBoard/ManagerDashBoard";
 import AllOrder from "../Page/AllOrder/AllOrder";
 import AllUser from "../Page/AllUser/AllUser";
+import AllSupplier from "../Page/AllSupplier/AllSupplier";
 
 const AllRouters = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const AllRouters = createBrowserRouter([
       {
         path: "/managerDashBoard/allUser",
         element: <AllUser />,
+      },
+      {
+        path: "/managerDashBoard/allSupplier",
+        element: <AllSupplier />,
       },
     ],
   },

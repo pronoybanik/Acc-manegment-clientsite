@@ -35,7 +35,7 @@ const AllOrder = () => {
     content = <Errors>{error?.data?.error}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Video"}</Errors>;
+    content = <Errors>{"There are no payment"}</Errors>;
   }
   if (
     !isLoading &&
