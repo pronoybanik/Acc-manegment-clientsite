@@ -54,6 +54,7 @@ const ManagerNavBar = () => {
                       All Order
                     </Link>
                   </li>
+                  
                   <li>
                     <Link
                       to="/managerDashBoard/allUser"
@@ -63,6 +64,32 @@ const ManagerNavBar = () => {
                     </Link>
                   </li>
 
+                  <li>
+                    <Link
+                      to="/managerDashBoard/createSupplier"
+                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                      create Supplier
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/managerDashBoard/createBrand"
+                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                      create Brand
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/managerDashBoard/createProduct"
+                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                      create product
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       to="/managerDashBoard/allSupplier"

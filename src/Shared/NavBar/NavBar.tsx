@@ -50,36 +50,9 @@ const NavBar = () => {
       <li>
         <Link
           className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addStore"
+          to="/allProducts"
         >
-          Add Store
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addSupplier"
-        >
-          Add Supplier
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addProduct"
-        >
-          Add Product
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addBrand"
-        >
-          Add Brand
+          all Products
         </Link>
       </li>
 

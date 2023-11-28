@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import BrandCard from "../../Components/BrandCard/BrandCard";
 import Errors from "../../Shared/Errors/Errors";
@@ -43,7 +42,12 @@ const Brands = () => {
   if (!isLoading && !isError && data.data.length === 0) {
     content = <Errors>{"There are no Brand"}</Errors>;
   }
-  if (!isLoading && !isError && data.status === "success" && data.data.length > 0) {
+  if (
+    !isLoading &&
+    !isError &&
+    data.status === "success" &&
+    data.data.length > 0
+  ) {
     content = data?.data?.map((d: BrandData) => (
       <BrandCard key={d?._id} BrandData={d} />
     ));
@@ -51,21 +55,15 @@ const Brands = () => {
 
   return (
     <section>
-      <div className="relative lg:h-[300px] md:h-[400px] h-80 bg-[url(https://medical-clinic.cmsmasters.net/wp-content/uploads/2016/09/bg-3-1.jpg)] bg-cover bg-center bg-no-repeat">
+      <div className="relative lg:h-[300px] md:h-[400px] h-80 bg-[url(https://images.pexels.com/photos/1656663/pexels-photo-1656663.jpeg?auto=compress&cs=tinysrgb&w=1600)] bg-cover bg-center bg-no-repeat">
         <div className="absolute inset-0 bg-black/20  sm:from-white/95 sm:to-white/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l">
           {" "}
         </div>
 
-        <div
-          data-aos="zoom-in-down"
-          className="flex  items-center justify-center h-full"
-        >
+        <div className="flex  items-center justify-center h-full">
           <div className="relative">
-            <p className="text-white font-sans lg:text-2xl md:text-2xl text-xl ">
-              Entrust Your Health Our Doctors
-            </p>
-            <p className="text-white lg:text-4xl md:text-3xl text-2xl font-semibold mt-4  sm:text-xl/relaxed">
-              Medical Excellence Every Day.
+            <p className="text-white max-w-screen-sm text-center lg:text-4xl md:text-3xl text-2xl font-semibold mt-4  sm:text-xl/relaxed">
+              Farmers' Market Treasures Fresh, Flavorful, and Just for You
             </p>
           </div>
         </div>
@@ -77,13 +75,14 @@ const Brands = () => {
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
           <header>
             <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-              Product Collection
+              All Brand Collection
             </h2>
 
-            <p className="mt-4 max-w-md text-gray-500">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque
-              praesentium cumque iure dicta incidunt est ipsam, officia dolor
-              fugit natus?
+            <p className="mt-4 max-w-sm text-gray-800">
+              Harvesting Success: Cultivating Quality, Nurturing Community.
+              Discover the freshest produce straight from local farms. Join our
+              farmers' market for a vibrant celebration of flavor,
+              sustainability, and farm-to-table goodness
             </p>
           </header>
 
@@ -110,26 +109,6 @@ const Brands = () => {
 
           <div className="mt-4 lg:mt-8 lg:grid lg:grid-cols-4 lg:items-start lg:gap-8">
             <div className="hidden space-y-4 lg:block">
-              <div>
-                <label
-                  htmlFor="SortBy"
-                  className="block text-xs font-medium text-gray-700"
-                >
-                  Sort By
-                </label>
-
-                <select
-                  id="SortBy"
-                  className="mt-1 rounded border-gray-300 text-sm"
-                >
-                  <option>Sort By</option>
-                  <option value="Title, DESC">Title, DESC</option>
-                  <option value="Title, ASC">Title, ASC</option>
-                  <option value="Price, DESC">Price, DESC</option>
-                  <option value="Price, ASC">Price, ASC</option>
-                </select>
-              </div>
-
               <div>
                 <p className="block text-xs font-medium text-gray-700">
                   Filters

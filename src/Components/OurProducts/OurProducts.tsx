@@ -4,6 +4,8 @@ import { useGetProductsQuery } from "../../Features/Products/ProductApi";
 import OurProductItem from "../OurProductItem/OurProductItem";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
+import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { Link } from "react-router-dom";
 
 type productData = {
   _id: string;
@@ -18,7 +20,6 @@ type productData = {
   name: string;
   unit: string;
 };
-
 
 const OurProducts = () => {
   const { data, isLoading, isError, error } = useGetProductsQuery({});
@@ -40,7 +41,7 @@ const OurProducts = () => {
     data.data.length > 0
   ) {
     content = data?.data
-      .slice()
+      .slice(0, 6)
       .sort((a: productData, b: productData) => b.price - a.price)
       .map((d: productData) => (
         <OurProductItem key={d?._id} data={d}></OurProductItem>
@@ -103,6 +104,9 @@ const OurProducts = () => {
           </div>
         </div>
       </div>
+      <Link to="/AllProducts" className="flex items-center justify-center lg:mt-1 md:mt-20 mt-10">
+        <PrimaryButton>See More Products</PrimaryButton>
+      </Link>
     </section>
   );
 };
