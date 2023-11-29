@@ -31,16 +31,16 @@ const OurProducts = () => {
   if (!isLoading && isError) {
     content = <Errors>{error?.data?.error}</Errors>;
   }
-  if (!isLoading && !isError && data.data.length === 0) {
+  if (!isLoading && !isError && data.data.products.length === 0) {
     content = <Errors>{"There are no product"}</Errors>;
   }
   if (
     !isLoading &&
     !isError &&
     data.status === "success" &&
-    data.data.length > 0
+    data.data.products.length > 0
   ) {
-    content = data?.data
+    content = data?.data?.products
       .slice(0, 6)
       .sort((a: productData, b: productData) => b.price - a.price)
       .map((d: productData) => (
@@ -104,7 +104,10 @@ const OurProducts = () => {
           </div>
         </div>
       </div>
-      <Link to="/AllProducts" className="flex items-center justify-center lg:mt-1 md:mt-20 mt-10">
+      <Link
+        to="/AllProducts"
+        className="flex items-center justify-center lg:mt-1 md:mt-20 mt-10"
+      >
         <PrimaryButton>See More Products</PrimaryButton>
       </Link>
     </section>

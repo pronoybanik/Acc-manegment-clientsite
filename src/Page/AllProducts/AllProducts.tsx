@@ -1,7 +1,19 @@
+import React, { useState, useEffect } from "react";
 import OurProductItem from "../../Components/OurProductItem/OurProductItem";
-import { useGetProductsQuery } from "../../Features/Products/ProductApi";
+import {
+  useGetProductsCategoryQuery,
+  useGetProductsFilersQuery,
+  useGetProductsQuery,
+} from "../../Features/Products/ProductApi";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearCategory,
+  clearPrice,
+  setCategory,
+  setPrice,
+} from "../../Features/Products/ProductSlice";
 
 type productData = {
   _id: string;
@@ -17,8 +29,67 @@ type productData = {
   unit: string;
 };
 
+const priceFilters = {
+  id: "size",
+  name: "price",
+  options: [
+    {
+      label: "Price: Low to High",
+      value: "price",
+      checked: false,
+    },
+    {
+      label: "Price: High to Low",
+      value: "-price",
+      checked: false,
+    },
+  ],
+};
+
+const productFilters = {
+  id: "product",
+  name: "products",
+  options: [
+    { value: "", label: "All", checked: false },
+    {
+      value: "rice",
+      label: "Rice",
+      checked: false,
+    },
+    {
+      value: "oil",
+      label: "Oil",
+      checked: false,
+    },
+  ],
+};
+
 const AllProducts = () => {
+  const [categoryData, setCategoryData] = useState("");
+  const [priceData, setPriceData] = useState("");
+  const dispatch = useDispatch();
+  const { category, price } = useSelector((state) => state?.productFilter);
+  console.log(category);
+
   const { data, isLoading, isError, error } = useGetProductsQuery({});
+  const { data: filterCategory } = useGetProductsCategoryQuery(category);
+  const { data: allFilter } = useGetProductsFilersQuery({ category, price });
+  console.log(allFilter);
+
+  useEffect(() => {
+    // Dispatch actions to update Redux state based on component state
+    if (categoryData) {
+      dispatch(setCategory(categoryData));
+    } else {
+      dispatch(clearCategory());
+    }
+
+    if (priceData) {
+      dispatch(setPrice(priceData));
+    } else {
+      dispatch(clearPrice());
+    }
+  }, [dispatch, categoryData, priceData]);
 
   let content = null;
   if (isLoading) {
@@ -27,19 +98,58 @@ const AllProducts = () => {
   if (!isLoading && isError) {
     content = <Errors>{error?.data?.error}</Errors>;
   }
-  if (!isLoading && !isError && data.data.length === 0) {
+  if (!isLoading && !isError && data.data.products.length === 0) {
     content = <Errors>{"There are no product"}</Errors>;
   }
   if (
     !isLoading &&
     !isError &&
     data.status === "success" &&
-    data.data.length > 0
+    data.data.products.length > 0
   ) {
-    content = data?.data.map((d: productData) => (
-      <OurProductItem key={d?._id} data={d}></OurProductItem>
-    ));
+    content =
+      category === ""
+        ? data?.data?.products.map((d: productData) => {
+            return <OurProductItem key={d?._id} data={d}></OurProductItem>;
+          })
+        : filterCategory?.data?.products.map((d: productData) => {
+            return <OurProductItem key={d?._id} data={d}></OurProductItem>;
+          });
   }
+
+  // let content = null;
+
+  // if (isLoading) {
+  //   content = <Loading />;
+  // } else if (isError) {
+  //   content = <Errors>{error?.data?.error}</Errors>;
+  // } else if (data.status === "success" && data.data.products.length === 0) {
+  //   content = <Errors>{"There are no products"}</Errors>;
+  // } else if (
+  //   category === "" &&
+  //   data.status === "success" &&
+  //   data.data.products.length > 0
+  // ) {
+  //   content = data.data.products.map((d: productData) => (
+  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
+  //   ));
+  // } else if (
+  //   filterCategory &&
+  //   filterCategory.status === "success" &&
+  //   filterCategory.data.products.length > 0
+  // ) {
+  //   content = filterCategory.data.products.map((d: productData) => (
+  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
+  //   ));
+  // } else if (
+  //   allFilter &&
+  //   allFilter.status === "success" &&
+  //   allFilter.data.products.length > 0
+  // ) {
+  //   content = allFilter.data.products.map((d: productData) => (
+  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
+  //   ));
+  // }
 
   return (
     <section>
@@ -110,7 +220,10 @@ const AllProducts = () => {
               <div className="mt-1 space-y-2">
                 <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium"> Availability </span>
+                    <span className="text-sm font-medium">
+                      {" "}
+                      product Category{" "}
+                    </span>
 
                     <span className="transition group-open:-rotate-180">
                       <svg
@@ -131,78 +244,32 @@ const AllProducts = () => {
                   </summary>
 
                   <div className="border-t border-gray-200 bg-white">
-                    <header className="flex items-center justify-between p-4">
-                      <span className="text-sm text-gray-700">
-                        {" "}
-                        0 Selected{" "}
-                      </span>
-
-                      <button
-                        type="button"
-                        className="text-sm text-gray-900 underline underline-offset-4"
-                      >
-                        Reset
-                      </button>
-                    </header>
-
                     <ul className="space-y-1 border-t border-gray-200 p-4">
-                      <li>
-                        <label
-                          htmlFor="FilterInStock"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterInStock"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            In Stock (5+)
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterPreOrder"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterPreOrder"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Pre Order (3+)
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterOutOfStock"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterOutOfStock"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Out of Stock (10+)
-                          </span>
-                        </label>
-                      </li>
+                      <div>
+                        {productFilters.options.map((option) => (
+                          <li key={option.value} className="flex items-center">
+                            <input
+                              defaultValue={option.value}
+                              type="checkbox"
+                              onChange={(e) =>
+                                setCategoryData(e.target.defaultValue)
+                              }
+                              defaultChecked={option.checked}
+                              className="h-4 w-4 text-black rounded border-gray-300 focus:ring-indigo-500"
+                            />
+                            <label className="ml-3 text-sm text-black ">
+                              {option.label}
+                            </label>
+                          </li>
+                        ))}
+                      </div>
                     </ul>
                   </div>
                 </details>
 
-                <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
+                {/* <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium"> Price </span>
+                    <span className="text-sm font-medium"> products Price </span>
 
                     <span className="transition group-open:-rotate-180">
                       <svg
@@ -268,11 +335,11 @@ const AllProducts = () => {
                       </div>
                     </div>
                   </div>
-                </details>
+                </details> */}
 
                 <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium"> Colors </span>
+                    <span className="text-sm font-medium"> price </span>
 
                     <span className="transition group-open:-rotate-180">
                       <svg
@@ -309,105 +376,22 @@ const AllProducts = () => {
 
                     <ul className="space-y-1 border-t border-gray-200 p-4">
                       <li>
-                        <label
-                          htmlFor="FilterRed"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterRed"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Red
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterBlue"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterBlue"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Blue
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterGreen"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterGreen"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Green
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterOrange"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterOrange"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Orange
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterPurple"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterPurple"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Purple
-                          </span>
-                        </label>
-                      </li>
-
-                      <li>
-                        <label
-                          htmlFor="FilterTeal"
-                          className="inline-flex items-center gap-2"
-                        >
-                          <input
-                            type="checkbox"
-                            id="FilterTeal"
-                            className="h-5 w-5 rounded border-gray-300"
-                          />
-
-                          <span className="text-sm font-medium text-gray-700">
-                            Teal
-                          </span>
-                        </label>
+                        {priceFilters.options.map((option) => (
+                          <div key={option.value} className="flex items-center">
+                            <input
+                              defaultValue={option.value}
+                              type="checkbox"
+                              onChange={(e) =>
+                                setPriceData(e.target.defaultValue)
+                              }
+                              defaultChecked={option.checked}
+                              className="h-4 w-4 text-black rounded border-gray-300 focus:ring-indigo-500"
+                            />
+                            <label className="ml-3 text-sm text-black ">
+                              {option.label}
+                            </label>
+                          </div>
+                        ))}
                       </li>
                     </ul>
                   </div>
