@@ -230,7 +230,7 @@ const AddSupplier = () => {
                 {brandIsLoading ? (
                   <div>Loading...</div>
                 ) : (
-                  brandData?.data?.map((data: BrandData, index: number) => (
+                  brandData?.data?.brands.map((data: BrandData, index: number) => (
                     <div key={data?._id}>
                       <input
                         className="peer sr-only"

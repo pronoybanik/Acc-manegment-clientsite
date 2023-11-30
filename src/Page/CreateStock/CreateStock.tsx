@@ -77,7 +77,6 @@ const CreateStock = () => {
   const [selectedFileCount, setSelectedFileCount] = React.useState(0);
   const [createStock, { data: stockData, isSuccess, error, isError }] =
     useCreateStockMutation();
-  console.log(stockData);
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -269,7 +268,7 @@ const CreateStock = () => {
                   {brandIsLoading ? (
                     <div>Loading...</div>
                   ) : (
-                    brandData?.data?.map((data: BrandData, index: number) => (
+                    brandData?.data?.brands.map((data: BrandData, index: number) => (
                       <div key={data?._id}>
                         <input
                           className="peer sr-only"
