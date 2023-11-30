@@ -8,6 +8,10 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 const ProductItem = () => {
   const { id } = useParams();
+  const [productQuantity, setProductQuantity] = useState(1);
+  const userItem = localStorage.getItem("userId");
+  const userId = userItem ? JSON.parse(userItem) : null;
+  const navigate = useNavigate();
 
   const {
     data: productData,
@@ -23,15 +27,8 @@ const ProductItem = () => {
       isError: orderIsError,
       isLoading: orderLoading,
       error: orderError,
-      data,
     },
   ] = useCreateOrderMutation();
-  console.log(data);
-
-  const [productQuantity, setProductQuantity] = useState(1);
-  const userItem = localStorage.getItem("userId");
-  const userId = userItem ? JSON.parse(userItem) : null;
-  const navigate = useNavigate();
 
   // increment handler
   const handleIncrement = () => {
@@ -80,7 +77,7 @@ const ProductItem = () => {
         </div>
 
         {/* product Data */}
-        <div className="sticky top-0 lg:mt-10">
+        <div className="sticky top-0 lg:mt-10 lg:pt-4">
           <strong className="rounded-full border border-blue-600 bg-gray-100 px-3 py-0.5 text- font-medium tracking-wide text-blue-600">
             Name: {productData?.data?.name}
           </strong>
@@ -189,8 +186,6 @@ const ProductItem = () => {
                 </button>
               </div>
             </div>
-
-        
 
             <div
               className="mt-4"

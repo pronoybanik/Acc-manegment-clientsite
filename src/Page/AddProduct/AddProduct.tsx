@@ -65,6 +65,7 @@ const AddProduct = () => {
       option: { value: string };
       price: { value: number };
       description: { value: string };
+      brandName: { value: string };
       productImage: { files: FileList };
     };
 
@@ -72,6 +73,7 @@ const AddProduct = () => {
     const category = target.category.value;
     const unit = target.unit.value;
     const BrandId = target.option.value;
+    const BrandName = target.brandName.value;
     const description = target.description.value;
     const ProductPrice = target.price.value;
     const productImage = target.productImage.files[0];
@@ -98,6 +100,7 @@ const AddProduct = () => {
         name: productName,
         description: description,
         brand: {
+          name: BrandName,
           id: BrandId,
         },
         price: ProductPrice,
@@ -121,8 +124,6 @@ const AddProduct = () => {
               independent from manufacturer and other group control gives you
               confidence that we will only recommend what is right for you.
             </p>
-
-           
           </div>
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
@@ -170,6 +171,7 @@ const AddProduct = () => {
                     id="unit"
                   />
                 </div>
+
                 <div>
                   <label className="sr-only" htmlFor="price">
                     price
@@ -180,6 +182,19 @@ const AddProduct = () => {
                     type="text"
                     name="price"
                     id="price"
+                  />
+                </div>
+
+                <div>
+                  <label className="sr-only" htmlFor="price">
+                    Brand Name
+                  </label>
+                  <input
+                    className="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                    placeholder="Brand Name"
+                    type="text"
+                    name="brandName"
+                    id="brandName"
                   />
                 </div>
               </div>

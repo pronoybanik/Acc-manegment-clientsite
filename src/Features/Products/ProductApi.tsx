@@ -14,6 +14,10 @@ const productsApi = ApiSlice.injectEndpoints({
       query: ({ data, data2 }) => `/product?category=${data}&sort=${data2}`,
       providesTags: ["getProduct"],
     }),
+    getProductsByName: builder.query({
+      query: (data) => `/product?brand.name=${data}`,
+      providesTags: ["getProduct"],
+    }),
     getProductItem: builder.query({
       query: (id) => `/product/${id}`,
     }),
@@ -34,4 +38,5 @@ export const {
   useCreateProductMutation,
   useGetProductsCategoryQuery,
   useGetProductsFilersQuery,
+  useGetProductsByNameQuery,
 } = productsApi;

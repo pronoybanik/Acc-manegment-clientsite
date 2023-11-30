@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import OurProductItem from "../../Components/OurProductItem/OurProductItem";
 import {
+  useGetProductsByNameQuery,
   useGetProductsCategoryQuery,
   useGetProductsFilersQuery,
   useGetProductsQuery,
@@ -14,6 +15,7 @@ import {
   setCategory,
   setPrice,
 } from "../../Features/Products/ProductSlice";
+import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 
 type productData = {
   _id: string;
@@ -27,23 +29,6 @@ type productData = {
   imageURLs: string;
   name: string;
   unit: string;
-};
-
-const priceFilters = {
-  id: "size",
-  name: "price",
-  options: [
-    {
-      label: "Price: Low to High",
-      value: "price",
-      checked: false,
-    },
-    {
-      label: "Price: High to Low",
-      value: "-price",
-      checked: false,
-    },
-  ],
 };
 
 const productFilters = {
@@ -67,15 +52,26 @@ const productFilters = {
 const AllProducts = () => {
   const [categoryData, setCategoryData] = useState("");
   const [priceData, setPriceData] = useState("");
+  const [brandName, setBrandName] = React.useState<string>("");
+
   const dispatch = useDispatch();
-  const { category, price } = useSelector((state) => state?.productFilter);
-  console.log(category);
 
-  const { data, isLoading, isError, error } = useGetProductsQuery({});
-  const { data: filterCategory } = useGetProductsCategoryQuery(category);
-  const { data: allFilter } = useGetProductsFilersQuery({ category, price });
-  console.log(allFilter);
+  const { category } = useSelector((state) => state?.productFilter);
+  // console.log(category);
 
+  const {
+    data: allProduct,
+    isLoading,
+    isError,
+    error,
+  } = useGetProductsQuery({});
+  const { data: filterCategory } = useGetProductsCategoryQuery(brandName);
+  // const { data: allFilter } = useGetProductsFilersQuery({ category, price });
+  console.log(filterCategory);
+
+  // if (brandNameData) {
+  //   setBrandNameData("");
+  // }
   useEffect(() => {
     // Dispatch actions to update Redux state based on component state
     if (categoryData) {
@@ -98,58 +94,24 @@ const AllProducts = () => {
   if (!isLoading && isError) {
     content = <Errors>{error?.data?.error}</Errors>;
   }
-  if (!isLoading && !isError && data.data.products.length === 0) {
-    content = <Errors>{"There are no product"}</Errors>;
+  if (!isLoading && !isError && allProduct.data.products.length === 0) {
+    content = <Errors>{"There are no products"}</Errors>;
   }
   if (
     !isLoading &&
     !isError &&
-    data.status === "success" &&
-    data.data.products.length > 0
+    allProduct.status === "success" &&
+    allProduct.data.products.length > 0
   ) {
     content =
-      category === ""
-        ? data?.data?.products.map((d: productData) => {
+      brandName === ""
+        ? allProduct?.data?.products.map((d: productData) => {
             return <OurProductItem key={d?._id} data={d}></OurProductItem>;
           })
         : filterCategory?.data?.products.map((d: productData) => {
             return <OurProductItem key={d?._id} data={d}></OurProductItem>;
           });
   }
-
-  // let content = null;
-
-  // if (isLoading) {
-  //   content = <Loading />;
-  // } else if (isError) {
-  //   content = <Errors>{error?.data?.error}</Errors>;
-  // } else if (data.status === "success" && data.data.products.length === 0) {
-  //   content = <Errors>{"There are no products"}</Errors>;
-  // } else if (
-  //   category === "" &&
-  //   data.status === "success" &&
-  //   data.data.products.length > 0
-  // ) {
-  //   content = data.data.products.map((d: productData) => (
-  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
-  //   ));
-  // } else if (
-  //   filterCategory &&
-  //   filterCategory.status === "success" &&
-  //   filterCategory.data.products.length > 0
-  // ) {
-  //   content = filterCategory.data.products.map((d: productData) => (
-  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
-  //   ));
-  // } else if (
-  //   allFilter &&
-  //   allFilter.status === "success" &&
-  //   allFilter.data.products.length > 0
-  // ) {
-  //   content = allFilter.data.products.map((d: productData) => (
-  //     <OurProductItem key={d?._id} data={d}></OurProductItem>
-  //   ));
-  // }
 
   return (
     <section>
@@ -199,11 +161,11 @@ const AllProducts = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="hidden space-y-4 lg:block">
+        <div className="grid grid-cols-4 gap-4">
+          <div className="hidden space-y-4 lg:block ">
             <div>
               <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-                All Brand Collection
+                All product Collection
               </h2>
 
               <p className="mt-4 max-w-sm text-gray-800">
@@ -215,205 +177,26 @@ const AllProducts = () => {
             </div>
 
             <div>
-              <p className="block text-xs font-medium text-gray-700">Filters</p>
-
+              <p className="text-center border-b-2 w-36 mx-auto ">
+                Filtering Products
+              </p>
               <div className="mt-1 space-y-2">
-                <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium">
-                      {" "}
-                      product Category{" "}
-                    </span>
-
-                    <span className="transition group-open:-rotate-180">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-4 w-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-
-                  <div className="border-t border-gray-200 bg-white">
-                    <ul className="space-y-1 border-t border-gray-200 p-4">
-                      <div>
-                        {productFilters.options.map((option) => (
-                          <li key={option.value} className="flex items-center">
-                            <input
-                              defaultValue={option.value}
-                              type="checkbox"
-                              onChange={(e) =>
-                                setCategoryData(e.target.defaultValue)
-                              }
-                              defaultChecked={option.checked}
-                              className="h-4 w-4 text-black rounded border-gray-300 focus:ring-indigo-500"
-                            />
-                            <label className="ml-3 text-sm text-black ">
-                              {option.label}
-                            </label>
-                          </li>
-                        ))}
-                      </div>
-                    </ul>
-                  </div>
-                </details>
-
-                {/* <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium"> products Price </span>
-
-                    <span className="transition group-open:-rotate-180">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-4 w-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-
-                  <div className="border-t border-gray-200 bg-white">
-                    <header className="flex items-center justify-between p-4">
-                      <span className="text-sm text-gray-700">
-                        The highest price is $600
-                      </span>
-
-                      <button
-                        type="button"
-                        className="text-sm text-gray-900 underline underline-offset-4"
-                      >
-                        Reset
-                      </button>
-                    </header>
-
-                    <div className="border-t border-gray-200 p-4">
-                      <div className="flex justify-between gap-4">
-                        <label
-                          htmlFor="FilterPriceFrom"
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-sm text-gray-600">$</span>
-
-                          <input
-                            type="number"
-                            id="FilterPriceFrom"
-                            placeholder="From"
-                            className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-                          />
-                        </label>
-
-                        <label
-                          htmlFor="FilterPriceTo"
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-sm text-gray-600">$</span>
-
-                          <input
-                            type="number"
-                            id="FilterPriceTo"
-                            placeholder="To"
-                            className="w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
-                          />
-                        </label>
-                      </div>
+                {productFilters?.options.map((option, index: number) => (
+                  <div
+                    onClick={() => setBrandName(option?.value)}
+                    className="bg-slate-50 cursor-pointer hover:bg-slate-100 mt-2 py-2 ps-4 font-medium rounded-lg"
+                  >
+                    <div className="flex gap-2">
+                      <div className="-mt-1 text-lg">{index + 1}.</div>
+                      <div>{option.label}</div>
                     </div>
                   </div>
-                </details> */}
-
-                <details className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-gray-900 transition">
-                    <span className="text-sm font-medium"> price </span>
-
-                    <span className="transition group-open:-rotate-180">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-4 w-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-
-                  <div className="border-t border-gray-200 bg-white">
-                    <header className="flex items-center justify-between p-4">
-                      <span className="text-sm text-gray-700">
-                        {" "}
-                        0 Selected{" "}
-                      </span>
-
-                      <button
-                        type="button"
-                        className="text-sm text-gray-900 underline underline-offset-4"
-                      >
-                        Reset
-                      </button>
-                    </header>
-
-                    <ul className="space-y-1 border-t border-gray-200 p-4">
-                      <li>
-                        {priceFilters.options.map((option) => (
-                          <div key={option.value} className="flex items-center">
-                            <input
-                              defaultValue={option.value}
-                              type="checkbox"
-                              onChange={(e) =>
-                                setPriceData(e.target.defaultValue)
-                              }
-                              defaultChecked={option.checked}
-                              className="h-4 w-4 text-black rounded border-gray-300 focus:ring-indigo-500"
-                            />
-                            <label className="ml-3 text-sm text-black ">
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </li>
-                    </ul>
-                  </div>
-                </details>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="mt-4 col-span-2">
-            <div className="flex gap-4">
-              <p className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100">
-                ACI
-              </p>
-              /
-              <p className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100">
-                Fresh
-              </p>
-              /
-              <p className="cursor-pointer text-xl font-serif font-semibold leading-2 relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100">
-                Rupchanda
-              </p>
-            </div>
+          <div className="mt-4 col-span-3">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
               {content}
             </div>
