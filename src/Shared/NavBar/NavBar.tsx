@@ -50,36 +50,9 @@ const NavBar = () => {
       <li>
         <Link
           className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addStore"
+          to="/allProducts"
         >
-          Add Store
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addSupplier"
-        >
-          Add Supplier
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addProduct"
-        >
-          Add Product
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addBrand"
-        >
-          Add Brand
+          all Products
         </Link>
       </li>
 
@@ -132,32 +105,38 @@ const NavBar = () => {
 
           <div className="flex items-center gap-4 ">
             <div className="flex gap-2">
-              <button
-                className="text-white"
-                onClick={() => setShowLoginModal(true)}
-              >
-                Login
-              </button>
+              {!data?.data?.email ? (
+                <>
+                  <button
+                    className="text-white"
+                    onClick={() => setShowLoginModal(true)}
+                  >
+                    Login
+                  </button>
 
-              <p className="text-white mt-2">/</p>
+                  <p className="text-white mt-2">/</p>
 
-              <button
-                className="text-white"
-                onClick={() => setShowRegisterModal(true)}
-              >
-                Register
-              </button>
-
-              {showLoginModal && <Login closeForm={closeLoginForm} />}
-              {showRegisterModal && <Register closeForm={closeRegisterForm} />}
-              {data?.data?.email ? (
+                  <button
+                    className="text-white"
+                    onClick={() => setShowRegisterModal(true)}
+                  >
+                    Register
+                  </button>
+                </>
+              ) : (
                 <button
                   onClick={handleLogOut}
-                  className="text-white bg-black px-5 py-2 "
+                  className="text-white bg-black px-5 py-2"
                 >
                   Logout
                 </button>
-              ) : null}
+              )}
+
+              {showLoginModal && <Login closeForm={closeLoginForm} />}
+              {showRegisterModal && <Register closeForm={closeRegisterForm} />}
+              {/* {data?.data?.email ? (
+               
+              ) : null} */}
             </div>
 
             <div className="block md:hidden">

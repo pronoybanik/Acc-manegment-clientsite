@@ -19,7 +19,7 @@ const OurProductItem = ({ data }: { data: productData }) => {
   
 
   return (
-    <section className="border-2 p-4 mt-4 h-full">
+    <section className="border-2 p-4 mt-4 ">
       <Link
         key={data?._id}
         to={`/product/${data?._id}`}
