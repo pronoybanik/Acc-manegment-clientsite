@@ -6,17 +6,20 @@ import {
   useLoginAccountMutation,
 } from "../../Features/Login/LoginApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import Errors from "../../Shared/Errors/Errors";
+import Loading from "../../Shared/Loading/Loading";
 
 interface LoginProps {
   closeForm: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
-  const [loginAccount, { data: accountData }] = useLoginAccountMutation();
+  const [
+    loginAccount,
+    { data: loginData, isLoading: loginLoading, error: loginError },
+  ] = useLoginAccountMutation();
 
-  const { data, isLoading, error } = useGetUserByIdQuery(
-    accountData?.data?.user?._id
-  );
+  const { data } = useGetUserByIdQuery(loginData?.data?.user?._id);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -24,22 +27,13 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
 
   // Error HandleIng...
   let content = null;
-  if (isLoading) {
+  if (loginLoading) {
     content = <p>Loading..</p>;
   }
-  if (!isLoading && error?.data?.status === "fail") {
-    content = (
-      <div
-        role="alert"
-        className="rounded border-s-4 border-red-500 bg-red-50 p-4"
-      >
-        <strong className="block font-medium text-red-800">
-          {error?.data?.error}
-        </strong>
-      </div>
-    );
+  if (!loginLoading && loginError?.data?.status === "fail") {
+    content = <Errors>{loginError?.data?.error}</Errors>;
   }
-  if (!isLoading && !error && data?.status === "success") {
+  if (!loginLoading && !loginError && data?.status === "success") {
     setTimeout(() => {
       alert("Login SuccessFull");
       navigate(navigateForm, { replace: true });
@@ -187,7 +181,11 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                       </Link>
                     </p>
                     <PrimaryButton>
-                      {isLoading ? <div>Loading...</div> : <div>Sing in</div>}{" "}
+                      {loginLoading ? (
+                        <div>Loading...</div>
+                      ) : (
+                        <div>Sing in</div>
+                      )}{" "}
                     </PrimaryButton>
                   </div>
                 </form>
