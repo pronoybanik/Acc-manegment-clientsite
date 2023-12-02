@@ -1,6 +1,10 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  useGetUserByIdQuery,
+  useGetUserQuery,
+  useLoginAccountMutation,
+} from "../../Features/Login/LoginApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
 interface LoginProps {
@@ -8,8 +12,15 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ closeForm }) => {
-  const [loginAccount, { data, error, isLoading }] = useLoginAccountMutation();
+  const [loginAccount, { data: accountData }] = useLoginAccountMutation();
+
+  const { data, isLoading, error } = useGetUserByIdQuery(
+    accountData?.data?.user?._id
+  );
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const navigateForm = location.state?.from?.pathname || "/";
 
   // Error HandleIng...
   let content = null;
@@ -31,8 +42,8 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
   if (!isLoading && !error && data?.status === "success") {
     setTimeout(() => {
       alert("Login SuccessFull");
+      navigate(navigateForm, { replace: true });
       window.location.reload();
-      navigate("/");
     }, 1000);
   }
 

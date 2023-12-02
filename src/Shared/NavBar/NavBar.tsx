@@ -132,7 +132,7 @@ const NavBar = () => {
                 </button>
               )}
 
-              {showLoginModal && <Login closeForm={closeLoginForm} />}
+              {showLoginModal && <Login  closeForm={closeLoginForm} />}
               {showRegisterModal && <Register closeForm={closeRegisterForm} />}
               {/* {data?.data?.email ? (
                

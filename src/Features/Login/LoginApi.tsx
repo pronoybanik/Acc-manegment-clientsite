@@ -9,6 +9,7 @@ const loginApi = ApiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
@@ -19,7 +20,7 @@ const loginApi = ApiSlice.injectEndpoints({
             "userId",
             JSON.stringify(result.data.data.user._id)
           );
-          
+
           dispatch(
             userLoggedIn({
               token: result.data.data.token,
@@ -28,16 +29,31 @@ const loginApi = ApiSlice.injectEndpoints({
           );
         } catch (error) {
           console.log(error);
+        } finally {
+          if (queryFulfilled && queryFulfilled.invalidateQueries) {
+            queryFulfilled.invalidateQueries(["user"]);
+          }
         }
       },
     }),
     getUser: builder.query({
       query: () => "/user/me",
+      providesTags: ["user"],
+    }),
+    getUserById: builder.query({
+      query: (id) => `/user/${id}`,
+      providesTags: ["user"],
     }),
     getAllUser: builder.query({
       query: () => "/user",
+      providesTags: ["user"],
     }),
   }),
 });
 
-export const { useLoginAccountMutation, useGetUserQuery, useGetAllUserQuery } = loginApi;
+export const {
+  useLoginAccountMutation,
+  useGetUserQuery,
+  useGetAllUserQuery,
+  useGetUserByIdQuery,
+} = loginApi;

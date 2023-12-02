@@ -135,6 +135,7 @@ const OurProducts = () => {
             ) : (
               brandData?.data?.brands.map((data: BrandData) => (
                 <p
+                  key={data?._id}
                   onClick={() => setBrandNameData(data?.name)}
                   className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
                 >
