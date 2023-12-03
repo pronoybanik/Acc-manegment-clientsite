@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   category: "",
   price: "",
+  pageNumber: 1,
 };
 
 // Create a slice
@@ -24,11 +25,20 @@ const productSlice = createSlice({
     clearPrice: (state) => {
       state.price = "";
     },
+    changePageNumber: (state, action) => {
+      state.pageNumber = action.payload;
+    },
   },
 });
 
 // Export actions
-export const { setCategory, clearCategory, setPrice, clearPrice } = productSlice.actions;
+export const {
+  setCategory,
+  clearCategory,
+  setPrice,
+  clearPrice,
+  changePageNumber,
+} = productSlice.actions;
 
 // Export reducer
 export default productSlice.reducer;

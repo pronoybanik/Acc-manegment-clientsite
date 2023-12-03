@@ -1,13 +1,11 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetUserByIdQuery,
-  useGetUserQuery,
   useLoginAccountMutation,
 } from "../../Features/Login/LoginApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
-import Loading from "../../Shared/Loading/Loading";
 
 interface LoginProps {
   closeForm: () => void;
@@ -78,7 +76,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
           <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-md text-center">
               <button
-                className="text-gray-600 hover:text-gray-800 absolute top-4 right-4"
+                className="text-gray-600 shadow-2xl hover:text-gray-800 absolute top-4 right-4"
                 onClick={closeForm}
               >
                 Close
@@ -86,15 +84,9 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
 
               <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
-                  <h1 className="text-2xl font-bold sm:text-3xl">
-                    Get started today!
+                  <h1 className="text-2xl font-bold sm:text-3xl pb-4">
+                    please Login Your Account!
                   </h1>
-
-                  <p className="mt-4 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                    libero nulla eaque error neque ipsa culpa autem, at itaque
-                    nostrum!
-                  </p>
                 </div>
 
                 <form
@@ -110,7 +102,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                     <div className="relative">
                       <input
                         type="email"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter email"
                         name="email"
                       />
@@ -142,7 +134,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                     <div className="relative">
                       <input
                         type="password"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter password"
                         name="password"
                       />
@@ -173,13 +165,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                   </div>
                   {content}
 
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-500">
-                      No account?
-                      <Link to="/regi" className="underline">
-                        Sign up
-                      </Link>
-                    </p>
+                  <div className="flex justify-center">
                     <PrimaryButton>
                       {loginLoading ? (
                         <div>Loading...</div>

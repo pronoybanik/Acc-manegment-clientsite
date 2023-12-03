@@ -1,13 +1,15 @@
 import React from "react";
-import OurProductItem from "../../Components/OurProductItem/OurProductItem";
 import {
+  useGetProductPaginationQuery,
   useGetProductsCategoryQuery,
-  useGetProductsQuery,
 } from "../../Features/Products/ProductApi";
-import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
-import { useDispatch } from "react-redux";
+import Errors from "../../Shared/Errors/Errors";
+import OurProductItem from "../../Components/OurProductItem/OurProductItem";
+import ProductPagination from "../../Shared/ProductPagination/ProductPagination";
+import { useSelector } from "react-redux";
 
+// set Data Type
 type productData = {
   _id: string;
   brand: {
@@ -44,15 +46,16 @@ const productFilters = {
 
 const AllProducts = () => {
   const [brandName, setBrandName] = React.useState<string>("");
-
-  const dispatch = useDispatch();
+  const { pageNumber } = useSelector((state) => state?.productFilter);
+  const limit = 6;
 
   const {
     data: allProduct,
     isLoading,
     isError,
     error,
-  } = useGetProductsQuery({});
+  } = useGetProductPaginationQuery({ pageNumber, limit });
+
   const { data: filterCategory } = useGetProductsCategoryQuery(brandName);
 
   let content = null;
@@ -71,6 +74,10 @@ const AllProducts = () => {
     allProduct.status === "success" &&
     allProduct.data.products.length > 0
   ) {
+    // content = allProduct?.data?.products.map((d: productData) => {
+    //   return <OurProductItem key={d?._id} data={d}></OurProductItem>;
+    // });
+
     content =
       brandName === ""
         ? allProduct?.data?.products.map((d: productData) => {
@@ -171,6 +178,12 @@ const AllProducts = () => {
             </div>
           </div>
         </div>
+        {/* pagination Api */}
+
+        <ProductPagination
+          currentPage={allProduct?.data?.currentPage}
+          pageNumber={allProduct?.data?.numberOfPage}
+        />
       </div>
     </section>
   );
