@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import {
   useDeleteUserMutation,
-  useEditUserMutation,
+  useEditUserMutation
 } from "../../Features/Login/LoginApi";
 
 type UserDataType = {

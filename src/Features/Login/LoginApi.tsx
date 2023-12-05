@@ -48,6 +48,21 @@ const loginApi = ApiSlice.injectEndpoints({
       query: () => "/user",
       providesTags: ["user"],
     }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"]
+    }),
+    editUser: builder.mutation({
+      query: ({ userId, data }) => ({
+        url: `/user/${userId}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
@@ -56,4 +71,6 @@ export const {
   useGetUserQuery,
   useGetAllUserQuery,
   useGetUserByIdQuery,
+  useDeleteUserMutation,
+  useEditUserMutation,
 } = loginApi;
