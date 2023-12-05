@@ -40,6 +40,14 @@ const orderApi = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getAllPayment"],
     }),
+    editOrderPayment: builder.mutation({
+      query: ({ orderId, data }) => ({
+        url: `/payment/${orderId}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["getAllPayment"],
+    }),
   }),
 });
 
@@ -50,4 +58,5 @@ export const {
   useCreateOrderPaymentMutation,
   useGetAllPaymentQuery,
   useDeleteOrderPaymentMutation,
+  useEditOrderPaymentMutation,
 } = orderApi;

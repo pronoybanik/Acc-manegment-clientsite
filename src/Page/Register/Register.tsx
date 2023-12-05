@@ -13,7 +13,6 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   const [createAccount, { isSuccess, isLoading, isError, error }] =
     useCreateAccountMutation();
   const navigate = useNavigate();
-  
 
   // image file counter
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -31,7 +30,7 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
       alert(" Account is Create");
       navigate("/");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,10 +116,8 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
               <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
                   <h1 className="text-2xl font-bold sm:text-3xl pb-10">
-                    Create A  Account!
+                    Create A Account!
                   </h1>
-
-                
                 </div>
 
                 <section>

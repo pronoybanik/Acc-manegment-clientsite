@@ -1,5 +1,8 @@
 import { useEffect } from "react";
-import { useDeleteOrderPaymentMutation } from "../../Features/Orders/OrdersApi";
+import {
+  useDeleteOrderPaymentMutation,
+  useEditOrderPaymentMutation,
+} from "../../Features/Orders/OrdersApi";
 import OrderSItem from "../OrderSItem/OrderSItem";
 
 interface OrderData {
@@ -24,20 +27,6 @@ interface UserData {
 }
 
 const OrdersSection = ({ orderInfo }: { orderInfo: UserData }) => {
-  // delete funsanality...
-  const [deleteOrderPayment, { isSuccess }] = useDeleteOrderPaymentMutation();
-  const handleDelete = (id: string) => {
-    if (id) {
-      deleteOrderPayment(id);
-    }
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      alert("Delete Orders");
-    }
-  }, [isSuccess]);
-
   const {
     _id,
     email,
@@ -50,6 +39,40 @@ const OrdersSection = ({ orderInfo }: { orderInfo: UserData }) => {
     priceData,
     shippingStatus,
   } = orderInfo;
+
+  const [deleteOrderPayment, { isSuccess }] = useDeleteOrderPaymentMutation();
+  const [editOrderPayment, { isSuccess: editOrderSuccess }] =
+    useEditOrderPaymentMutation();
+
+  const handleDelete = (id: string) => {
+    if (id) {
+      deleteOrderPayment(id);
+    }
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const productStatus = e.target.value;
+    const orderId = orderInfo?._id;
+
+    if (productStatus && orderId) {
+      editOrderPayment({
+        orderId,
+        data: {
+          shippingStatus: productStatus,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      alert("Delete Order");
+    } else if (editOrderSuccess) {
+      alert("change product status");
+    } else {
+      console.log("No Change");
+    }
+  }, [isSuccess, editOrderSuccess]);
 
   return (
     <div
@@ -111,52 +134,24 @@ const OrdersSection = ({ orderInfo }: { orderInfo: UserData }) => {
 
         <div className="space-y-4 text-center">
           <div className="block rounded border border-gray-600 px-5 py-3 text-sm text-gray-600 transition hover:ring-1 hover:ring-gray-400">
-            <div>
-              <details className="group [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex cursor-pointer border items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                  <span className="text-sm font-medium">
-                    Change Shipping Status
-                  </span>
-
-                  <span className="shrink-0 transition duration-300 group-open:-rotate-180">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </summary>
-
-                <ul className="mt-2 space-y-1 px-4">
-                  <li>
-                    <div className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                      Shipping
-                    </div>
-                  </li>
-
-                  <li>
-                    <div className="block border rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                      Delivered
-                    </div>
-                  </li>
-                </ul>
-              </details>
-            </div>
+            <select
+              onChange={handleStatusChange}
+              className="h-8 w-72 my-2 rounded border-gray-200 bg-gray-50 p-0 text-center text-lg text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+              id="nameSelect"
+              name="selectedName"
+            >
+              <option className="bg-gray-300">Change product status</option>
+              <option className="font-semibold" value="processing">
+                processing
+              </option>
+              <option className="font-semibold" value="shipped">
+                shipped
+              </option>
+              <option className="font-semibold" value="delivered">
+                delivered
+              </option>
+            </select>
           </div>
-
-          {/* <a
-            href="#"
-            className="block rounded bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600"
-          >
-            Checkout
-          </a> */}
 
           <p className="inline-block font-bold text-red-500 text-sm underline underline-offset-4 transition hover:text-gray-600">
             Shipping Status:- {shippingStatus}

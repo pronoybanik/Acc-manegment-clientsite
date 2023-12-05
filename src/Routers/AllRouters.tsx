@@ -8,7 +8,6 @@ import ProductItem from "../Components/ProductItem/ProductItem";
 import AddProduct from "../Page/AddProduct/AddProduct";
 import AddBrand from "../Page/AddBrand/AddBrand";
 import AddCard from "../Page/AddCard/AddCard";
-// import AddStore from "../Page/AddStore/AddStore";
 import AddSupplier from "../Page/AddSupplier/AddSupplier";
 import ManagerDashBoard from "../LayOut/ManagerDashBoard/ManagerDashBoard";
 import AllOrder from "../Page/AllOrder/AllOrder";
@@ -19,7 +18,7 @@ import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
 import LogIn from "../Page/Login/Login";
-import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
+
 
 const AllRouters = createBrowserRouter([
   {
@@ -50,6 +49,7 @@ const AllRouters = createBrowserRouter([
         ),
       },
       { path: "/allProducts", element: <AllProducts /> },
+
       { path: "/login", element: <LogIn /> },
       { path: "/blog", element: "blog" },
     ],

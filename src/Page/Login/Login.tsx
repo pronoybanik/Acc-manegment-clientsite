@@ -11,7 +11,7 @@ interface LoginProps {
   closeForm: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ closeForm }) => {
+const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
   const [
     loginAccount,
     { data: loginData, isLoading: loginLoading, error: loginError },
@@ -184,4 +184,4 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
   );
 };
 
-export default Login;
+export default LogIn;

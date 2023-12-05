@@ -2,6 +2,23 @@ import React from "react";
 import { useGetAllUserQuery } from "../../Features/Login/LoginApi";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
+import UserItem from "../../Components/UserItem/UserItem";
+
+type UserDataType = {
+  createdAt: string;
+  email: string;
+  firstName: string;
+  imageURL: string;
+  lastName: string;
+  password: string;
+  presentAddress: string;
+  role: string;
+  shippingAddress: string;
+  status: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+};
 
 const AllUser = () => {
   const { data, isError, error, isLoading } = useGetAllUserQuery({});
@@ -17,22 +34,8 @@ const AllUser = () => {
     content = <Errors>{"There are no user"}</Errors>;
   }
   if (!isLoading && !isError && data.data.length > 0) {
-    content = data?.data?.map((userData) => (
-      <tr key={userData._id}>
-        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-          {userData.firstName}
-          {userData.lastName}
-        </td>
-        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-          {userData.email}
-        </td>
-        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-          {userData.role}
-        </td>
-        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-          {userData.status}
-        </td>
-      </tr>
+    content = data?.data?.map((userData: UserDataType) => (
+      <UserItem key={userData?._id} userData={userData}></UserItem>
     ));
   }
 
@@ -54,7 +57,7 @@ const AllUser = () => {
               status
             </th>
             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-              status Change 
+              status Change
             </th>
             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
               Delate Account
