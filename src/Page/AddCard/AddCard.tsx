@@ -152,14 +152,16 @@ const AddCard = () => {
 
                   <dl className="mt-0.5 space-y-px text-[10px] text-gray-600">
                     <div>
-                      <dt className="inline">Unit:</dt>
-                      <dd className="inline">{data?.productId?.unit}</dd>
+                      <dt className="inline text-sm">Unit:</dt>
+                      <dd className="inline text-sm ">
+                        {data?.productId?.unit}
+                      </dd>
                     </div>
 
                     <div>
-                      <dt className="inline">price:</dt>
-                      <dd className="inline">
-                        {data?.productId?.price * data?.quantity}
+                      <dt className="inline text-sm">price:</dt>
+                      <dd className="inline font-mono text-sm ml-2 font-semibold">
+                        {data?.productId?.price * data?.quantity}Tk
                       </dd>
                     </div>
                   </dl>
@@ -176,11 +178,13 @@ const AddCard = () => {
                       min="1"
                       value={data?.quantity}
                       id="Line1Qty"
-                      className="h-8 w-12 rounded border-gray-200 bg-gray-50 p-0 text-center text-xs text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                      className="h-8 w-12 rounded border-gray-200 font-medium bg-gray-200 p-0 text-center text-xs text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                     />
                   </form>
 
-                  {orderStatus === "shipping" ? (
+                  {orderStatus?.shippingStatus === "processing" ||
+                  orderData?.shippingStatus === "shipped" ||
+                  orderData?.shippingStatus === "delivered" ? null : (
                     <button
                       onClick={() => handleOrderDelete(data?._id)}
                       className="text-gray-600 transition hover:text-red-600"
@@ -202,7 +206,7 @@ const AddCard = () => {
                         />
                       </svg>
                     </button>
-                  ) : null}
+                  )}
                 </div>
               </li>
             ) : null
@@ -232,12 +236,18 @@ const AddCard = () => {
 
                   <div className="after:mt-4 after:block after:h-1 after:w-full after:rounded-lg after:bg-gray-200">
                     <ol className="grid grid-cols-3 text-sm font-medium text-gray-500">
-                      <li className="relative flex justify-start text-blue-600">
+                      <li
+                        className={`relative flex justify-start ${
+                          orderStatus?.shippingStatus === "processing"
+                            ? "text-blue-600"
+                            : "text-slate-500"
+                        }`}
+                      >
                         <span
                           className={`absolute -bottom-[1.75rem] start-0 rounded-full ${
-                            orderStatus.shippingStatus === "processing"
+                            orderStatus?.shippingStatus === "processing"
                               ? "bg-blue-600"
-                              : "bg-slate-200"
+                              : "bg-slate-300"
                           } text-white`}
                         >
                           <svg
@@ -272,10 +282,16 @@ const AddCard = () => {
                         </svg>
                       </li>
 
-                      <li className="relative flex justify-center text-blue-600">
+                      <li
+                        className={`relative flex justify-center  ${
+                          orderStatus?.shippingStatus === "shipped"
+                            ? "text-blue-700"
+                            : "text-slate-500"
+                        }`}
+                      >
                         <span
                           className={`absolute -bottom-[1.75rem] left-1/2 -translate-x-1/2 rounded-full ${
-                            orderStatus.shippingStatus === "shipped"
+                            orderStatus?.shippingStatus === "shipped"
                               ? "bg-blue-700"
                               : "bg-slate-200"
                           } text-white`}
@@ -294,7 +310,7 @@ const AddCard = () => {
                           </svg>
                         </span>
 
-                        <span className="hidden sm:block"> shipping </span>
+                        <span className="hidden sm:block"> shipped </span>
 
                         <svg
                           className="mx-auto h-6 w-6 sm:hidden"
@@ -317,7 +333,13 @@ const AddCard = () => {
                         </svg>
                       </li>
 
-                      <li className="relative flex justify-end">
+                      <li
+                        className={`relative flex justify-end  ${
+                          orderStatus?.shippingStatus === "delivered"
+                            ? "text-blue-700"
+                            : "text-slate-500"
+                        }`}
+                      >
                         <span
                           className={`absolute -bottom-[1.75rem] end-0 rounded-full ${
                             orderStatus.shippingStatus === "delivered"
@@ -365,23 +387,17 @@ const AddCard = () => {
                   <dl className="space-y-0.5 text-sm text-gray-700">
                     <div className="flex justify-between">
                       <dt>Subtotal</dt>
-                      <dd>
-                        TK:{" "}
-                        {/* {orderData?.data?.reduce((data: OrderItem) =>
-                        data?.userId === userId ? { totalPrice } : "0"
-                      )} */}
-                        {totalPrice}
-                      </dd>
+                      <dd className="font-sans">TK:{totalPrice}</dd>
                     </div>
 
                     <div className="flex justify-between">
                       <dt>DaleyBry charge</dt>
-                      <dd>TK: 100</dd>
+                      <dd className="font-sans">TK: 100</dd>
                     </div>
 
                     <div className="flex justify-between !text-base font-medium">
                       <dt>Total</dt>
-                      <dd>TK: {totalPriceWithVat}</dd>
+                      <dd className="font-sans">TK: {totalPriceWithVat}</dd>
                     </div>
                   </dl>
 
@@ -409,16 +425,19 @@ const AddCard = () => {
                   </div>
 
                   <div className="flex justify-end">
-                    {orderStatus.paymentStatus === "unpaid" && "paid" ? (
-                      <div onClick={() => setCheckOut(true)}>
-                        <PrimaryButton>Check Out</PrimaryButton>
-                      </div>
-                    ) : (
+                    {orderStatus?.shippingStatus === "processing" ||
+                    orderData?.shippingStatus === "shipped" ||
+                    orderData?.shippingStatus === "delivered" ? (
                       <button className="relative cursor-pointer  text-white px-10   py-2 my-1   bg-no-repeat text-xl bg-slate-400 disabled   font-serif rounded-lg ">
                         Disable
                       </button>
+                    ) : (
+                      <div onClick={() => setCheckOut(true)}>
+                        <PrimaryButton>Check Out</PrimaryButton>
+                      </div>
                     )}
                   </div>
+
                   {checkOut && (
                     <PaymentModel
                       orderData={order}

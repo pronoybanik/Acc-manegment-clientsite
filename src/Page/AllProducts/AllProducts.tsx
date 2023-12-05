@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from "react";
-import OurProductItem from "../../Components/OurProductItem/OurProductItem";
+import React from "react";
 import {
-  useGetProductsByNameQuery,
+  useGetProductPaginationQuery,
   useGetProductsCategoryQuery,
-  useGetProductsFilersQuery,
-  useGetProductsQuery,
 } from "../../Features/Products/ProductApi";
-import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearCategory,
-  clearPrice,
-  setCategory,
-  setPrice,
-} from "../../Features/Products/ProductSlice";
-import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
+import Errors from "../../Shared/Errors/Errors";
+import OurProductItem from "../../Components/OurProductItem/OurProductItem";
+import ProductPagination from "../../Shared/ProductPagination/ProductPagination";
+import { useSelector } from "react-redux";
 
+// set Data Type
 type productData = {
   _id: string;
   brand: {
@@ -35,13 +28,15 @@ const productFilters = {
   id: "product",
   name: "products",
   options: [
-    { value: "", label: "All", checked: false },
+    { id: 1, value: "", label: "All", checked: false },
     {
+      id: 2,
       value: "rice",
       label: "Rice",
       checked: false,
     },
     {
+      id: 3,
       value: "oil",
       label: "Oil",
       checked: false,
@@ -50,42 +45,18 @@ const productFilters = {
 };
 
 const AllProducts = () => {
-  const [categoryData, setCategoryData] = useState("");
-  const [priceData, setPriceData] = useState("");
   const [brandName, setBrandName] = React.useState<string>("");
-
-  const dispatch = useDispatch();
-
-  const { category } = useSelector((state) => state?.productFilter);
-  // console.log(category);
+  const { pageNumber } = useSelector((state) => state?.productFilter);
+  const limit = 6;
 
   const {
     data: allProduct,
     isLoading,
     isError,
     error,
-  } = useGetProductsQuery({});
+  } = useGetProductPaginationQuery({ pageNumber, limit });
+
   const { data: filterCategory } = useGetProductsCategoryQuery(brandName);
-  // const { data: allFilter } = useGetProductsFilersQuery({ category, price });
-  console.log(filterCategory);
-
-  // if (brandNameData) {
-  //   setBrandNameData("");
-  // }
-  useEffect(() => {
-    // Dispatch actions to update Redux state based on component state
-    if (categoryData) {
-      dispatch(setCategory(categoryData));
-    } else {
-      dispatch(clearCategory());
-    }
-
-    if (priceData) {
-      dispatch(setPrice(priceData));
-    } else {
-      dispatch(clearPrice());
-    }
-  }, [dispatch, categoryData, priceData]);
 
   let content = null;
   if (isLoading) {
@@ -103,6 +74,10 @@ const AllProducts = () => {
     allProduct.status === "success" &&
     allProduct.data.products.length > 0
   ) {
+    // content = allProduct?.data?.products.map((d: productData) => {
+    //   return <OurProductItem key={d?._id} data={d}></OurProductItem>;
+    // });
+
     content =
       brandName === ""
         ? allProduct?.data?.products.map((d: productData) => {
@@ -183,6 +158,7 @@ const AllProducts = () => {
               <div className="mt-1 space-y-2">
                 {productFilters?.options.map((option, index: number) => (
                   <div
+                    key={option?.id}
                     onClick={() => setBrandName(option?.value)}
                     className="bg-slate-50 cursor-pointer hover:bg-slate-100 mt-2 py-2 ps-4 font-medium rounded-lg"
                   >
@@ -202,6 +178,12 @@ const AllProducts = () => {
             </div>
           </div>
         </div>
+        {/* pagination Api */}
+
+        <ProductPagination
+          currentPage={allProduct?.data?.currentPage}
+          pageNumber={allProduct?.data?.numberOfPage}
+        />
       </div>
     </section>
   );

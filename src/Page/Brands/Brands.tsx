@@ -34,12 +34,10 @@ type BrandData = {
 };
 
 const Brands = () => {
-  const { data, isLoading, isError, error } = useGetBrandQuery({}); // Removed the empty array
-  console.log(data?.data?.brands);
+  const { data, isLoading, isError, error } = useGetBrandQuery({});
 
   const [brandName, setBrandName] = React.useState<string>("");
   const { data: brandNameData } = useGetBrandNameQuery(brandName);
-  console.log(brandNameData);
 
   let content = null;
   if (isLoading) {
@@ -144,12 +142,12 @@ const Brands = () => {
                     {index + 1}. {d.name}
                   </div>
                 ))}
-                 <div
-                    onClick={() => setBrandName("")}
-                    className="bg-slate-50 cursor-pointer text-center hover:bg-slate-100 mt-2 py-2 ps-4 font-medium rounded-lg"
-                  >
-                    See All Brand
-                  </div>
+                <div
+                  onClick={() => setBrandName("")}
+                  className="bg-slate-50 cursor-pointer text-center hover:bg-slate-100 mt-2 py-2 ps-4 font-medium rounded-lg"
+                >
+                  See All Brand
+                </div>
               </div>
             </div>
 

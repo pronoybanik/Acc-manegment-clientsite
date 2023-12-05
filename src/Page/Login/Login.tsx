@@ -1,38 +1,41 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useGetUserByIdQuery,
+  useLoginAccountMutation,
+} from "../../Features/Login/LoginApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import Errors from "../../Shared/Errors/Errors";
 
 interface LoginProps {
   closeForm: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ closeForm }) => {
-  const [loginAccount, { data, error, isLoading }] = useLoginAccountMutation();
+const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
+  const [
+    loginAccount,
+    { data: loginData, isLoading: loginLoading, error: loginError },
+  ] = useLoginAccountMutation();
+
+  const { data } = useGetUserByIdQuery(loginData?.data?.user?._id);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const navigateForm = location.state?.from?.pathname || "/";
 
   // Error HandleIng...
   let content = null;
-  if (isLoading) {
+  if (loginLoading) {
     content = <p>Loading..</p>;
   }
-  if (!isLoading && error?.data?.status === "fail") {
-    content = (
-      <div
-        role="alert"
-        className="rounded border-s-4 border-red-500 bg-red-50 p-4"
-      >
-        <strong className="block font-medium text-red-800">
-          {error?.data?.error}
-        </strong>
-      </div>
-    );
+  if (!loginLoading && loginError?.data?.status === "fail") {
+    content = <Errors>{loginError?.data?.error}</Errors>;
   }
-  if (!isLoading && !error && data?.status === "success") {
+  if (!loginLoading && !loginError && data?.status === "success") {
     setTimeout(() => {
       alert("Login SuccessFull");
+      navigate(navigateForm, { replace: true });
       window.location.reload();
-      navigate("/");
     }, 1000);
   }
 
@@ -73,7 +76,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
           <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-md text-center">
               <button
-                className="text-gray-600 hover:text-gray-800 absolute top-4 right-4"
+                className="text-gray-600 shadow-2xl hover:text-gray-800 absolute top-4 right-4"
                 onClick={closeForm}
               >
                 Close
@@ -81,15 +84,9 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
 
               <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
-                  <h1 className="text-2xl font-bold sm:text-3xl">
-                    Get started today!
+                  <h1 className="text-2xl font-bold sm:text-3xl pb-4">
+                    please Login Your Account!
                   </h1>
-
-                  <p className="mt-4 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                    libero nulla eaque error neque ipsa culpa autem, at itaque
-                    nostrum!
-                  </p>
                 </div>
 
                 <form
@@ -105,7 +102,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                     <div className="relative">
                       <input
                         type="email"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter email"
                         name="email"
                       />
@@ -137,7 +134,7 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                     <div className="relative">
                       <input
                         type="password"
-                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                         placeholder="Enter password"
                         name="password"
                       />
@@ -168,15 +165,13 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
                   </div>
                   {content}
 
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-500">
-                      No account?
-                      <Link to="/regi" className="underline">
-                        Sign up
-                      </Link>
-                    </p>
+                  <div className="flex justify-center">
                     <PrimaryButton>
-                      {isLoading ? <div>Loading...</div> : <div>Sing in</div>}{" "}
+                      {loginLoading ? (
+                        <div>Loading...</div>
+                      ) : (
+                        <div>Sing in</div>
+                      )}{" "}
                     </PrimaryButton>
                   </div>
                 </form>
@@ -189,4 +184,4 @@ const Login: React.FC<LoginProps> = ({ closeForm }) => {
   );
 };
 
-export default Login;
+export default LogIn;

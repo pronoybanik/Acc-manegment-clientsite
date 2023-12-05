@@ -14,6 +14,6 @@ export const ApiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes:["getBrands", "getProduct", "getOrder", "getAllPayment", "getStock", "getSupplier"],
+  tagTypes:["getBrands", "getProduct", "getOrder", "getAllPayment", "getStock", "getSupplier", "user"],
   endpoints: (builder) => ({}),
 });

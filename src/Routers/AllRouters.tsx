@@ -8,7 +8,6 @@ import ProductItem from "../Components/ProductItem/ProductItem";
 import AddProduct from "../Page/AddProduct/AddProduct";
 import AddBrand from "../Page/AddBrand/AddBrand";
 import AddCard from "../Page/AddCard/AddCard";
-// import AddStore from "../Page/AddStore/AddStore";
 import AddSupplier from "../Page/AddSupplier/AddSupplier";
 import ManagerDashBoard from "../LayOut/ManagerDashBoard/ManagerDashBoard";
 import AllOrder from "../Page/AllOrder/AllOrder";
@@ -17,6 +16,9 @@ import AllSupplier from "../Page/AllSupplier/AllSupplier";
 import CreateStock from "../Page/CreateStock/CreateStock";
 import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
+import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
+import LogIn from "../Page/Login/Login";
+
 
 const AllRouters = createBrowserRouter([
   {
@@ -25,16 +27,40 @@ const AllRouters = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/brands", element: <Brands /> },
+      {
+        path: "/brands",
+        element: <Brands />,
+      },
       { path: "/brands/:id", element: <BrandItem /> },
-      { path: "/product/:id", element: <ProductItem /> },
-      { path: "/addCard", element: <AddCard /> },
+      {
+        path: "/product/:id",
+        element: (
+          <PrivateRoute>
+            <ProductItem />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/addCard",
+        element: (
+          <PrivateRoute>
+            <AddCard />
+          </PrivateRoute>
+        ),
+      },
       { path: "/allProducts", element: <AllProducts /> },
+
+      { path: "/login", element: <LogIn /> },
+      { path: "/blog", element: "blog" },
     ],
   },
   {
     path: "/managerDashBoard",
-    element: <ManagerDashBoard />,
+    element: (
+      // <ManagerPrivateRoute>
+      <ManagerDashBoard />
+      //  </ManagerPrivateRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { path: "/managerDashBoard/allBrand", element: <Brands /> },

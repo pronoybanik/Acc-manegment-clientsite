@@ -6,6 +6,14 @@ const productsApi = ApiSlice.injectEndpoints({
       query: () => `/product`,
       providesTags: ["getProduct"],
     }),
+    createProduct: builder.mutation({
+      query: (data) => ({
+        url: "/product",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["getProduct"],
+    }),
     getProductsCategory: builder.query({
       query: (data) => `/product?category=${data}&sort=price`,
       providesTags: ["getProduct"],
@@ -21,13 +29,9 @@ const productsApi = ApiSlice.injectEndpoints({
     getProductItem: builder.query({
       query: (id) => `/product/${id}`,
     }),
-    createProduct: builder.mutation({
-      query: (data) => ({
-        url: "/product",
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["getProduct"],
+    getProductPagination: builder.query({
+      query: ({ pageNumber, limit }) =>
+        `/product?page=${pageNumber}&limit=${limit}`,
     }),
   }),
 });
@@ -39,4 +43,5 @@ export const {
   useGetProductsCategoryQuery,
   useGetProductsFilersQuery,
   useGetProductsByNameQuery,
+  useGetProductPaginationQuery,
 } = productsApi;
