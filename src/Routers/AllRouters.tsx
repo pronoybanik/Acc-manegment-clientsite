@@ -18,7 +18,7 @@ import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
 import LogIn from "../Page/Login/Login";
-
+import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
 
 const AllRouters = createBrowserRouter([
   {
@@ -57,9 +57,9 @@ const AllRouters = createBrowserRouter([
   {
     path: "/managerDashBoard",
     element: (
-      // <ManagerPrivateRoute>
-      <ManagerDashBoard />
-      //  </ManagerPrivateRoute>
+      <ManagerPrivateRoute>
+        <ManagerDashBoard />
+      </ManagerPrivateRoute>
     ),
     errorElement: <ErrorPage />,
     children: [

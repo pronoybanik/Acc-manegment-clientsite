@@ -41,6 +41,7 @@ interface UserData {
 }
 
 const SupplierItem = ({ data }: { data: UserData }) => {
+  console.log(data);
   const [deleteSupplier, { isSuccess }] = useDeleteSupplierMutation();
 
   const {
@@ -50,8 +51,9 @@ const SupplierItem = ({ data }: { data: UserData }) => {
     email,
     emergencyContactNumber,
     status,
-    imageURL,
     name,
+    location,
+    nationalIdImageURL,
   } = data;
 
   const handleDelete = (id: string) => {
@@ -94,9 +96,10 @@ const SupplierItem = ({ data }: { data: UserData }) => {
           <div className="hidden sm:block sm:shrink-0">
             <img
               alt="Paul Clapton"
-              src={imageURL}
-              className="h-16 w-16 rounded-lg object-cover shadow-sm"
+              src={nationalIdImageURL}
+              className="h-28 w-40 rounded-lg object-contain shadow-sm"
             />
+            <p className="mt-1">Nation Id Card Image</p>
           </div>
         </div>
 
@@ -114,7 +117,7 @@ const SupplierItem = ({ data }: { data: UserData }) => {
 
           <div className="flex flex-col-reverse">
             <dt className="text-sm font-medium text-gray-600">
-              Location: {brand?.id?.location}
+             Supplier Location: {location}
             </dt>
           </div>
           <div
