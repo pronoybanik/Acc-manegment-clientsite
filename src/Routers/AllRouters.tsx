@@ -43,7 +43,8 @@ const AllRouters = createBrowserRouter([
       {
         path: "/addCard",
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+          >
             <AddCard />
           </PrivateRoute>
         ),

@@ -1,18 +1,24 @@
 import React from "react";
 import { useGetStockQuery } from "../../Features/Stock/Stock";
+import Loading from "../../Shared/Loading/Loading";
+import Errors from "../../Shared/Errors/Errors";
 
 const AllStock = () => {
-  const { data } = useGetStockQuery({});
-  console.log(data?.data?.stocks);
+  const { data, isLoading, isError, error } = useGetStockQuery({});
+  
 
-  return (
-    <section className="">
-      <div>
-        <p className="text-4xl mb-6 text-center font-bold uppercase border-b-4 w-96 mx-auto">
-          {" "}
-          All stock List
-        </p>
-      </div>
+  let content = null;
+  if (isLoading) {
+    content = <Loading></Loading>;
+  }
+  if (!isLoading && isError) {
+    content = <Errors>{error?.data?.error}</Errors>;
+  }
+  if (!isLoading && !isError && data.data.length === 0) {
+    content = <Errors>{"There are no Video"}</Errors>;
+  }
+  if (!isLoading && !isError && data?.data?.stocks?.length > 0) {
+    content = (
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
         {data?.data?.stocks?.map((d) => (
           <div
@@ -75,6 +81,18 @@ const AllStock = () => {
           </div>
         ))}
       </div>
+    );
+  }
+
+  return (
+    <section className="">
+      <div>
+        <p className="text-4xl mb-6 text-center font-bold uppercase border-b-4 w-96 mx-auto">
+          {" "}
+          All stock List
+        </p>
+      </div>
+      {content}
     </section>
   );
 };

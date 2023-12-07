@@ -126,13 +126,13 @@ const NavBar = () => {
               ) : (
                 <button
                   onClick={handleLogOut}
-                  className="text-white bg-black px-5 py-2"
+                  className="text-white  px-5 py-2 bg-red-700 shadow-sm rounded-sm  "
                 >
                   Logout
                 </button>
               )}
 
-              {showLoginModal && <Login  closeForm={closeLoginForm} />}
+              {showLoginModal && <Login closeForm={closeLoginForm} />}
               {showRegisterModal && <Register closeForm={closeRegisterForm} />}
               {/* {data?.data?.email ? (
                
