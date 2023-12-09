@@ -227,22 +227,15 @@ const ManagerNavBar = () => {
 
                       <ul className="mt-2 space-y-1 px-4">
                         <li>
-                          <a
-                            href=""
+                          <Link
+                            to="/managerDashBoard/userDetails"
                             className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                           >
-                            Details
-                          </a>
+                           Account Details
+                          </Link>
                         </li>
 
-                        <li>
-                          <a
-                            href=""
-                            className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                          >
-                            Security
-                          </a>
-                        </li>
+                        
 
                         <li>
                           <form action="/logout">

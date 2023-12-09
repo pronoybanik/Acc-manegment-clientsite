@@ -19,6 +19,7 @@ import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
 import LogIn from "../Page/Login/Login";
 import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
+import UserDetails from "../Page/UserDetails/UserDetails";
 
 const AllRouters = createBrowserRouter([
   {
@@ -96,6 +97,10 @@ const AllRouters = createBrowserRouter([
       {
         path: "/managerDashBoard/createBrand",
         element: <AddBrand />,
+      },
+      {
+        path: "/managerDashBoard/userDetails",
+        element: <UserDetails />,
       },
     ],
   },

@@ -87,7 +87,7 @@ const AllStock = () => {
   return (
     <section className="">
       <div>
-        <p className="text-4xl mb-6 text-center font-bold uppercase border-b-4 w-96 mx-auto">
+        <p className="text-3xl mb-6 text-center font-bold uppercase border-b-4 w-96 mx-auto">
           {" "}
           All stock List
         </p>
