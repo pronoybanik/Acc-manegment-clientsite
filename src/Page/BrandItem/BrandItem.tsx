@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetBrandItemQuery } from "../../Features/Brands/BrandsAPi";
 import Loading from "../../Shared/Loading/Loading";

@@ -8,7 +8,7 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
 
 interface LoginProps {
-  closeForm: () => void;
+  closeForm?: () => void;
 }
 
 const LogIn: React.FC<LoginProps> = ({ closeForm }) => {

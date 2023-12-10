@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
 
@@ -231,11 +231,9 @@ const ManagerNavBar = () => {
                             to="/managerDashBoard/userDetails"
                             className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                           >
-                           Account Details
+                            Account Details
                           </Link>
                         </li>
-
-                        
 
                         <li>
                           <form action="/logout">

@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetStockQuery } from "../../Features/Stock/Stock";
 import Loading from "../../Shared/Loading/Loading";
 import Errors from "../../Shared/Errors/Errors";

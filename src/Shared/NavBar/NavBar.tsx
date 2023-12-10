@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../../Page/Login/Login";
+import Login from "../../Page/LogIn/LogIn";
 import Register from "../../Page/Register/Register";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../Features/Login/LoginSlice";

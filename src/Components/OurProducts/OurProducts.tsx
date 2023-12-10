@@ -10,6 +10,8 @@ import Loading from "../../Shared/Loading/Loading";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import { Link } from "react-router-dom";
 import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type productData = {
   _id: string;
@@ -58,12 +60,27 @@ const OurProducts = () => {
   const { data: productName } = useGetProductsByNameQuery(brandDataInfo);
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError
+  ): string => {
+    if ("data" in error && error.data) {
+      // Assuming error.data has a structure like { error: string }
+      return error.data.error || "An error occurred";
+    } else {
+      // Handle other cases or return a default error message
+      return "An error occurred";
+    }
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
+  // if (!isLoading && isError) {
+  //   content = <Errors>{error?.data?.error}</Errors>;
+  // }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && data.data.products.length === 0) {
     content = <Errors>{"There are no product"}</Errors>;

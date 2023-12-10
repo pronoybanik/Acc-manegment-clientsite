@@ -8,6 +8,7 @@ import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
 import BrandPagination from "../../Components/BrandPagination/BrandPagination";
 import { useSelector } from "react-redux";
+import { Store } from "../../App/Store";
 
 type BrandData = {
   _id: string;
@@ -35,16 +36,17 @@ type BrandData = {
   image: string;
 };
 
+type RootState = ReturnType<typeof Store.getState>;
+
 const Brands = () => {
   // const { data, isLoading, isError, error } = useGetBrandQuery({});
-  const { pageNumber } = useSelector((state) => state?.productFilter);
-
+  const { pageNumber } = useSelector((state : RootState) => state?.productFilter);
   const limit = 3;
+
   const { data, isLoading, error, isError } = useGetBrandPaginationQuery({
     pageNumber,
     limit,
   });
-  console.log(data);
 
   const [brandName, setBrandName] = React.useState<string>("");
   const { data: brandNameData } = useGetBrandNameQuery(brandName);

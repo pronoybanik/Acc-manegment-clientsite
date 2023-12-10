@@ -1,4 +1,3 @@
-import React from "react";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
 import { Link } from "react-router-dom";

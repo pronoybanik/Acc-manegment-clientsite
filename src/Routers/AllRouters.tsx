@@ -17,7 +17,7 @@ import CreateStock from "../Page/CreateStock/CreateStock";
 import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
-import LogIn from "../Page/Login/Login";
+import LogIn from "../Page/LogIn/LogIn";
 import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
 import UserDetails from "../Page/UserDetails/UserDetails";
 import EditUserDetails from "../Page/EditUserDetails/EditUserDetails";
@@ -45,8 +45,7 @@ const AllRouters = createBrowserRouter([
       {
         path: "/addCard",
         element: (
-          <PrivateRoute
-          >
+          <PrivateRoute>
             <AddCard />
           </PrivateRoute>
         ),

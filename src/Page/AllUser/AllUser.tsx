@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetAllUserQuery } from "../../Features/Login/LoginApi";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
