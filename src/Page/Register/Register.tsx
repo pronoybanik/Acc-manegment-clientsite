@@ -3,6 +3,8 @@ import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
 import { useNavigate } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface LoginProps {
   closeForm: () => void;
@@ -13,6 +15,22 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
   const [createAccount, { isSuccess, isLoading, isError, error }] =
     useCreateAccountMutation();
   const navigate = useNavigate();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   // image file counter
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -251,9 +269,7 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
                     </div>
                     <div>
                       <div>
-                        {isError && (
-                          <Errors>{error?.data?.error?.message}</Errors>
-                        )}
+                        {isError && <Errors>{getErrorText(error)}</Errors>}
                       </div>
                     </div>
                     {/* profile Image */}

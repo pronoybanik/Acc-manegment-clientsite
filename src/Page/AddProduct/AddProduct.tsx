@@ -4,6 +4,8 @@ import { useCreateProductMutation } from "../../Features/Products/ProductApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
 import { useNavigate } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type BrandData = {
   _id: string;
@@ -38,6 +40,22 @@ const AddProduct = () => {
     useCreateProductMutation();
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
   const navigate = useNavigate();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -236,7 +254,7 @@ const AddProduct = () => {
                 ></textarea>
               </div>
 
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+              <div>{isError && <Errors>{getErrorText(error)}</Errors>}</div>
 
               <div>
                 <label

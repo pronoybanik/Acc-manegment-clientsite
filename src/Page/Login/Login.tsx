@@ -6,6 +6,8 @@ import {
 } from "../../Features/Login/LoginApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface LoginProps {
   closeForm?: () => void;
@@ -14,22 +16,36 @@ interface LoginProps {
 const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
   const [
     loginAccount,
-    { data: loginData, isLoading: loginLoading, error: loginError },
+    { data: loginData, isLoading: loginLoading, error: loginError, isError },
   ] = useLoginAccountMutation();
-
   const { data } = useGetUserByIdQuery(loginData?.data?.user?._id);
   const navigate = useNavigate();
-
   const location = useLocation();
   const navigateForm = location.state?.from?.pathname || "/";
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   // Error HandleIng...
   let content = null;
   if (loginLoading) {
     content = <p>Loading..</p>;
   }
-  if (!loginLoading && loginError?.data?.status === "fail") {
-    content = <Errors>{loginError?.data?.error}</Errors>;
+  if (!loginLoading && isError && loginError) {
+    content = <Errors>{getErrorText(loginError)}</Errors>;
   }
   if (!loginLoading && !loginError && data?.status === "success") {
     setTimeout(() => {

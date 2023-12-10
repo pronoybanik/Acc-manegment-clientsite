@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useDeleteOrderMutation,
   useGetAllPaymentQuery,
@@ -8,6 +8,8 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import PaymentModel from "../../Components/PaymentModel/PaymentModel";
 import Loading from "../../Shared/Loading/Loading";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface Product {
   brand: {
@@ -117,12 +119,29 @@ const AddCard = () => {
     }
   }, [isSuccess]);
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+  console.log(orderStatus);
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && order.length === 0) {
     content = <Errors>{"There are no order"}</Errors>;

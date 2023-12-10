@@ -60,25 +60,27 @@ const OurProducts = () => {
   const { data: productName } = useGetProductsByNameQuery(brandDataInfo);
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
 
+
   const getErrorText = (
-    error: FetchBaseQueryError | SerializedError
+    error: FetchBaseQueryError | SerializedError | undefined
   ): string => {
-    if ("data" in error && error.data) {
-      // Assuming error.data has a structure like { error: string }
-      return error.data.error || "An error occurred";
-    } else {
-      // Handle other cases or return a default error message
-      return "An error occurred";
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
     }
+    return "An error occurred";
   };
 
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
-  // if (!isLoading && isError) {
-  //   content = <Errors>{error?.data?.error}</Errors>;
-  // }
   if (!isLoading && isError) {
     content = <Errors>{getErrorText(error)}</Errors>;
   }

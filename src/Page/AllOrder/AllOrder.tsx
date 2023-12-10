@@ -1,7 +1,9 @@
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import OrdersSection from "../../Components/OrdersSection/OrdersSection";
 import { useGetAllPaymentQuery } from "../../Features/Orders/OrdersApi";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface OrderData {
   productId: string;
@@ -27,12 +29,29 @@ interface UserData {
 const AllOrder = () => {
   const { data, isLoading, isError, error } = useGetAllPaymentQuery({});
 
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
     content = <Errors>{"There are no payment"}</Errors>;

@@ -8,6 +8,9 @@ import Errors from "../../Shared/Errors/Errors";
 import OurProductItem from "../../Components/OurProductItem/OurProductItem";
 import ProductPagination from "../../Shared/ProductPagination/ProductPagination";
 import { useSelector } from "react-redux";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
+import { Store } from "../../App/Store";
 
 // set Data Type
 type productData = {
@@ -44,9 +47,13 @@ const productFilters = {
   ],
 };
 
+type RootState = ReturnType<typeof Store.getState>;
+
 const AllProducts = () => {
   const [brandName, setBrandName] = React.useState<string>("");
-  const { pageNumber } = useSelector((state) => state?.productFilter);
+  const { pageNumber } = useSelector(
+    (state: RootState) => state?.productFilter
+  );
   const limit = 6;
 
   const {
@@ -58,12 +65,28 @@ const AllProducts = () => {
 
   const { data: filterCategory } = useGetProductsCategoryQuery(brandName);
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && allProduct.data.products.length === 0) {
     content = <Errors>{"There are no products"}</Errors>;

@@ -3,8 +3,9 @@ import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import { useCreateSupplierMutation } from "../../Features/Supplier/Supplier";
 import Errors from "../../Shared/Errors/Errors";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
-import { useGetUserQuery } from "../../Features/Login/LoginApi";
 import { useNavigate } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type BrandData = {
   _id: string;
@@ -35,12 +36,27 @@ type BrandData = {
 
 const AddSupplier = () => {
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
-  const { data } = useGetUserQuery({});
 
   const [createSupplier, { isSuccess, isLoading, isError, error }] =
     useCreateSupplierMutation();
   const [selectedFileCount, setSelectedFileCount] = useState(0);
   const navigate = useNavigate();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -83,8 +99,6 @@ const AddSupplier = () => {
     const location = target.location.value;
     const nationalIdImageURL = target.nationalIdImageURL.files[0];
 
-   
-
     const formData = new FormData();
     formData.append("image", nationalIdImageURL);
 
@@ -116,7 +130,6 @@ const AddSupplier = () => {
         permanentAddress,
         location,
         nationalIdImageURL: nationalImageUrl,
-       
       });
     } catch (error) {
       console.error("Error:", error);
@@ -258,7 +271,7 @@ const AddSupplier = () => {
                 ></textarea>
               </div>
 
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+              <div>{isError && <Errors>{getErrorText(error)}</Errors>}</div>
 
               <div>
                 <label

@@ -1,16 +1,75 @@
 import { useGetStockQuery } from "../../Features/Stock/Stock";
 import Loading from "../../Shared/Loading/Loading";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
+
+interface Brand {
+  id: string;
+}
+
+interface ProductType {
+  brand: Brand;
+  category: string;
+  createdAt: string;
+  description: string;
+  imageURLs: string[];
+  name: string;
+  price: number;
+  quantity: number;
+  sellCount: number;
+  status: string;
+  supplied: {
+    id: {
+      brand: Brand;
+      contactNumber: string;
+      createdAt: string;
+      email: string;
+      emergencyContactNumber: string;
+      imageURL: string;
+      location: string;
+      name: string;
+      nationalIdImageURL: string;
+      permanentAddress: string;
+      presentAddress: string;
+      status: string;
+      updatedAt: string;
+      __v: number;
+      _id: string;
+    };
+  };
+  unit: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}
 
 const AllStock = () => {
   const { data, isLoading, isError, error } = useGetStockQuery({});
+  
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
     content = <Errors>{"There are no Video"}</Errors>;
@@ -18,7 +77,7 @@ const AllStock = () => {
   if (!isLoading && !isError && data?.data?.stocks?.length > 0) {
     content = (
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
-        {data?.data?.stocks?.map((d) => (
+        {data?.data?.stocks?.map((d: ProductType) => (
           <div
             key={d._id}
             className="mx-auto  bg-slate-100 max-w-screen-xl px-4 py-4"

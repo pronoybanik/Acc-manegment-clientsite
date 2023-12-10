@@ -2,6 +2,8 @@ import { useGetAllUserQuery } from "../../Features/Login/LoginApi";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
 import UserItem from "../../Components/UserItem/UserItem";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type UserDataType = {
   createdAt: string;
@@ -22,12 +24,28 @@ type UserDataType = {
 const AllUser = () => {
   const { data, isError, error, isLoading } = useGetAllUserQuery({});
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.data?.error}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
     content = <Errors>{"There are no user"}</Errors>;
