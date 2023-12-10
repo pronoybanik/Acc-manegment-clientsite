@@ -1,11 +1,13 @@
 import React from "react";
 import {
   useGetBrandNameQuery,
-  useGetBrandQuery,
+  useGetBrandPaginationQuery,
 } from "../../Features/Brands/BrandsAPi";
 import BrandCard from "../../Components/BrandCard/BrandCard";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
+import BrandPagination from "../../Components/BrandPagination/BrandPagination";
+import { useSelector } from "react-redux";
 
 type BrandData = {
   _id: string;
@@ -34,7 +36,15 @@ type BrandData = {
 };
 
 const Brands = () => {
-  const { data, isLoading, isError, error } = useGetBrandQuery({});
+  // const { data, isLoading, isError, error } = useGetBrandQuery({});
+  const { pageNumber } = useSelector((state) => state?.productFilter);
+
+  const limit = 3;
+  const { data, isLoading, error, isError } = useGetBrandPaginationQuery({
+    pageNumber,
+    limit,
+  });
+  console.log(data);
 
   const [brandName, setBrandName] = React.useState<string>("");
   const { data: brandNameData } = useGetBrandNameQuery(brandName);
@@ -152,21 +162,16 @@ const Brands = () => {
             </div>
 
             <div className="mt-4 col-span-3">
-              <div className="flex gap-2">
-                {/* {brandData?.data?.map((data) => (
-                <p
-                  onClick={() => setBrandNameData(data?.name)}
-                  className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                >
-                  {data?.name} /
-                </p>
-              ))} */}
-              </div>
+              <div className="flex gap-2"></div>
               <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
                 {content}
               </div>
             </div>
           </div>
+          <BrandPagination
+            currentPage={data?.data?.currentPage}
+            pageNumber={data?.data?.numberOfPage}
+          />
         </div>
       </section>
     </section>

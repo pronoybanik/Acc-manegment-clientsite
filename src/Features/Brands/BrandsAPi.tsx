@@ -22,6 +22,10 @@ const brandApi = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getBrands"],
     }),
+    getBrandPagination: builder.query({
+      query: ({ pageNumber, limit }) =>
+        `/brand?page=${pageNumber}&limit=${limit}`,
+    }),
   }),
 });
 
@@ -30,4 +34,5 @@ export const {
   useGetBrandItemQuery,
   useCreateBrandMutation,
   useGetBrandNameQuery,
+  useGetBrandPaginationQuery,
 } = brandApi;

@@ -5,7 +5,6 @@ import Errors from "../../Shared/Errors/Errors";
 
 const AllStock = () => {
   const { data, isLoading, isError, error } = useGetStockQuery({});
-  
 
   let content = null;
   if (isLoading) {
