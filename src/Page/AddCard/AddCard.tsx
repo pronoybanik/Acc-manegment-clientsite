@@ -58,13 +58,44 @@ interface UserData {
   _id: string;
 }
 
+interface ProductData {
+  _id: string;
+  createdAt: string;
+  productId: {
+    brand: {
+      id: string;
+    };
+    category: string;
+    createdAt: string;
+    description: string;
+    imageURLs: string;
+    name: string;
+    price: number;
+    unit: string;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+  };
+  quantity: number;
+  updatedAt: string;
+  userId: string;
+  __v: number;
+}
+
+
 const AddCard = () => {
   const [deleteOrder, { isSuccess }] = useDeleteOrderMutation();
   const { data: orderData, isLoading, isError, error } = useGetOrderQuery({});
   const { data } = useGetAllPaymentQuery({});
 
-  const [order, setOrder] = useState([]);
-  const [orderStatus, setOrderStatus] = useState({});
+  
+  const [order, setOrder] = useState<ProductData[]>([]);
+  console.log("test1",order);
+
+  const [orderStatus, setOrderStatus] = useState<
+    UserData | Record<string, never>
+  >({});
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkOut, setCheckOut] = useState(false);
 
@@ -134,7 +165,6 @@ const AddCard = () => {
     }
     return "An error occurred";
   };
-  console.log(orderStatus);
 
   let content = null;
   if (isLoading) {
@@ -202,8 +232,8 @@ const AddCard = () => {
                   </form>
 
                   {orderStatus?.shippingStatus === "processing" ||
-                  orderData?.shippingStatus === "shipped" ||
-                  orderData?.shippingStatus === "delivered" ? null : (
+                  orderStatus?.shippingStatus === "shipped" ||
+                  orderStatus?.shippingStatus === "delivered" ? null : (
                     <button
                       onClick={() => handleOrderDelete(data?._id)}
                       className="text-gray-600 transition hover:text-red-600"
@@ -445,8 +475,8 @@ const AddCard = () => {
 
                   <div className="flex justify-end">
                     {orderStatus?.shippingStatus === "processing" ||
-                    orderData?.shippingStatus === "shipped" ||
-                    orderData?.shippingStatus === "delivered" ? (
+                    orderStatus?.shippingStatus === "shipped" ||
+                    orderStatus?.shippingStatus === "delivered" ? (
                       <button className="relative cursor-pointer  text-white px-10   py-2 my-1   bg-no-repeat text-xl bg-slate-400 disabled   font-serif rounded-lg ">
                         Disable
                       </button>

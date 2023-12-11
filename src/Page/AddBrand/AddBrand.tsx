@@ -135,9 +135,9 @@ const AddBrand = () => {
                     <input
                       type="file"
                       className="hidden"
-                      id="nationalIdImageURL"
+                      id="brandImage"
                       required
-                      name="nationalIdImageURL"
+                      name="brandImage"
                       onChange={handleFileChange}
                       multiple // Allow multiple file selection
                     />

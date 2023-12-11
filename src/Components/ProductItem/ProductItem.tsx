@@ -214,7 +214,7 @@ const ProductItem = () => {
               </PrimaryButton>
             </div>
             <div>
-              {orderIsError && <Errors>{orderError?.toString()}</Errors>}
+              {orderIsError && <Errors>{getErrorText(orderError)}</Errors>}
             </div>
           </div>
         </div>

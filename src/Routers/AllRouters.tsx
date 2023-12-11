@@ -20,7 +20,6 @@ import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
 import LogIn from "../Page/LogIn/LogIn";
 import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
 import UserDetails from "../Page/UserDetails/UserDetails";
-import EditUserDetails from "../Page/EditUserDetails/EditUserDetails";
 
 const AllRouters = createBrowserRouter([
   {
@@ -101,10 +100,6 @@ const AllRouters = createBrowserRouter([
       {
         path: "/managerDashBoard/userDetails",
         element: <UserDetails />,
-      },
-      {
-        path: "/managerDashBoard/userDetails/:id",
-        element: <EditUserDetails />,
       },
     ],
   },

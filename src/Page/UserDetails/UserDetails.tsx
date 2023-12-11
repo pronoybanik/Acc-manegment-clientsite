@@ -1,6 +1,4 @@
-import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
-import { Link } from "react-router-dom";
 
 const UserDetails = () => {
   const { data, isLoading } = useGetUserQuery({});
@@ -18,11 +16,7 @@ const UserDetails = () => {
         />
       </div>
 
-      <Link to={`/managerDashBoard/userDetails/${data?.data?._id}`} className="flex justify-end mr-2  my-2">
-        <PrimaryButton>Edit Profile</PrimaryButton>
-      </Link>
-
-      <div className="flow-root rounded-lg border border-gray-100 py-3 shadow-sm">
+      <div className="flow-root rounded-lg border border-gray-100 py-3 shadow-sm mt-4">
         {!isLoading ? (
           <dl className="-my-3 divide-y divide-gray-100 text-sm">
             <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
