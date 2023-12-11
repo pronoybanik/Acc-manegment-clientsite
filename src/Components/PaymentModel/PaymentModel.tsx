@@ -2,45 +2,45 @@ import { useGetUserQuery } from "../../Features/Login/LoginApi";
 import { useCreateOrderPaymentMutation } from "../../Features/Orders/OrdersApi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 
-interface checkOutProps {
+interface ProductData {
+  _id: string;
+  createdAt: string;
+  productId: {
+    brand: {
+      id: string;
+    };
+    category: string;
+    createdAt: string;
+    description: string;
+    imageURLs: string;
+    name: string;
+    price: number;
+    unit: string;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+  };
+  quantity: number;
+  updatedAt: string;
+  userId: string;
+  __v: number;
+}
+
+interface PaymentModelProps {
+  orderData: ProductData[]; // Change the type to an array
+  priceData: number;
   closeForm: () => void;
 }
 
-interface Product {
-  brand: {
-    id: string;
-  };
-  _id: string;
-  name: string;
-  description: string;
-  unit: string;
-  price: number;
-  imageURLs: string;
-  category: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-interface OrderData {
-  _id: string;
-  productId: Product;
-  quantity: number;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-interface PriceData {
-  totalPriceWithVat: number;
-}
-
-const PaymentModel: React.FC<
-  checkOutProps & { priceData: PriceData; orderData: OrderData }
-> = ({ closeForm, priceData, orderData }) => {
+const PaymentModel: React.FC<PaymentModelProps> = ({
+  closeForm,
+  priceData,
+  orderData,
+}) => {
   const { data } = useGetUserQuery({});
   const [createOrderPayment, { data: orderPayment }] =
     useCreateOrderPaymentMutation();
+  console.log("test2", orderData);
 
   if (orderPayment?.url) {
     alert("please pay your Bill");

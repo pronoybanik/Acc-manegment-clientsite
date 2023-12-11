@@ -41,9 +41,10 @@ type BrandData = {
 type RootState = ReturnType<typeof Store.getState>;
 
 const Brands = () => {
-  // const { data, isLoading, isError, error } = useGetBrandQuery({});
-  const { pageNumber } = useSelector((state : RootState) => state?.productFilter);
-  const limit = 3;
+  const { pageNumber } = useSelector(
+    (state: RootState) => state?.productFilter
+  );
+  const limit = 6;
 
   const { data, isLoading, error, isError } = useGetBrandPaginationQuery({
     pageNumber,

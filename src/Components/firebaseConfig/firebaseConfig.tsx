@@ -1,12 +1,12 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDasFJu3vOyHdLang2QAzlhdLSX74RglNA",
-  authDomain: "foodie--haven.firebaseapp.com",
-  projectId: "foodie--haven",
-  storageBucket: "foodie--haven.appspot.com",
-  messagingSenderId: "695200099477",
-  appId: "1:695200099477:web:f7762da9d94803a8f3bf9c",
+  apiKey: "AIzaSyBrS2eYJQd1FZ5fcYsDwfBBLYkM-TmnW-4",
+  authDomain: "foodie---haven-1d1d1.firebaseapp.com",
+  projectId: "foodie---haven-1d1d1",
+  storageBucket: "foodie---haven-1d1d1.appspot.com",
+  messagingSenderId: "628040195899",
+  appId: "1:628040195899:web:dd0d2d294ac2773882611e"
 };
 
 const app = initializeApp(firebaseConfig);
