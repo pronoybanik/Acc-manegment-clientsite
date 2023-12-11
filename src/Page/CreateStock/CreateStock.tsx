@@ -5,6 +5,8 @@ import { useGetAllSupplierQuery } from "../../Features/Supplier/Supplier";
 import { useCreateStockMutation } from "../../Features/Stock/Stock";
 import { useNavigate } from "react-router-dom";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type BrandData = {
   _id: string;
@@ -75,9 +77,24 @@ const CreateStock = () => {
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
   const { data, isLoading } = useGetAllSupplierQuery({});
   const [selectedFileCount, setSelectedFileCount] = React.useState(0);
-  const [createStock, { data: stockData, isSuccess, error, isError }] =
-    useCreateStockMutation();
+  const [createStock, { isSuccess, error, isError }] = useCreateStockMutation();
   const navigate = useNavigate();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -268,23 +285,25 @@ const CreateStock = () => {
                   {brandIsLoading ? (
                     <div>Loading...</div>
                   ) : (
-                    brandData?.data?.brands.map((data: BrandData, index: number) => (
-                      <div key={data?._id}>
-                        <input
-                          className="peer sr-only"
-                          id={`option${index + 1}`}
-                          type="radio"
-                          name="option"
-                          defaultValue={data?._id}
-                        />
-                        <label
-                          htmlFor={`option${index + 1}`}
-                          className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                        >
-                          <span className="text-sm"> {data?.name} </span>
-                        </label>
-                      </div>
-                    ))
+                    brandData?.data?.brands.map(
+                      (data: BrandData, index: number) => (
+                        <div key={data?._id}>
+                          <input
+                            className="peer sr-only"
+                            id={`option${index + 1}`}
+                            type="radio"
+                            name="option"
+                            defaultValue={data?._id}
+                          />
+                          <label
+                            htmlFor={`option${index + 1}`}
+                            className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                          >
+                            <span className="text-sm"> {data?.name} </span>
+                          </label>
+                        </div>
+                      )
+                    )
                   )}
                 </div>
               </div>
@@ -328,7 +347,7 @@ const CreateStock = () => {
                   </span>
                 </div>
               </div>
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+              <div>{isError && <Errors>{getErrorText(error)}</Errors>}</div>
 
               <div className="mt-4">
                 <PrimaryButton>Submit</PrimaryButton>

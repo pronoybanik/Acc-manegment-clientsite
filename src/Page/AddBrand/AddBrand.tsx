@@ -3,17 +3,34 @@ import { useCreateBrandMutation } from "../../Features/Brands/BrandsAPi";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
 import { useNavigate } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const AddBrand = () => {
   const [createBrand, { isSuccess, isLoading, isError, error }] =
     useCreateBrandMutation();
+  const [selectedFileCount, setSelectedFileCount] = useState(0);
   const navigate = useNavigate();
 
-  const [selectedFileCount, setSelectedFileCount] = useState(0);
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
-    const files = inputElement.files; // Access the files property
+    const inputElement = e.target as HTMLInputElement;
+    const files = inputElement.files;
 
     if (files) {
       const count = files.length;
@@ -145,7 +162,7 @@ const AddBrand = () => {
                 ></textarea>
               </div>
 
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+              <div>{isError && <Errors>{getErrorText(error)}</Errors>}</div>
 
               <div className="mt-4">
                 <PrimaryButton>

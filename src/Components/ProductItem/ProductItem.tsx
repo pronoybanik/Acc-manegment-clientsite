@@ -5,6 +5,8 @@ import { useCreateOrderMutation } from "../../Features/Orders/OrdersApi";
 import Loading from "../../Shared/Loading/Loading";
 import Errors from "../../Shared/Errors/Errors";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const ProductItem = () => {
   const { id } = useParams();
@@ -40,12 +42,28 @@ const ProductItem = () => {
     setProductQuantity(productQuantity - 1);
   };
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.toString()}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && productData.data.length === 0) {
     content = <Errors>{"There are no product"}</Errors>;

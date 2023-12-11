@@ -1,8 +1,9 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetBrandItemQuery } from "../../Features/Brands/BrandsAPi";
 import Loading from "../../Shared/Loading/Loading";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 interface Product {
   brand: {
@@ -27,12 +28,28 @@ const BrandItem = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetBrandItemQuery(id);
 
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
+
   let content = null;
   if (isLoading) {
     content = <Loading></Loading>;
   }
   if (!isLoading && isError) {
-    content = <Errors>{error?.toString()}</Errors>;
+    content = <Errors>{getErrorText(error)}</Errors>;
   }
   if (!isLoading && !isError && data.data.length === 0) {
     content = <Errors>{"There are no Brand"}</Errors>;

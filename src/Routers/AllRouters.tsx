@@ -17,8 +17,10 @@ import CreateStock from "../Page/CreateStock/CreateStock";
 import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
-import LogIn from "../Page/Login/Login";
-
+import LogIn from "../Page/LogIn/LogIn";
+import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
+import UserDetails from "../Page/UserDetails/UserDetails";
+import EditUserDetails from "../Page/EditUserDetails/EditUserDetails";
 
 const AllRouters = createBrowserRouter([
   {
@@ -57,9 +59,9 @@ const AllRouters = createBrowserRouter([
   {
     path: "/managerDashBoard",
     element: (
-      // <ManagerPrivateRoute>
-      <ManagerDashBoard />
-      //  </ManagerPrivateRoute>
+      <ManagerPrivateRoute>
+        <ManagerDashBoard />
+      </ManagerPrivateRoute>
     ),
     errorElement: <ErrorPage />,
     children: [
@@ -95,6 +97,14 @@ const AllRouters = createBrowserRouter([
       {
         path: "/managerDashBoard/createBrand",
         element: <AddBrand />,
+      },
+      {
+        path: "/managerDashBoard/userDetails",
+        element: <UserDetails />,
+      },
+      {
+        path: "/managerDashBoard/userDetails/:id",
+        element: <EditUserDetails />,
       },
     ],
   },

@@ -4,16 +4,25 @@ export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:5050/api/v1",
-    prepareHeaders: async (headers, { getState, endpoints }) => {
+    prepareHeaders: async (headers) => {
       const token = localStorage.getItem("token");
-      const tokenParse = JSON.parse(token);
 
-      if (tokenParse) {
+      if (token !== null) {
+        const tokenParse = JSON.parse(token);
         headers.set("authorization", `Bearer ${tokenParse}`);
       }
+
       return headers;
     },
   }),
-  tagTypes:["getBrands", "getProduct", "getOrder", "getAllPayment", "getStock", "getSupplier", "user"],
-  endpoints: (builder) => ({}),
+  tagTypes: [
+    "getBrands",
+    "getProduct",
+    "getOrder",
+    "getAllPayment",
+    "getStock",
+    "getSupplier",
+    "user",
+  ],
+  endpoints: () => ({}),
 });

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 type product = {
@@ -51,8 +50,6 @@ const BrandCard = ({ BrandData }: { BrandData: product }) => {
         </h3>
 
         <p className="mt-1.5 text-sm text-gray-700">{slicedDescription}...</p>
-
-      
       </div>
     </Link>
   );

@@ -10,7 +10,7 @@ const loginApi = ApiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
 
@@ -29,11 +29,12 @@ const loginApi = ApiSlice.injectEndpoints({
           );
         } catch (error) {
           console.log(error);
-        } finally {
-          if (queryFulfilled && queryFulfilled.invalidateQueries) {
-            queryFulfilled.invalidateQueries(["user"]);
-          }
-        }
+        } 
+        // finally {
+        //   if (queryFulfilled && queryFulfilled.invalidateQueries) {
+        //     queryFulfilled.invalidateQueries(["user"]);
+        //   }
+        // }
       },
     }),
     getUser: builder.query({

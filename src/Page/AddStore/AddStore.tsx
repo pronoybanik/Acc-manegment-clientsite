@@ -3,12 +3,30 @@ import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
 import { useCreateStoreMutation } from "../../Features/Store/store";
 import Errors from "../../Shared/Errors/Errors";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const AddStore = () => {
   const { data } = useGetUserQuery({});
 
   const [createStore, { isSuccess, isLoading, isError, error }] =
     useCreateStoreMutation();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -64,11 +82,7 @@ const AddStore = () => {
           </div>
 
           <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-            <form
-              onSubmit={handleCreateStore}
-              action=""
-              className="space-y-4"
-            >
+            <form onSubmit={handleCreateStore} action="" className="space-y-4">
               <div>
                 <label className="sr-only" htmlFor="name">
                   Store Name
@@ -110,7 +124,7 @@ const AddStore = () => {
                 ></textarea>
               </div>
 
-              {isError ? <Errors>{error?.data?.error} </Errors> : null}
+              {isError ? <Errors>{getErrorText(error)} </Errors> : null}
               <div className="mt-4">
                 <PrimaryButton>
                   {isLoading ? (

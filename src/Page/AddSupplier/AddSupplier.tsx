@@ -3,7 +3,9 @@ import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
 import { useCreateSupplierMutation } from "../../Features/Supplier/Supplier";
 import Errors from "../../Shared/Errors/Errors";
 import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
-import { useGetUserQuery } from "../../Features/Login/LoginApi";
+import { useNavigate } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type BrandData = {
   _id: string;
@@ -34,11 +36,27 @@ type BrandData = {
 
 const AddSupplier = () => {
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
-  const { data } = useGetUserQuery({});
 
   const [createSupplier, { isSuccess, isLoading, isError, error }] =
     useCreateSupplierMutation();
   const [selectedFileCount, setSelectedFileCount] = useState(0);
+  const navigate = useNavigate();
+
+  const getErrorText = (
+    error: FetchBaseQueryError | SerializedError | undefined
+  ): string => {
+    if (
+      error &&
+      "data" in error &&
+      error.data &&
+      typeof error.data === "object"
+    ) {
+      if ("error" in error.data && typeof error.data.error === "string") {
+        return error.data.error || "An error occurred";
+      }
+    }
+    return "An error occurred";
+  };
 
   const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const inputElement = e.target as HTMLInputElement; // Cast to HTMLInputElement
@@ -52,9 +70,10 @@ const AddSupplier = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      alert(" Your product is Add");
+      alert("supplier create successfully");
+      navigate("/managerDashBoard/allSupplier");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   const handleCreateSupplier = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,18 +98,6 @@ const AddSupplier = () => {
     const permanentAddress = target.permanentAddress.value;
     const location = target.location.value;
     const nationalIdImageURL = target.nationalIdImageURL.files[0];
-
-    console.log(
-      name,
-      email,
-      contactNumber,
-      emergencyContactNumber,
-      BrandId,
-      presentAddress,
-      permanentAddress,
-      location,
-      nationalIdImageURL
-    );
 
     const formData = new FormData();
     formData.append("image", nationalIdImageURL);
@@ -123,7 +130,6 @@ const AddSupplier = () => {
         permanentAddress,
         location,
         nationalIdImageURL: nationalImageUrl,
-        imageURL: data?.data?.imageURL,
       });
     } catch (error) {
       console.error("Error:", error);
@@ -230,23 +236,25 @@ const AddSupplier = () => {
                 {brandIsLoading ? (
                   <div>Loading...</div>
                 ) : (
-                  brandData?.data?.brands.map((data: BrandData, index: number) => (
-                    <div key={data?._id}>
-                      <input
-                        className="peer sr-only"
-                        id={`option${index + 1}`}
-                        type="radio"
-                        name="option"
-                        defaultValue={data?._id}
-                      />
-                      <label
-                        htmlFor={`option${index + 1}`}
-                        className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                      >
-                        <span className="text-sm"> {data?.name} </span>
-                      </label>
-                    </div>
-                  ))
+                  brandData?.data?.brands.map(
+                    (data: BrandData, index: number) => (
+                      <div key={data?._id}>
+                        <input
+                          className="peer sr-only"
+                          id={`option${index + 1}`}
+                          type="radio"
+                          name="option"
+                          defaultValue={data?._id}
+                        />
+                        <label
+                          htmlFor={`option${index + 1}`}
+                          className="block w-full rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
+                        >
+                          <span className="text-sm"> {data?.name} </span>
+                        </label>
+                      </div>
+                    )
+                  )
                 )}
               </div>
 
@@ -263,14 +271,14 @@ const AddSupplier = () => {
                 ></textarea>
               </div>
 
-              <div>{isError && <Errors>{error?.data?.error}</Errors>}</div>
+              <div>{isError && <Errors>{getErrorText(error)}</Errors>}</div>
 
               <div>
                 <label
                   className="block text-gray-700 text-sm font-bold"
                   htmlFor="nationalIdImageURL"
                 >
-                  Upload Product Image
+                  Upload Nid card Image
                 </label>
                 <div className="mt-1 flex items-center space-x-4">
                   <label className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 cursor-pointer">
