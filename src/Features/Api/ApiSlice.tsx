@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5050/api/v1",
+    baseUrl: "https://acc-management-serversite.vercel.app/api/v1",
     prepareHeaders: async (headers) => {
       const token = localStorage.getItem("token");
 
