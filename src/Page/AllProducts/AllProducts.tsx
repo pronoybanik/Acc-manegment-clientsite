@@ -44,6 +44,24 @@ const productFilters = {
       label: "Oil",
       checked: false,
     },
+    {
+      id: 4,
+      value: "tree",
+      label: "Tree",
+      checked: false,
+    },
+    {
+      id: 5,
+      value: "colddrinks",
+      label: "Cold Drinks",
+      checked: false,
+    },
+    {
+      id: 6,
+      value: "thesoap",
+      label: "The Soap",
+      checked: false,
+    },
   ],
 };
 
