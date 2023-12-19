@@ -30,7 +30,7 @@ const BrandPagination: React.FC<ProductPaginationProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-4 w-96 mx-auto">
+    <div className="flex items-center justify-center gap-3 mt-4  mx-auto">
       <button
         disabled={Number(currentPage) === 1}
         onClick={() => decrementPageNumber(currentPage)}

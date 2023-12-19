@@ -30,11 +30,11 @@ const ProductPagination: React.FC<ProductPaginationProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-4 w-96 mx-auto">
+    <div className="flex items-center justify-center gap-3 mt-4  mx-auto">
       <button
         disabled={Number(currentPage) === 1}
         onClick={() => decrementPageNumber(currentPage)}
-        className="inline-flex disabled:bg-slate-500 disabled:text-white h-8 w-full px-2 py-2  items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
+        className="inline-flex  disabled:bg-slate-500 disabled:text-white h-8 w-full  px-2 py-2  items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
       >
         <span className="only">pre Page</span>
       </button>
