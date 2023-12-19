@@ -34,7 +34,7 @@ const BrandPagination: React.FC<ProductPaginationProps> = ({
       <button
         disabled={Number(currentPage) === 1}
         onClick={() => decrementPageNumber(currentPage)}
-        className="inline-flex disabled:bg-slate-500 disabled:text-white h-8 w-full px-2 py-2  items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
+        className="inline-flex disabled:bg-slate-500 disabled:text-white h-8 w-64 px-2 py-2  items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
       >
         <span className="only">pre Page</span>
       </button>
@@ -42,7 +42,7 @@ const BrandPagination: React.FC<ProductPaginationProps> = ({
       <button
         disabled={Number(currentPage) === Number(pageNumber)}
         onClick={() => incrementPageNumber(currentPage)}
-        className="inline-flex  disabled:bg-slate-500 disabled:text-white  h-8 px-2 py-2 w-full items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
+        className="inline-flex  disabled:bg-slate-500 disabled:text-white  h-8 px-2 py-2 w-64 items-center justify-center rounded border-2 border-gray-400 bg-white text-gray-900 rtl:rotate-180"
       >
         <span className="only">Next Page</span>
       </button>
