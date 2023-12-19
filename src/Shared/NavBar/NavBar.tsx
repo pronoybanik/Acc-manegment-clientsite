@@ -54,7 +54,7 @@ const NavBar = () => {
           className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
           to="/allProducts"
         >
-          all Products
+          All Products
         </Link>
       </li>
 
