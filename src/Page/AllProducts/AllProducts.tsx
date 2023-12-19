@@ -44,6 +44,24 @@ const productFilters = {
       label: "Oil",
       checked: false,
     },
+    {
+      id: 4,
+      value: "tree",
+      label: "Tree",
+      checked: false,
+    },
+    {
+      id: 5,
+      value: "colddrinks",
+      label: "Cold Drinks",
+      checked: false,
+    },
+    {
+      id: 6,
+      value: "thesoap",
+      label: "The Soap",
+      checked: false,
+    },
   ],
 };
 
@@ -138,30 +156,11 @@ const AllProducts = () => {
           <p className="border-b-2 border-[#98CB4C] mx-auto w-14 lg:mt-4 mt-2"></p>
         </div>
 
-        <div className="mt-8 block lg:hidden">
-          <button className="flex cursor-pointer items-center gap-2 border-b border-gray-400 pb-1 text-gray-900 transition hover:border-gray-600">
-            <span className="text-sm font-medium"> Filters & Sorting </span>
+       
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-4 w-4 rtl:rotate-180"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.25 4.5l7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4">
-          <div className="hidden space-y-4 lg:block ">
-            <div>
+        <div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
+          <div className=" space-y-4  ">
+            <div className="hidden lg:block">
               <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
                 All product Collection
               </h2>

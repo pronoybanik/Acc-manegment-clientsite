@@ -54,7 +54,7 @@ const NavBar = () => {
           className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
           to="/allProducts"
         >
-          all Products
+          All Products
         </Link>
       </li>
 
@@ -80,7 +80,7 @@ const NavBar = () => {
 
   return (
     <section className="sticky top-0 z-50">
-      <header className="bg-[#000000] ">
+      <header className="bg-[#000000]">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="md:flex md:items-center md:gap-12">
@@ -173,7 +173,7 @@ const NavBar = () => {
       <div className=" bg-white ">
         {/* mobile navigation */}
         <div
-          className={`fixed z-40 w-full  bg-gray-200 overflow-hidden flex flex-col lg:hidden gap-12  origin-top duration-700 ${
+          className={`fixed z-40 w-full bg-gray-200 overflow-hidden flex flex-col lg:hidden gap-12  origin-top duration-700 ${
             !mobileNavbar ? "h-0" : "max-w-screen-md"
           }`}
         >

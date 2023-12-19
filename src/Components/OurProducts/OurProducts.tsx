@@ -60,7 +60,6 @@ const OurProducts = () => {
   const { data: productName } = useGetProductsByNameQuery(brandDataInfo);
   const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
 
-
   const getErrorText = (
     error: FetchBaseQueryError | SerializedError | undefined
   ): string => {
@@ -147,18 +146,18 @@ const OurProducts = () => {
           </div>
         </div>
 
-        <div className="mt-4 col-span-2 ">
-          <div className="flex gap-2">
+        <div className="mt-4 col-span-2 lg:w-full w-80">
+          <div className="flex gap-1">
             {brandIsLoading ? (
               <div className="text-xl ml-2 py-2">Loading..</div>
             ) : (
-              brandData?.data?.brands.map((data: BrandData) => (
+              brandData?.data?.brands.slice(0, 5).map((data: BrandData) => (
                 <p
                   key={data?._id}
                   onClick={() => setBrandNameData(data?.name)}
-                  className="cursor-pointer text-xl font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
+                  className="cursor-pointer lg:text-xl md:text-xl text-xs font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
                 >
-                  {data?.name} /
+                  {data?.name} / 
                 </p>
               ))
             )}
