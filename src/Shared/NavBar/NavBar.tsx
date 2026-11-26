@@ -4,7 +4,7 @@ import Register from "../../Page/Register/Register";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../Features/Login/LoginSlice";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
-import LogIn from "../../Page/LogIn/Login";
+import AuthLogin from "../../Page/AuthLogin/AuthLogin";
 
 const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -146,7 +146,7 @@ const NavBar = () => {
           </nav>
         </div>
       )}
-      {showLoginModal && <LogIn closeForm={closeLoginForm} />}
+      {showLoginModal && <AuthLogin closeForm={closeLoginForm} />}
       {showRegisterModal && <Register closeForm={closeRegisterForm} />}
     </header>
   );

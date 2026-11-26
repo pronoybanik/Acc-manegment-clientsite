@@ -17,7 +17,7 @@ import CreateStock from "../Page/CreateStock/CreateStock";
 import AllStock from "../Page/AllStock/AllStock";
 import AllProducts from "../Page/AllProducts/AllProducts";
 import PrivateRoute from "../Shared/privateRoute/PrivateRoute";
-import LogIn from "../Page/LogIn/Login";
+import AuthLogin from "../Page/AuthLogin/AuthLogin";
 import ManagerPrivateRoute from "../Shared/ManagerPrivateRoute/ManagerPrivateRoute";
 import UserDetails from "../Page/UserDetails/UserDetails";
 
@@ -51,7 +51,7 @@ const AllRouters = createBrowserRouter([
       },
       { path: "/allProducts", element: <AllProducts /> },
 
-      { path: "/login", element: <LogIn /> },
+      { path: "/login", element: <AuthLogin /> },
       { path: "/blog", element: "blog" },
     ],
   },
