@@ -5,15 +5,8 @@ import AllRouters from "./Routers/AllRouters";
 
 function App() {
   return (
-    <div className="max-w-[1640px] mx-auto font-serif ">
+    <div className="mx-auto max-w-[1640px] font-sans">
       <RouterProvider router={AllRouters} />
-
-      {/* <div className="fixed inset-x-0 bottom-0 p-4">
-        <div className="rounded-lg bg-black  px-4 py-3 text-white shadow-lg">
-         
-          <BiArrowFromBottom />
-        </div>
-      </div> */}
     </div>
   );
 }

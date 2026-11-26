@@ -5,200 +5,166 @@ import Errors from "../../Shared/Errors/Errors";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 
-interface Product {
-  brand: {
-    name: string;
-    id: string;
-  };
-  category: string;
-  createdAt: string;
-  description: string;
-  imageURLs: string;
-  name: string;
-  unit: string;
-  updatedAt: string;
-  price: number;
-  __v: number;
+type BrandProduct = {
   _id: string;
-}
+  name: string;
+  description?: string;
+  category?: string;
+  imageURLs?: string | string[];
+  price?: number;
+  unit?: string;
+};
 
-
+type BrandDetails = {
+  _id: string;
+  name: string;
+  description?: string;
+  location?: string;
+  status?: string;
+  image?: string;
+  products?: BrandProduct[];
+};
 
 const BrandItem = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useGetBrandItemQuery(id);
+  const brand: BrandDetails | undefined = data?.data;
+  const products = brand?.products ?? [];
 
   const getErrorText = (
-    error: FetchBaseQueryError | SerializedError | undefined
+    queryError: FetchBaseQueryError | SerializedError | undefined
   ): string => {
     if (
-      error &&
-      "data" in error &&
-      error.data &&
-      typeof error.data === "object"
+      queryError &&
+      "data" in queryError &&
+      queryError.data &&
+      typeof queryError.data === "object" &&
+      "error" in queryError.data &&
+      typeof queryError.data.error === "string"
     ) {
-      if ("error" in error.data && typeof error.data.error === "string") {
-        return error.data.error || "An error occurred";
-      }
+      return queryError.data.error || "An error occurred";
     }
+
     return "An error occurred";
   };
 
-  let content = null;
   if (isLoading) {
-    content = <Loading></Loading>;
+    return <main className="mx-auto max-w-7xl px-5 py-10"><Loading /></main>;
   }
-  if (!isLoading && isError) {
-    content = <Errors>{getErrorText(error)}</Errors>;
+
+  if (isError) {
+    return <main className="mx-auto max-w-7xl px-5 py-10"><Errors>{getErrorText(error)}</Errors></main>;
   }
-  if (!isLoading && !isError && data.data.length === 0) {
-    content = <Errors>{"There are no Brand"}</Errors>;
+
+  if (!brand) {
+    return <main className="mx-auto max-w-7xl px-5 py-10"><Errors>Maker not found.</Errors></main>;
   }
-  if (!isLoading && !isError && data.status === "success") {
-    content = (
-      <>
-        {/* product items Data */}
-        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:ml-32">
-            <img
-              alt="Les Paul"
-              src={data?.data?.image}
-              className="aspect-square w-[350px] rounded-xl object-cover"
-            />
-          </div>
 
-          <div className="sticky top-0 lg:mt-10">
-            <strong className="rounded-full text-2xl border border-blue-600 bg-gray-100 px-3 py-0.5 text- font-medium tracking-wide text-blue-600">
-              Name: {data?.data?.name}
-            </strong>
-
-            <div className="mt-4 flex justify-between">
-              <div className="max-w-[35ch] space-y-2">
-                <div className="flex">
-                  <div className=" text-xl font-medium mr-2">Location:</div>
-                  <div className="font-bold text-xl">
-                    {data?.data?.location}
-                  </div>
-                </div>
-                <div className="flex ">
-                  <div className="mb-2 text-xl font-medium mr-2">Status:</div>
-                  <div className="font-bold text-xl font-sans text-red-600">
-                    {data?.data?.status}
-                  </div>
-                </div>
-
-                {/* starts */}
-                <div className="-ms-0.5 flex">
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-
-                  <svg
-                    className="h-5 w-5 text-gray-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="prose max-w-none">
-                <p className="mb-2 text-lg font-medium">About:</p>
-                {data?.data?.description}
-              </div>
-
-              {/* <button className="mt-2 text-sm font-medium underline">Read More</button> */}
-            </div>
-          </div>
-        </div>
-
-        {/* Brand Related Products Data  */}
-        <div>
-          <div className="my-14">
-            <div className="text-5xl flex items-center justify-center  font-serif">
-              Brand Related Product
-            </div>
-            <p className="border-b-2 border-[#98CB4C] mx-auto w-14 mt-4" />
-          </div>
-
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-            {data?.data?.products?.length === 0 ? (
-              <Errors>Create A Products</Errors>
-            ) : (
-              data?.data?.products?.map((data: Product) => (
-                <section key={data?._id} className="border-2 p-4 mt-4 h-full">
-                  <Link
-                    key={data?._id}
-                    to={`/product/${data?._id}`}
-                    className="group block"
-                  >
-                    <img
-                      src={data?.imageURLs}
-                      alt=""
-                      className="h-full object-contain w-full"
-                    />
-
-                    <div className="mt-3 flex justify-between text-sm">
-                      <div>
-                        <h3 className="text-gray-900 group-hover:underline group-hover:underline-offset-4">
-                          {data?.category}
-                        </h3>
-
-                        <p className="mt-1.5 max-w-[45ch] text-xs text-gray-500">
-                          {data?.name}
-                        </p>
-                      </div>
-
-                      <p className="text-gray-900">price:{data?.price} TK</p>
-                    </div>
-                  </Link>
-                </section>
-              ))
-            )}
-          </div>
-        </div>
-      </>
-    );
-  }
+  const getImageUrl = (imageURLs?: string | string[]) =>
+    Array.isArray(imageURLs) ? imageURLs[0] : imageURLs;
 
   return (
-    <div className="relative mx-auto max-w-screen-xl px-4 py-8">{content}</div>
+    <main className="bg-haven-canvas text-haven-ink">
+      <div className="mx-auto max-w-7xl px-5 pb-12 pt-5 sm:px-8 lg:px-10">
+        <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-2 text-[10px] text-haven-mutedInk">
+          <Link to="/" className="transition hover:text-haven-primary">Market</Link>
+          <span className="opacity-40">/</span>
+          <Link to="/brands" className="transition hover:text-haven-primary">Artisan Makers</Link>
+          <span className="opacity-40">/</span>
+          <span className="truncate font-semibold text-haven-ink">{brand.name}</span>
+        </nav>
+
+        <section className="overflow-hidden rounded-xl bg-white shadow-warm">
+          <div className="grid lg:grid-cols-12">
+            <div className="relative min-h-64 bg-haven-muted lg:col-span-6 lg:min-h-[420px]">
+              <img
+                src={brand.image || "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=85"}
+                alt={`${brand.name} artisan kitchen`}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[8px] font-bold uppercase tracking-wider text-haven-green shadow-card">
+                ✦ Verified Maker Spotlight
+              </span>
+            </div>
+            <div className="flex flex-col justify-between gap-5 p-5 sm:p-8 lg:col-span-6">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-haven-primary">{brand.location || "Independent Artisan"}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-haven-greenLight/60 px-2.5 py-1 text-[8px] font-bold text-haven-green">
+                    <span aria-hidden="true">✓</span>{brand.status || "Verified Maker"}
+                  </span>
+                </div>
+                <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{brand.name}</h1>
+                <p className="mt-3 text-xs leading-6 text-haven-mutedInk">{brand.description || "A local artisan kitchen creating small-batch goods with care."}</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 rounded-lg bg-haven-muted p-3">
+                <div>
+                  <p className="text-[8px] font-bold uppercase text-haven-mutedInk">Menu</p>
+                  <p className="mt-1 font-display text-sm font-bold">{products.length} items</p>
+                </div>
+                <div>
+                  <p className="text-[8px] font-bold uppercase text-haven-mutedInk">Kitchen</p>
+                  <p className="mt-1 line-clamp-1 text-[10px] font-semibold">{brand.name}</p>
+                </div>
+                <div>
+                  <p className="text-[8px] font-bold uppercase text-haven-mutedInk">Sourcing</p>
+                  <p className="mt-1 line-clamp-1 text-[10px] font-semibold text-haven-green">{brand.location || "Local"}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full bg-haven-greenLight px-3 py-1.5 text-[8px] font-semibold text-haven-green">Independent maker</span>
+                <span className="rounded-full bg-[#ffebe4] px-3 py-1.5 text-[8px] font-semibold text-haven-primary">Small-batch craft</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-[8px] font-bold uppercase tracking-wider text-haven-green">Made by {brand.name}</p>
+              <h2 className="mt-1 font-display text-2xl font-bold">Kitchen &amp; Menu</h2>
+            </div>
+            <Link to="/brands" className="text-[10px] font-bold text-haven-primary hover:underline">← Back to all makers</Link>
+          </div>
+
+          {products.length > 0 ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {products.map((product) => {
+                const imageUrl = getImageUrl(product.imageURLs);
+
+                return (
+                  <article key={product._id} className="group flex flex-col overflow-hidden rounded-xl border border-haven-border/70 bg-white p-2 shadow-card transition hover:-translate-y-1 hover:shadow-warm">
+                    <Link to={`/product/${product._id}`} className="flex flex-1 flex-col">
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-haven-muted">
+                        {imageUrl && <img src={imageUrl} alt={product.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
+                        {product.category && <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-bold text-haven-green">{product.category}</span>}
+                      </div>
+                      <h3 className="mt-3 font-display text-sm font-bold text-haven-ink transition group-hover:text-haven-primary">{product.name}</h3>
+                      <p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4 text-haven-mutedInk">{product.description}</p>
+                    </Link>
+                    <div className="mt-3 flex items-center justify-between gap-2 border-t border-haven-border pt-3">
+                      <p className="font-display text-sm font-bold text-haven-ink">
+                        {product.price != null ? `৳${product.price}` : "Ask for price"}
+                        {product.unit && <span className="ml-1 text-[9px] font-normal text-haven-mutedInk">/ {product.unit}</span>}
+                      </p>
+                      <Link to={`/product/${product._id}`} className="rounded-full bg-haven-primary px-3 py-1.5 text-[9px] font-bold text-white transition hover:bg-haven-primaryHover">View item</Link>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-xl bg-white p-8 text-center shadow-card">
+              <h3 className="font-display text-base font-bold">This kitchen is preparing its menu</h3>
+              <p className="mt-1 text-xs text-haven-mutedInk">Check back soon for this maker's latest offerings.</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
   );
 };
 

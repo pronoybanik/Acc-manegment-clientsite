@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useCreateAccountMutation } from "../../Features/Register/RegisterApi";
-import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
 import Errors from "../../Shared/Errors/Errors";
 import { useNavigate } from "react-router-dom";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -45,10 +45,10 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      alert(" Account is Create");
+      closeForm();
       navigate("/");
     }
-  }, [isSuccess, navigate]);
+  }, [closeForm, isSuccess, navigate]);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -105,217 +105,192 @@ const Register: React.FC<LoginProps> = ({ closeForm }) => {
       console.error("Error:", error);
     }
   };
-  return (
-    <div className="fixed z-10 inset-0 overflow-y-auto  ">
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
+  const inputClassName =
+    "w-full rounded-xl border border-[#e1bfb6]/60 bg-[#fdfbf7] px-4 py-3 text-sm text-[#181d1a] outline-none transition placeholder:text-[#8d7169] focus:border-[#a93102] focus:ring-4 focus:ring-[#a93102]/10";
+  const labelClassName = "mb-2 block text-sm font-semibold text-[#181d1a]";
 
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
+  return createPortal(
+    <div className="fixed inset-0 z-[60] overflow-y-auto bg-[#181d1a]/55 p-4 backdrop-blur-sm">
+      <div className="flex min-h-full items-center justify-center">
+        <section
+          aria-labelledby="register-title"
+          aria-modal="true"
+          className="relative my-6 w-full max-w-2xl overflow-hidden rounded-3xl bg-[#fff] shadow-[0_24px_64px_-12px_rgba(31,36,33,0.28)]"
+          role="dialog"
         >
-          &#8203;
-        </span>
+          <div className="h-1.5 bg-gradient-to-r from-[#2c694e] via-[#a93102] to-[#e6a05b]" />
+          <button
+            aria-label="Close registration form"
+            className="absolute right-5 top-5 rounded-full p-2 text-[#59413a] transition hover:bg-[#f0f5f0] hover:text-[#a93102] focus:outline-none focus:ring-2 focus:ring-[#a93102]/30"
+            onClick={closeForm}
+            type="button"
+          >
+            <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" strokeWidth="1.8" />
+            </svg>
+          </button>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          {/* Add your login form content here */}
-
-          <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-md text-center">
-              <button
-                className="text-gray-600 hover:text-gray-800 absolute top-4 right-4"
-                onClick={closeForm}
-              >
-                Close
-              </button>
-
-              <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-2xl text-center">
-                  <h1 className="text-2xl font-bold sm:text-3xl pb-10">
-                    Create A Account!
-                  </h1>
-                </div>
-
-                <section>
-                  <form onSubmit={handleRegister} action="">
-                    <div className="flex gap-4 mb-2">
-                      {/* first Name */}
-                      <div>
-                        <label htmlFor="firstName" className="sr-only">
-                          First Name
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="text"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="First Name"
-                            name="firstName"
-                          />
-                        </div>
-                      </div>
-                      {/* last Name */}
-                      <div>
-                        <label htmlFor="lastName" className="sr-only">
-                          Last Name
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="text"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="Last Name"
-                            name="lastName"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {/* Email  */}
-                    <div className="mb-2">
-                      <label htmlFor="email" className="sr-only">
-                        Email
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="email"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Enter email"
-                          name="email"
-                        />
-
-                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                    {/* shipping Address */}
-                    <div className="mb-2">
-                      <label htmlFor="shippingAddress" className="sr-only">
-                        shipping Address
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="text"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Shipping Address"
-                          name="shippingAddress"
-                        />
-                      </div>
-                    </div>
-                    {/* present Address */}
-                    <div className="mb-2">
-                      <label htmlFor="email" className="sr-only">
-                        present Address
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="text"
-                          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                          placeholder="Present Address"
-                          name="presentAddress"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 mb-2 ">
-                      {/* password */}
-                      <div>
-                        <label htmlFor="email" className="sr-only">
-                          Password
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="password"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="Password"
-                            name="password"
-                          />
-                        </div>
-                      </div>
-                      {/* confirmPassword */}
-                      <div>
-                        <label htmlFor="confirmPassword" className="sr-only">
-                          confirm Password
-                        </label>
-
-                        <div className="relative">
-                          <input
-                            type="password"
-                            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                            placeholder="Confirm Password"
-                            name="confirmPassword"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>
-                        {isError && <Errors>{getErrorText(error)}</Errors>}
-                      </div>
-                    </div>
-                    {/* profile Image */}
-                    <div className="mb-2">
-                      <label
-                        className="block text-gray-700 text-sm font-bold"
-                        htmlFor="productImage"
-                      >
-                        Upload Product Image
-                      </label>
-                      <div className="mt-1 flex items-center space-x-4">
-                        <label className="bg-[#98CB4C] hover:bg-[#a1d84f] text-white rounded-lg px-4 py-2 cursor-pointer">
-                          Browse
-                          <input
-                            type="file"
-                            required
-                            className="hidden"
-                            id="profileImage"
-                            name="profileImage"
-                            onChange={handleFileChange}
-                            multiple // Allow multiple file selection
-                          />
-                        </label>
-                        <span className="text-gray-500">
-                          {selectedFileCount === 1
-                            ? "1 file selected"
-                            : `${selectedFileCount} files selected`}
-                        </span>
-                      </div>
-                    </div>
-
-                    <PrimaryButton>
-                      {isLoading ? (
-                        <div className="animate-pulse">Loading...</div>
-                      ) : (
-                        <div>Sing up</div>
-                      )}
-                    </PrimaryButton>
-                  </form>
-                </section>
+          <div className="px-6 pb-8 pt-8 sm:px-10 sm:pb-10">
+            <div className="mb-7 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fbeee8] font-serif text-lg font-bold text-[#a93102]">
+                FH
               </div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-[#2c694e]">
+                Join our table
+              </p>
+              <h1 id="register-title" className="font-serif text-3xl font-bold tracking-tight text-[#181d1a]">
+                Create your account
+              </h1>
+              <p className="mt-2 text-sm leading-6 text-[#59413a]">
+                Meet the makers behind your next favorite meal.
+              </p>
             </div>
+
+            <form onSubmit={handleRegister} className="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="firstName" className={labelClassName}>
+                  First name
+                </label>
+                <input
+                  autoComplete="given-name"
+                  className={inputClassName}
+                  id="firstName"
+                  name="firstName"
+                  placeholder="First name"
+                  type="text"
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className={labelClassName}>
+                  Last name
+                </label>
+                <input
+                  autoComplete="family-name"
+                  className={inputClassName}
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Last name"
+                  type="text"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label htmlFor="register-email" className={labelClassName}>
+                  Email address
+                </label>
+                <input
+                  autoComplete="email"
+                  className={inputClassName}
+                  id="register-email"
+                  name="email"
+                  placeholder="you@example.com"
+                  type="email"
+                />
+              </div>
+              <div>
+                <label htmlFor="shippingAddress" className={labelClassName}>
+                  Shipping address
+                </label>
+                <input
+                  autoComplete="shipping street-address"
+                  className={inputClassName}
+                  id="shippingAddress"
+                  name="shippingAddress"
+                  placeholder="Where should we deliver?"
+                  type="text"
+                />
+              </div>
+              <div>
+                <label htmlFor="presentAddress" className={labelClassName}>
+                  Present address
+                </label>
+                <input
+                  autoComplete="street-address"
+                  className={inputClassName}
+                  id="presentAddress"
+                  name="presentAddress"
+                  placeholder="Your current address"
+                  type="text"
+                />
+              </div>
+              <div>
+                <label htmlFor="register-password" className={labelClassName}>
+                  Password
+                </label>
+                <input
+                  autoComplete="new-password"
+                  className={inputClassName}
+                  id="register-password"
+                  name="password"
+                  placeholder="Create a password"
+                  type="password"
+                />
+              </div>
+              <div>
+                <label htmlFor="confirmPassword" className={labelClassName}>
+                  Confirm password
+                </label>
+                <input
+                  autoComplete="new-password"
+                  className={inputClassName}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Repeat your password"
+                  type="password"
+                />
+              </div>
+
+              <div className="sm:col-span-2" aria-live="polite">
+                {isError && <Errors>{getErrorText(error)}</Errors>}
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="profileImage" className={labelClassName}>
+                  Profile photo
+                </label>
+                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-[#e1bfb6] bg-[#fdfbf7] p-3">
+                  <label
+                    className="cursor-pointer rounded-lg bg-[#2c694e] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#24563f] focus-within:ring-4 focus-within:ring-[#2c694e]/20"
+                    htmlFor="profileImage"
+                  >
+                    Choose photo
+                    <input
+                      accept="image/*"
+                      className="sr-only"
+                      id="profileImage"
+                      name="profileImage"
+                      onChange={handleFileChange}
+                      required
+                      type="file"
+                      multiple
+                    />
+                  </label>
+                  <span className="text-sm text-[#59413a]">
+                    {selectedFileCount === 1
+                      ? "1 file selected"
+                      : `${selectedFileCount} files selected`}
+                  </span>
+                  <span className="w-full text-xs text-[#8d7169]">
+                    Add a photo so your community can put a face to your name.
+                  </span>
+                </div>
+              </div>
+
+              <button
+                aria-busy={isLoading}
+                className="mt-2 flex w-full items-center justify-center rounded-xl bg-[#a93102] px-5 py-3.5 text-sm font-bold text-white shadow-[0_6px_16px_-4px_rgba(169,49,2,0.35)] transition hover:-translate-y-0.5 hover:bg-[#8f2a05] focus:outline-none focus:ring-4 focus:ring-[#a93102]/20 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70 sm:col-span-2"
+                type="submit"
+              >
+                {isLoading ? "Creating account..." : "Create account"}
+              </button>
+            </form>
+            <p className="mt-6 text-center text-xs text-[#59413a]">
+              Thoughtfully sourced. Happily shared.
+            </p>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -1,14 +1,19 @@
 
 const Loading = () => {
   return (
-    <div className="flex h-full my-auto font-serif text-[#668d2b] animate-pulse font-medium text-4xl uppercase items-center justify-center  gap-2 ">
-      L{" "}
-      <div>
-        <div className="flex items-center justify-center ">
-          <div className="border-t-2 border-[#98CB4C] border-solid rounded-full animate-spin w-8 h-8"></div>
-        </div>
-      </div>{" "}
-      ading <div className="">...</div>
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-32 w-full items-center justify-center gap-3 py-8 text-haven-green"
+    >
+      <span
+        aria-hidden="true"
+        className="h-8 w-8 animate-spin rounded-full border-[3px] border-haven-border border-t-haven-primary motion-reduce:animate-none"
+      />
+      <span className="font-display text-xl font-semibold">Loading</span>
+      <span aria-hidden="true" className="animate-pulse font-display text-2xl font-bold text-haven-primary">
+        ...
+      </span>
     </div>
   );
 };

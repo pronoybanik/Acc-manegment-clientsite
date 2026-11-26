@@ -1,10 +1,7 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  useGetUserByIdQuery,
-  useLoginAccountMutation,
-} from "../../Features/Login/LoginApi";
-import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
+import { useLoginAccountMutation } from "../../Features/Login/LoginApi";
 import Errors from "../../Shared/Errors/Errors";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
@@ -16,12 +13,18 @@ interface LoginProps {
 const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
   const [
     loginAccount,
-    { data: loginData, isLoading: loginLoading, error: loginError, isError },
+    { isLoading: loginLoading, error: loginError, isError, isSuccess },
   ] = useLoginAccountMutation();
-  const { data } = useGetUserByIdQuery(loginData?.data?.user?._id);
   const navigate = useNavigate();
   const location = useLocation();
   const navigateForm = location.state?.from?.pathname || "/";
+
+  React.useEffect(() => {
+    if (!isSuccess) return;
+
+    closeForm?.();
+    navigate(navigateForm, { replace: true });
+  }, [closeForm, isSuccess, navigate, navigateForm]);
 
   const getErrorText = (
     error: FetchBaseQueryError | SerializedError | undefined
@@ -39,20 +42,12 @@ const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
     return "An error occurred";
   };
 
-  // Error HandleIng...
   let content = null;
   if (loginLoading) {
     content = <p>Loading..</p>;
   }
   if (!loginLoading && isError && loginError) {
     content = <Errors>{getErrorText(loginError)}</Errors>;
-  }
-  if (!loginLoading && !loginError && data?.status === "success") {
-    setTimeout(() => {
-      alert("Login SuccessFull");
-      navigate(navigateForm, { replace: true });
-      window.location.reload();
-    }, 1000);
   }
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,131 +67,92 @@ const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
     });
   };
 
-  return (
-    <div className="fixed z-10 inset-0 overflow-y-auto  ">
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
-
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
+  return createPortal(
+    <div className="fixed inset-0 z-[60] overflow-y-auto bg-[#181d1a]/55 p-4 backdrop-blur-sm">
+      <div className="flex min-h-full items-center justify-center">
+        <section
+          aria-labelledby="login-title"
+          aria-modal="true"
+          className="relative my-6 w-full max-w-md overflow-hidden rounded-3xl bg-[#fff] shadow-[0_24px_64px_-12px_rgba(31,36,33,0.28)]"
+          role="dialog"
         >
-          &#8203;
-        </span>
+          <div className="h-1.5 bg-gradient-to-r from-[#2c694e] via-[#a93102] to-[#e6a05b]" />
+          <button
+            aria-label="Close login form"
+            className="absolute right-5 top-5 rounded-full p-2 text-[#59413a] transition hover:bg-[#f0f5f0] hover:text-[#a93102] focus:outline-none focus:ring-2 focus:ring-[#a93102]/30"
+            onClick={closeForm}
+            type="button"
+          >
+            <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" strokeWidth="1.8" />
+            </svg>
+          </button>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          {/* Add your login form content here */}
-
-          <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-md text-center">
-              <button
-                className="text-gray-600 shadow-2xl hover:text-gray-800 absolute top-4 right-4"
-                onClick={closeForm}
-              >
-                Close
-              </button>
-
-              <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-2xl text-center">
-                  <h1 className="text-2xl font-bold sm:text-3xl pb-4">
-                    please Login Your Account!
-                  </h1>
-                </div>
-
-                <form
-                  action=""
-                  onSubmit={handleLogin}
-                  className="mx-auto mb-0 mt-8 max-w-2xl space-y-4"
-                >
-                  <div>
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        type="email"
-                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                        placeholder="Enter email"
-                        name="email"
-                      />
-
-                      <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-gray-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="password" className="sr-only">
-                      Password
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        type="password"
-                        className="w-full border-2 rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                        placeholder="Enter password"
-                        name="password"
-                      />
-
-                      <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-gray-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                  {content}
-
-                  <div className="flex justify-center">
-                    <PrimaryButton>
-                      {loginLoading ? (
-                        <div>Loading...</div>
-                      ) : (
-                        <div>Sing in</div>
-                      )}{" "}
-                    </PrimaryButton>
-                  </div>
-                </form>
+          <div className="px-6 pb-8 pt-9 sm:px-10 sm:pb-10">
+            <div className="mb-7 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fbeee8] font-serif text-lg font-bold text-[#a93102]">
+                FH
               </div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-[#2c694e]">
+                Welcome back
+              </p>
+              <h1 id="login-title" className="font-serif text-3xl font-bold tracking-tight text-[#181d1a]">
+                Sign in to Foodie Haven
+              </h1>
+              <p className="mt-2 text-sm leading-6 text-[#59413a]">
+                Your favorite artisan finds are just around the table.
+              </p>
             </div>
+
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label htmlFor="login-email" className="mb-2 block text-sm font-semibold text-[#181d1a]">
+                  Email address
+                </label>
+                <input
+                  autoComplete="email"
+                  className="w-full rounded-xl border border-[#e1bfb6]/60 bg-[#fdfbf7] px-4 py-3 text-sm text-[#181d1a] outline-none transition placeholder:text-[#8d7169] focus:border-[#a93102] focus:ring-4 focus:ring-[#a93102]/10"
+                  id="login-email"
+                  name="email"
+                  placeholder="you@example.com"
+                  required
+                  type="email"
+                />
+              </div>
+              <div>
+                <label htmlFor="login-password" className="mb-2 block text-sm font-semibold text-[#181d1a]">
+                  Password
+                </label>
+                <input
+                  autoComplete="current-password"
+                  className="w-full rounded-xl border border-[#e1bfb6]/60 bg-[#fdfbf7] px-4 py-3 text-sm text-[#181d1a] outline-none transition placeholder:text-[#8d7169] focus:border-[#a93102] focus:ring-4 focus:ring-[#a93102]/10"
+                  id="login-password"
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  type="password"
+                />
+              </div>
+
+              <div aria-live="polite">
+                {content}
+              </div>
+              <button
+                aria-busy={loginLoading}
+                className="flex w-full items-center justify-center rounded-xl bg-[#a93102] px-5 py-3.5 text-sm font-bold text-white shadow-[0_6px_16px_-4px_rgba(169,49,2,0.35)] transition hover:-translate-y-0.5 hover:bg-[#8f2a05] focus:outline-none focus:ring-4 focus:ring-[#a93102]/20 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
+                type="submit"
+              >
+                {loginLoading ? "Signing in..." : "Sign in"}
+              </button>
+            </form>
+            <p className="mt-6 text-center text-xs text-[#59413a]">
+              A better pantry starts with the people who make it.
+            </p>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
