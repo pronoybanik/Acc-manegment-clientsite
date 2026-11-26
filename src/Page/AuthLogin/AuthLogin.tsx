@@ -10,7 +10,7 @@ interface LoginProps {
   closeForm?: () => void;
 }
 
-const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
+const AuthLogin: React.FC<LoginProps> = ({ closeForm }) => {
   const [
     loginAccount,
     { isLoading: loginLoading, error: loginError, isError, isSuccess },
@@ -18,6 +18,13 @@ const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const navigateForm = location.state?.from?.pathname || "/";
+  const handleClose = () => {
+    if (closeForm) {
+      closeForm();
+    } else {
+      navigate("/");
+    }
+  };
 
   React.useEffect(() => {
     if (!isSuccess) return;
@@ -80,7 +87,7 @@ const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
           <button
             aria-label="Close login form"
             className="absolute right-5 top-5 rounded-full p-2 text-[#59413a] transition hover:bg-[#f0f5f0] hover:text-[#a93102] focus:outline-none focus:ring-2 focus:ring-[#a93102]/30"
-            onClick={closeForm}
+            onClick={handleClose}
             type="button"
           >
             <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -156,4 +163,4 @@ const LogIn: React.FC<LoginProps> = ({ closeForm }) => {
   );
 };
 
-export default LogIn;
+export default AuthLogin;

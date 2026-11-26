@@ -1,10 +1,10 @@
 import React from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Login from "../../Page/LogIn/LogIn";
 import Register from "../../Page/Register/Register";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../Features/Login/LoginSlice";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
+import AuthLogin from "../../Page/AuthLogin/AuthLogin";
 
 const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -146,7 +146,7 @@ const NavBar = () => {
           </nav>
         </div>
       )}
-      {showLoginModal && <Login closeForm={closeLoginForm} />}
+      {showLoginModal && <AuthLogin closeForm={closeLoginForm} />}
       {showRegisterModal && <Register closeForm={closeRegisterForm} />}
     </header>
   );
