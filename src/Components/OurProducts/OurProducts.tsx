@@ -1,178 +1,135 @@
 import React from "react";
-import image from "../../Images/home page image/pexels-pixabay-219794-removebg-preview.png";
-import {
-  useGetProductsByNameQuery,
-  useGetProductsQuery,
-} from "../../Features/Products/ProductApi";
+import { Link } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 import OurProductItem from "../OurProductItem/OurProductItem";
 import Errors from "../../Shared/Errors/Errors";
 import Loading from "../../Shared/Loading/Loading";
-import PrimaryButton from "../../Shared/Buttons/PrimaryButton";
-import { Link } from "react-router-dom";
-import { useGetBrandQuery } from "../../Features/Brands/BrandsAPi";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import { HomepageBrand, HomepageProduct } from "../HomepageSections/homepageTypes";
 
-type productData = {
-  _id: string;
-  brand: {
-    name: string;
-    _id: string;
-  };
-  price: number;
-  category: string;
-  description: string;
-  imageURLs: string;
-  name: string;
-  unit: string;
+type OurProductsProps = {
+  products: HomepageProduct[];
+  brands: HomepageBrand[];
+  brandsLoading: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  error?: FetchBaseQueryError | SerializedError;
 };
 
-type BrandData = {
-  _id: string;
-  name: string;
-  description: string;
-  email: string;
-  location: string;
-  products: {
-    brand: {
-      name: string;
-      id: string;
-    };
-    _id: string;
-    name: string;
-    description: string;
-    unit: string;
-    imageURLs: string[];
-    category: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  image: string;
-};
-
-const OurProducts = () => {
-  const [brandNameData, setBrandNameData] = React.useState("");
-  const brandDataInfo = brandNameData.toLowerCase();
-  const { data, isLoading, isError, error } = useGetProductsQuery({});
-  const { data: productName } = useGetProductsByNameQuery(brandDataInfo);
-  const { data: brandData, isLoading: brandIsLoading } = useGetBrandQuery({});
+const OurProducts = ({
+  products,
+  brands,
+  brandsLoading,
+  isLoading,
+  isError,
+  error,
+}: OurProductsProps) => {
+  const [brandName, setBrandName] = React.useState("");
 
   const getErrorText = (
-    error: FetchBaseQueryError | SerializedError | undefined
+    queryError: FetchBaseQueryError | SerializedError | undefined
   ): string => {
     if (
-      error &&
-      "data" in error &&
-      error.data &&
-      typeof error.data === "object"
+      queryError &&
+      "data" in queryError &&
+      queryError.data &&
+      typeof queryError.data === "object" &&
+      "error" in queryError.data &&
+      typeof queryError.data.error === "string"
     ) {
-      if ("error" in error.data && typeof error.data.error === "string") {
-        return error.data.error || "An error occurred";
-      }
+      return queryError.data.error || "An error occurred";
     }
+
     return "An error occurred";
   };
 
+  const filteredProducts = brandName
+    ? products.filter(
+        (product) =>
+          product.brand?.name?.toLowerCase() === brandName.toLowerCase()
+      )
+    : products;
+
+  const sortedProducts = [...filteredProducts]
+    .sort((first, second) => second.price - first.price)
+    .slice(0, 6);
+
   let content = null;
   if (isLoading) {
-    content = <Loading></Loading>;
-  }
-  if (!isLoading && isError) {
+    content = <Loading />;
+  } else if (isError) {
     content = <Errors>{getErrorText(error)}</Errors>;
-  }
-  if (!isLoading && !isError && data.data.products.length === 0) {
-    content = <Errors>{"There are no product"}</Errors>;
-  }
-  if (
-    !isLoading &&
-    !isError &&
-    data.status === "success" &&
-    data.data.products.length > 0
-  ) {
-    content =
-      brandNameData != ""
-        ? productName?.data?.products
-            .slice(0, 6)
-            .sort((a: productData, b: productData) => b.price - a.price)
-            .map((d: productData) => (
-              <OurProductItem key={d?._id} data={d}></OurProductItem>
-            ))
-        : data?.data?.products
-            .slice(0, 6)
-            .sort((a: productData, b: productData) => b.price - a.price)
-            .map((d: productData) => (
-              <OurProductItem key={d?._id} data={d}></OurProductItem>
-            ));
+  } else if (sortedProducts.length === 0) {
+    content = <Errors>No products are available for this maker.</Errors>;
+  } else {
+    content = sortedProducts.map((product) => (
+      <OurProductItem key={product._id} data={product} />
+    ));
   }
 
   return (
-    <section className="w-10/12 mx-auto">
-      <div className="my-14">
-        <div className="lg:text-5xl text-3xl flex items-center justify-center  font-serif">
-          Our Products
+    <section className="bg-haven-muted py-12 sm:py-16" id="trending">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-haven-primary">
+              Customer obsessions
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-bold text-haven-ink sm:text-3xl">
+              Trending pantry &amp; kitchen releases
+            </h2>
+          </div>
+          <Link
+            to="/allProducts"
+            className="text-sm font-bold text-haven-primary hover:underline"
+          >
+            Browse all products <span aria-hidden="true">→</span>
+          </Link>
         </div>
-        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 lg:mt-4 mt-2"></p>
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setBrandName("")}
+            aria-pressed={brandName === ""}
+            className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+              brandName === ""
+                ? "bg-haven-green text-white"
+                : "bg-white text-haven-mutedInk hover:text-haven-primary"
+            }`}
+          >
+            All trending
+          </button>
+          {brands.slice(0, 5).map((brand) => (
+            <button
+              type="button"
+              key={brand._id}
+              onClick={() => setBrandName(brand.name)}
+              aria-pressed={brandName === brand.name}
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                brandName === brand.name
+                  ? "bg-haven-green text-white"
+                  : "bg-white text-haven-mutedInk hover:text-haven-primary"
+              }`}
+            >
+              {brand.name}
+            </button>
+          ))}
+          {brandsLoading && brands.length === 0 && (
+            <span className="ml-2 text-xs text-haven-mutedInk" role="status">
+              Loading makers…
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {content}
+        </div>
+        <Link
+          to="/allProducts"
+          className="mx-auto mt-8 flex w-fit rounded-xl bg-haven-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-haven-primaryHover"
+        >
+          See more products
+        </Link>
       </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div className=" mr-4 lg:block md:block hidden">
-          <div className="bg-gray-100">
-            <p className="text-center my-4 font-serif text-2xl font-semibold pt-10">
-              Healthy Foods
-            </p>
-            <p className="text-sm text-center font-light mx-10 my-6">
-              Orci condimentum et a fringilla urna. Integer tincidunt fusce eu
-              ipsum
-            </p>
-            <img
-              className=" w-full mt-2 rounded-lg my-8 object-cover "
-              src={image}
-              alt=""
-            />
-          </div>
-
-          <div className="bg-gray-100">
-            <p className="text-center my-4 font-serif text-2xl font-semibold pt-10">
-              Healthy Foods
-            </p>
-            <p className="text-sm text-center font-light mx-10 my-6">
-              Orci condimentum et a fringilla urna. Integer tincidunt fusce eu
-              ipsum
-            </p>
-            <img className=" w-full mt-2 rounded-lg my-8 " src={image} alt="" />
-          </div>
-        </div>
-
-        <div className="mt-4 col-span-2 lg:w-full w-80">
-          <div className="flex gap-1">
-            {brandIsLoading ? (
-              <div className="text-xl ml-2 py-2">Loading..</div>
-            ) : (
-              brandData?.data?.brands.slice(0, 5).map((data: BrandData) => (
-                <p
-                  key={data?._id}
-                  onClick={() => setBrandNameData(data?.name)}
-                  className="cursor-pointer lg:text-xl md:text-xl text-xs font-serif font-semibold leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                >
-                  {data?.name} / 
-                </p>
-              ))
-            )}
-          </div>
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-            {content}
-          </div>
-        </div>
-      </div>
-      <Link
-        to="/AllProducts"
-        className="flex items-center justify-center lg:mt-1 md:mt-20 mt-10"
-      >
-        <PrimaryButton>See More Products</PrimaryButton>
-      </Link>
     </section>
   );
 };

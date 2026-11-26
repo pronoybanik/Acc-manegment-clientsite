@@ -1,55 +1,65 @@
 
+import { Link } from "react-router-dom";
+
 const OurServices = () => {
-  const serviceInfo = [
+  const aisles = [
     {
-      image:
-        "https://new-basel2.myshopify.com/cdn/shop/files/organic-icon-1_157x.png?v=1613716705",
-      serviceName: " Select your box",
-      serviceInfo:
-        "Primis aptent vel turpis a a class suspendisse et augue orci a diam tristique consequat hendrerit ullamcorper torquent a integer a arcu neque vestibulum hac.",
+      icon: "🥐",
+      title: "Bakery & Pastries",
     },
     {
-      image:
-        "https://new-basel2.myshopify.com/cdn/shop/files/organic-icon-2_157x.png?v=1613716705",
-      serviceName: "Choose box contents",
-      serviceInfo:
-        "Purus velit class id conse ctetur ante elit vestibulum dignissim magna adipiscing quisque ante volutpat vestibulum vulputate. Suspendisse eu.",
+      icon: "🧀",
+      title: "Artisan Pantry",
     },
     {
-      image:
-        "https://new-basel2.myshopify.com/cdn/shop/files/organic-icon-3_157x.png?v=1613716705",
-      serviceName: "Recieve your box",
-      serviceInfo:
-        "Hendrerit cursus duis nostra adipiscing vestibulum nulla a nam eu commodo primis scelerisque lacus litora a tristique adipiscing nam.",
+      icon: "🥬",
+      title: "Farm Cheeses",
+    },
+    {
+      icon: "🍲",
+      title: "Chef Kits",
+    },
+    {
+      icon: "🫙",
+      title: "Desserts & Cacao",
+    },
+    {
+      icon: "☕",
+      title: "Coffee & Herbs",
+    },
+    {
+      icon: "🌿",
+      title: "Plant-Based",
     },
   ];
 
   return (
-    <section className="font-serif bg-slate-100 py-6">
-      <div className="my-14">
-        <div className="lg:text-5xl text-4xl flex items-center justify-center  font-serif">
-          How it works
-        </div>
-        <p className="border-b-2 border-[#98CB4C] mx-auto w-14 lg:mt-4 mt-2"></p>
-      </div>
-
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 md:gap-10 lg:mx-48 md:mx-10">
-        {serviceInfo.map((data, index) => (
-          <div key={index} className=" flex justify-center">
-            <div className="">
-              <div className="flex justify-center">
-                <img className="w-24 h-24" src={data.image} alt="" />
-              </div>
-              <div className="mt-2 flex justify-center w-full mx-auto">
-                <h1 className="lg:text-3xl md:text-2xl  text-xl mr-2 -mt-2 font-bold text-[#98CB4C]">
-                  {index + 1}.
-                </h1>
-                <h1 className="lg:text-xl md:text-lg text-sm font-semibold">{data.serviceName}</h1>
-              </div>
-              <p className="mt-2 text-sm text-center lg:px-0 px-2">{data.serviceInfo}</p>
-            </div>
+    <section className="bg-haven-canvas py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-haven-green">Epicurean directory</p>
+            <h2 className="mt-1 font-display text-2xl font-bold text-haven-ink sm:text-3xl">Curated aisles</h2>
           </div>
-        ))}
+          <p className="hidden max-w-sm text-right text-xs leading-5 text-haven-mutedInk sm:block">
+            Explore artisan provisions, thoughtfully vetted for heritage sourcing and craft.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+          {aisles.map((aisle) => (
+            <Link
+              key={aisle.title}
+              to="/allProducts"
+              className="group rounded-2xl border border-transparent bg-white px-3 py-4 text-center shadow-card transition hover:-translate-y-1 hover:border-haven-greenLight"
+            >
+              <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-haven-muted text-2xl transition group-hover:bg-haven-greenLight">
+                {aisle.icon}
+              </span>
+              <h3 className="mt-3 text-xs font-bold text-haven-ink">{aisle.title}</h3>
+              <p className="mt-1 text-[10px] text-haven-mutedInk">Explore aisle</p>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

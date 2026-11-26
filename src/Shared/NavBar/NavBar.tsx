@@ -1,20 +1,73 @@
 import React from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Login from "../../Page/LogIn/LogIn";
 import Register from "../../Page/Register/Register";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../Features/Login/LoginSlice";
 import { useGetUserQuery } from "../../Features/Login/LoginApi";
-import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const [showRegisterModal, setShowRegisterModal] = React.useState(false);
   const [mobileNavbar, setMobileNavBar] = React.useState(false);
-  console.log(mobileNavbar);
-
+  const [searchText, setSearchText] = React.useState("");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
-
   const { data } = useGetUserQuery({});
+
+  React.useEffect(() => {
+    setSearchText(searchParams.get("search") ?? "");
+  }, [searchParams]);
+
+  const submitSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchText.trim();
+    setMobileNavBar(false);
+    navigate(
+      query ? `/allProducts?search=${encodeURIComponent(query)}` : "/allProducts"
+    );
+  };
+
+  const clearSearch = () => {
+    setSearchText("");
+    setMobileNavBar(false);
+    navigate("/allProducts");
+  };
+
+  const searchForm = (className: string) => (
+    <form
+      role="search"
+      onSubmit={submitSearch}
+      className={`flex min-w-0 items-center rounded-full border border-haven-border bg-haven-muted px-4 py-2.5 transition focus-within:border-haven-primary/50 ${className}`}
+    >
+      <input
+        type="text"
+        value={searchText}
+        onChange={(event) => setSearchText(event.currentTarget.value)}
+        aria-label="Search products"
+        placeholder="Search artisan cheeses, heritage meats, chef spices..."
+        className="min-w-0 flex-1 bg-transparent text-xs text-haven-ink outline-none placeholder:text-haven-mutedInk"
+      />
+      {searchText && (
+        <button
+          type="button"
+          onClick={clearSearch}
+          aria-label="Clear product search"
+          className="ml-2 px-1 text-base leading-none text-haven-mutedInk hover:text-haven-primary"
+        >
+          ×
+        </button>
+      )}
+      <button
+        type="submit"
+        aria-label="Search products"
+        className="ml-3 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-haven-primary text-base text-white transition hover:bg-haven-primaryHover"
+      >
+        <span aria-hidden="true">⌕</span>
+      </button>
+    </form>
+  );
 
   const handleLogOut = () => {
     dispatch(userLoggedOut());
@@ -22,214 +75,80 @@ const NavBar = () => {
     window.location.reload();
   };
 
-  const closeLoginForm = () => {
-    setShowLoginModal(false);
-  };
-  const closeRegisterForm = () => {
-    setShowRegisterModal(false);
-  };
+  const closeLoginForm = () => setShowLoginModal(false);
+  const closeRegisterForm = () => setShowRegisterModal(false);
 
-  const menuItem = (
+  const navLinks = (
     <>
-      <li>
-        <Link
-          to="/"
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-        >
-          Home
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/brands"
-        >
-          Brands
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/allProducts"
-        >
-          All Products
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/addCard"
-        >
-          Order Products
-        </Link>
-      </li>
-
-      <li>
-        <Link
-          className="cursor-pointer  leading-2  text-white relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-          to="/managerDashBoard"
-        >
-          Manager DashBoard
-        </Link>
-      </li>
+      <Link to="/" onClick={() => setMobileNavBar(false)} className="text-sm font-semibold text-haven-primary">Home</Link>
+      <Link to="/allProducts" onClick={() => setMobileNavBar(false)} className="text-sm font-semibold text-haven-mutedInk transition hover:text-haven-primary">All products</Link>
+      <Link to="/brands" onClick={() => setMobileNavBar(false)} className="text-sm font-semibold text-haven-mutedInk transition hover:text-haven-primary">Artisan brands</Link>
+      <a href="/#feast-box" onClick={() => setMobileNavBar(false)} className="text-sm font-semibold text-haven-mutedInk transition hover:text-haven-primary">Chef specials</a>
+      <Link to="/allProducts" onClick={() => setMobileNavBar(false)} className="text-sm font-semibold text-haven-mutedInk transition hover:text-haven-primary">Daily deals</Link>
     </>
   );
 
   return (
-    <section className="sticky top-0 z-50">
-      <header className="bg-[#000000]">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="md:flex md:items-center md:gap-12">
-              <Link to="/" className="block">
-                <span className="sr-only">Home</span>
-                <div className="flex gap-1 font-serif ">
-                  <p className="lg:text-2xl md:text-lg text-sm font-semibold text-[#88B644]">
-                    Foodie
-                  </p>
-                  <p className="lg:text-2xl md:text-lg text-sm font-semibold text-[#88B644]">
-                    .
-                  </p>
-                  <p className="lg:text-2xl md:text-lg text-sm font-semibold text-[#98cb4c]">
-                    Haven
-                  </p>
-                </div>
-              </Link>
-            </div>
-
-            <div className="hidden md:block">
-              <nav aria-label="Global">
-                <ul className="flex items-center gap-6 text-sm">{menuItem}</ul>
-              </nav>
-            </div>
-
-            <div className="flex items-center gap-4 ">
-              <div className="flex gap-2">
-                {!data?.data?.email ? (
-                  <>
-                    <button
-                      className="text-white"
-                      onClick={() => setShowLoginModal(true)}
-                    >
-                      Login
-                    </button>
-
-                    <p className="text-white mt-2">/</p>
-
-                    <button
-                      className="text-white"
-                      onClick={() => setShowRegisterModal(true)}
-                    >
-                      Register
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={handleLogOut}
-                    className="text-white  px-5 py-2 bg-red-700 shadow-sm rounded-sm  "
-                  >
-                    Logout
-                  </button>
-                )}
-
-                {showLoginModal && <Login closeForm={closeLoginForm} />}
-                {showRegisterModal && (
-                  <Register closeForm={closeRegisterForm} />
-                )}
-                {/* {data?.data?.email ? (
-               
-              ) : null} */}
-              </div>
-
-              <div
-                onClick={() => setMobileNavBar(!mobileNavbar)}
-                className="block md:hidden"
-              >
-                <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      <br />
-      <div className=" bg-white ">
-        {/* mobile navigation */}
-        <div
-          className={`fixed z-40 w-full bg-gray-200 overflow-hidden flex flex-col lg:hidden gap-12  origin-top duration-700 ${
-            !mobileNavbar ? "h-0" : "max-w-screen-md"
-          }`}
-        >
-          <div className="">
-            <div className="flex flex-col gap-4 m-2 text-sm tracking-wider">
-              <>
-                <li>
-                  <Link
-                    to="/"
-                    className="cursor-pointer  leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                  >
-                    Home
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className="cursor-pointer  leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                    to="/brands"
-                  >
-                    Brands
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className="cursor-pointer  leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                    to="/allProducts"
-                  >
-                    all Products
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className="cursor-pointer  leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                    to="/addCard"
-                  >
-                    Order Products
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    className="cursor-pointer  leading-2  text-black relative before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#98CB4C] before:transition hover:before:scale-x-100"
-                    to="/managerDashBoard"
-                  >
-                    Manager DashBoard
-                  </Link>
-                </li>
-              </>
-            </div>
-          </div>
+    <header className="sticky top-0 z-50 border-b border-haven-border bg-white/95 shadow-sm backdrop-blur">
+      <div className="bg-haven-green px-4 py-2 text-[10px] font-semibold text-white sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+          <p>Free artisan delivery on your first order over $35 with code <strong className="text-haven-greenLight">WELCOMEHAVEN</strong></p>
+          <p className="hidden sm:block">Farm-to-fork direct <span className="mx-2 opacity-50">|</span> Same-day cold-chain express</p>
         </div>
       </div>
-    </section>
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-10">
+        <Link to="/" className="shrink-0 font-display text-lg font-bold tracking-tight text-haven-primary sm:text-xl">
+          Foodie Haven
+        </Link>
+        {searchForm("hidden flex-1 lg:flex")}
+        <div className="hidden items-center gap-6 md:flex">
+          <nav aria-label="Main navigation" className="flex items-center gap-5">
+            {navLinks}
+          </nav>
+          <div className="h-6 border-l border-haven-border" />
+          {data?.data?.email ? (
+            <button
+              onClick={handleLogOut}
+              className="rounded-lg bg-haven-primary px-4 py-2 text-xs font-bold text-white transition hover:bg-haven-primaryHover"
+            >
+              Logout
+            </button>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button onClick={() => setShowLoginModal(true)} className="text-xs font-bold text-haven-mutedInk hover:text-haven-primary">Login</button>
+              <button onClick={() => setShowRegisterModal(true)} className="rounded-lg bg-haven-primary px-4 py-2 text-xs font-bold text-white transition hover:bg-haven-primaryHover">Join us</button>
+            </div>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => setMobileNavBar(!mobileNavbar)}
+          aria-expanded={mobileNavbar}
+          aria-label={mobileNavbar ? "Close navigation menu" : "Open navigation menu"}
+          className="grid h-10 w-10 place-items-center rounded-lg border border-haven-border text-haven-ink md:hidden"
+        >
+          <span aria-hidden="true">{mobileNavbar ? "×" : "☰"}</span>
+        </button>
+      </div>
+      {mobileNavbar && (
+        <div className="border-t border-haven-border bg-white px-5 py-4 md:hidden">
+          {searchForm("mb-5 w-full")}
+          <nav aria-label="Mobile navigation" className="flex flex-col gap-4">
+            {navLinks}
+            {data?.data?.email ? (
+              <button onClick={handleLogOut} className="self-start rounded-lg bg-haven-primary px-4 py-2 text-xs font-bold text-white">Logout</button>
+            ) : (
+              <div className="flex gap-4">
+                <button onClick={() => setShowLoginModal(true)} className="text-sm font-bold text-haven-primary">Login</button>
+                <button onClick={() => setShowRegisterModal(true)} className="text-sm font-bold text-haven-primary">Register</button>
+              </div>
+            )}
+          </nav>
+        </div>
+      )}
+      {showLoginModal && <Login closeForm={closeLoginForm} />}
+      {showRegisterModal && <Register closeForm={closeRegisterForm} />}
+    </header>
   );
 };
 
